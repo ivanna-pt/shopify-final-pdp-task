@@ -1,0 +1,10 @@
+{% assign main_menu = linklists['main-menu'] %}
+<ul class="nav-list">
+  {% if main_menu.links.size > 0 %}
+    {%- for link in main_menu.links -%}
+      <li class="nav-item">
+        <a href="{{ link.url }}" class="nav-link">{{ link.title }}</a>
+      </li>
+    {%- endfor -%}
+  {% endif %}
+</ul>
