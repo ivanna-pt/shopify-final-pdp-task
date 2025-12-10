@@ -12,10 +12,13 @@
     --color-gray-600: #737373;
     --color-black: #111111;
     --color-white: #ffffff;
+    --spacing: 0.25rem;
     --font-weight-bold: 700;
+    --default-transition-duration: 150ms;
+    --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     --default-font-family: var(--font-sans);
     --default-mono-font-family: var(--font-mono);
-    --font-poppins: "Poppins", sans-serif;
+    --page-width: 1320px;
     --text-h1: 30px;
     --leading-h1: 36px;
     --text-h2: 24px;
@@ -195,6 +198,15 @@
   .static {
     position: static;
   }
+  .container {
+    width: 100%;
+    @media (width >= 768px) {
+      max-width: 768px;
+    }
+    @media (width >= 990px) {
+      max-width: 990px;
+    }
+  }
   .block {
     display: block;
   }
@@ -207,14 +219,29 @@
   .grid {
     display: grid;
   }
+  .hidden {
+    display: none;
+  }
   .inline {
     display: inline;
+  }
+  .w-full {
+    width: 100%;
+  }
+  .flex-shrink {
+    flex-shrink: 1;
+  }
+  .flex-grow {
+    flex-grow: 1;
   }
   .transform {
     transform: var(--tw-rotate-x,) var(--tw-rotate-y,) var(--tw-rotate-z,) var(--tw-skew-x,) var(--tw-skew-y,);
   }
   .flex-wrap {
     flex-wrap: wrap;
+  }
+  .justify-between {
+    justify-content: space-between;
   }
   .border {
     border-style: var(--tw-border-style);
@@ -226,6 +253,11 @@
   .filter {
     filter: var(--tw-blur,) var(--tw-brightness,) var(--tw-contrast,) var(--tw-grayscale,) var(--tw-hue-rotate,) var(--tw-invert,) var(--tw-saturate,) var(--tw-sepia,) var(--tw-drop-shadow,);
   }
+  .transition {
+    transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to, opacity, box-shadow, transform, translate, scale, rotate, filter, -webkit-backdrop-filter, backdrop-filter, display, content-visibility, overlay, pointer-events;
+    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+    transition-duration: var(--tw-duration, var(--default-transition-duration));
+  }
 }
 @media (min-width: 768px) {
   :root {
@@ -236,6 +268,17 @@
   }
 }
 @layer utilities {
+  .page-width {
+    max-width: var(--page-width);
+    margin-inline: auto;
+    margin-block: calc(var(--spacing) * 0);
+    width: 100%;
+    padding-inline: calc(var(--spacing) * 4);
+    padding-block: calc(var(--spacing) * 0);
+    @media (width >= 768px) {
+      padding-inline: calc(var(--spacing) * 10);
+    }
+  }
   .h1 {
     font-size: var(--text-h1);
     --tw-leading: var(--leading-h1);
@@ -315,7 +358,6 @@
 }
 @layer base {
   html {
-    font-family: var(--font-poppins);
     color: var(--color-black);
   }
 }
