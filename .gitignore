@@ -21,3 +21,6 @@ release
 
 ##Tailwind
 node_modules/
+
+##VScode
+.vscode/

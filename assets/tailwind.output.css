@@ -7,9 +7,31 @@
       "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
       "Courier New", monospace;
-    --color-red-600: oklch(57.7% 0.245 27.325);
+    --color-gray-200: #ebebeb;
+    --color-gray-300: #cacacb;
+    --color-gray-600: #737373;
+    --color-black: #111111;
+    --color-white: #ffffff;
+    --font-weight-bold: 700;
     --default-font-family: var(--font-sans);
     --default-mono-font-family: var(--font-mono);
+    --font-poppins: "Poppins", sans-serif;
+    --text-h1: 30px;
+    --leading-h1: 36px;
+    --text-h2: 24px;
+    --leading-h2: 32px;
+    --text-body-lg: 16px;
+    --leading-body-lg: 24px;
+    --text-body-md: 14px;
+    --leading-body-md: 20px;
+    --btn-radius: 8px;
+    --btn-py: 16px;
+    --btn-px: 32px;
+    --btn-gap: 10px;
+    --accordion-radius: 8px;
+    --accordion-padding: 24px;
+    --accordion-gap: 24px;
+    --accordion-border: 1px solid var(--color-gray-200);
   }
 }
 @layer base {
@@ -188,17 +210,8 @@
   .inline {
     display: inline;
   }
-  .table {
-    display: table;
-  }
-  .border-collapse {
-    border-collapse: collapse;
-  }
   .transform {
     transform: var(--tw-rotate-x,) var(--tw-rotate-y,) var(--tw-rotate-z,) var(--tw-skew-x,) var(--tw-skew-y,);
-  }
-  .resize {
-    resize: both;
   }
   .flex-wrap {
     flex-wrap: wrap;
@@ -207,21 +220,103 @@
     border-style: var(--tw-border-style);
     border-width: 1px;
   }
-  .text-red-600 {
-    color: var(--color-red-600);
-  }
   .italic {
     font-style: italic;
   }
-  .underline {
-    text-decoration-line: underline;
-  }
-  .outline {
-    outline-style: var(--tw-outline-style);
-    outline-width: 1px;
-  }
   .filter {
     filter: var(--tw-blur,) var(--tw-brightness,) var(--tw-contrast,) var(--tw-grayscale,) var(--tw-hue-rotate,) var(--tw-invert,) var(--tw-saturate,) var(--tw-sepia,) var(--tw-drop-shadow,);
+  }
+}
+@media (min-width: 768px) {
+  :root {
+    --text-h1: 48px;
+    --leading-h1: 48px;
+    --text-h2: 30px;
+    --leading-h2: 36px;
+  }
+}
+@layer utilities {
+  .h1 {
+    font-size: var(--text-h1);
+    --tw-leading: var(--leading-h1);
+    line-height: var(--leading-h1);
+    --tw-font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-bold);
+  }
+  .h2 {
+    font-size: var(--text-h2);
+    --tw-leading: var(--leading-h2);
+    line-height: var(--leading-h2);
+    --tw-font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-bold);
+  }
+  .body-lg {
+    font-size: var(--text-body-lg);
+    --tw-leading: var(--leading-body-lg);
+    line-height: var(--leading-body-lg);
+  }
+  .body-md {
+    font-size: var(--text-body-md);
+    --tw-leading: var(--leading-body-md);
+    line-height: var(--leading-body-md);
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--btn-gap);
+    padding: var(--btn-py) var(--btn-px);
+    border-radius: var(--btn-radius);
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s, opacity 0.2s;
+  }
+  .btn-primary {
+    background: var(--color-white);
+    color: var(--color-black);
+  }
+  .btn-primary:hover {
+    background: var(--color-gray-300);
+  }
+  .btn-secondary {
+    background: var(--color-black);
+    color: var(--color-white);
+  }
+  .btn-secondary:hover {
+    background: var(--color-gray-600);
+  }
+  .accordion {
+    display: flex;
+    flex-direction: column;
+    gap: var(--accordion-gap);
+    padding: var(--accordion-padding);
+    border-radius: var(--accordion-radius);
+    border: var(--accordion-border);
+  }
+  .accordion summary {
+    list-style: none;
+  }
+  .accordion summary::-webkit-details-marker {
+    display: none;
+  }
+  .accordion-summary {
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .accordion-content {
+    font-size: var(--text-body-lg);
+    --tw-leading: var(--leading-body-lg);
+    line-height: var(--leading-body-lg);
+    color: var(--color-gray-600);
+  }
+}
+@layer base {
+  html {
+    font-family: var(--font-poppins);
+    color: var(--color-black);
   }
 }
 @property --tw-rotate-x {
@@ -245,11 +340,6 @@
   inherits: false;
 }
 @property --tw-border-style {
-  syntax: "*";
-  inherits: false;
-  initial-value: solid;
-}
-@property --tw-outline-style {
   syntax: "*";
   inherits: false;
   initial-value: solid;
@@ -307,6 +397,14 @@
   syntax: "*";
   inherits: false;
 }
+@property --tw-leading {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-font-weight {
+  syntax: "*";
+  inherits: false;
+}
 @layer properties {
   @supports ((-webkit-hyphens: none) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color:rgb(from red r g b)))) {
     *, ::before, ::after, ::backdrop {
@@ -316,7 +414,6 @@
       --tw-skew-x: initial;
       --tw-skew-y: initial;
       --tw-border-style: solid;
-      --tw-outline-style: solid;
       --tw-blur: initial;
       --tw-brightness: initial;
       --tw-contrast: initial;
@@ -330,6 +427,8 @@
       --tw-drop-shadow-color: initial;
       --tw-drop-shadow-alpha: 100%;
       --tw-drop-shadow-size: initial;
+      --tw-leading: initial;
+      --tw-font-weight: initial;
     }
   }
 }

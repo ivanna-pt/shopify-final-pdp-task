@@ -1,1 +1,121 @@
 @import "tailwindcss";
+
+@theme {
+  --breakpoint-*: initial;
+  --breakpoint-md: 750px;
+  --breakpoint-lg: 990px;
+
+  --color-black: #111111;
+  --color-white: #ffffff;
+
+  --color-gray-600: #737373;
+  --color-gray-300: #cacacb;
+  --color-gray-200: #ebebeb;
+  --color-gray-100: #f5f5f5;
+
+  --font-poppins: "Poppins", sans-serif;
+
+  --text-h1: 30px;
+  --leading-h1: 36px;
+
+  --text-h2: 24px;
+  --leading-h2: 32px;
+
+  --text-body-lg: 16px;
+  --leading-body-lg: 24px;
+
+  --text-body-md: 14px;
+  --leading-body-md: 20px;
+
+  --btn-radius: 8px;
+  --btn-py: 16px;
+  --btn-px: 32px;
+  --btn-gap: 10px;
+
+  --accordion-radius: 8px;
+  --accordion-padding: 24px;
+  --accordion-gap: 24px;
+  --accordion-border: 1px solid var(--color-gray-200);
+}
+
+@media (min-width: 768px) {
+  :root {
+    --text-h1: 48px;
+    --leading-h1: 48px;
+
+    --text-h2: 30px;
+    --leading-h2: 36px;
+  }
+}
+
+@layer utilities {
+  .h1 {
+    @apply text-h1 leading-h1 font-bold;
+  }
+  .h2 {
+    @apply text-h2 leading-h2 font-bold;
+  }
+  .body-lg {
+    @apply text-body-lg leading-body-lg;
+  }
+  .body-md {
+    @apply text-body-md leading-body-md;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--btn-gap);
+    padding: var(--btn-py) var(--btn-px);
+    border-radius: var(--btn-radius);
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s, opacity 0.2s;
+  }
+  .btn-primary {
+    background: var(--color-white);
+    color: var(--color-black);
+  }
+  .btn-primary:hover {
+    background: var(--color-gray-300);
+  }
+  .btn-secondary {
+    background: var(--color-black);
+    color: var(--color-white);
+  }
+  .btn-secondary:hover {
+    background: var(--color-gray-600);
+  }
+  .accordion {
+    display: flex;
+    flex-direction: column;
+    gap: var(--accordion-gap);
+    padding: var(--accordion-padding);
+    border-radius: var(--accordion-radius);
+    border: var(--accordion-border);
+  }
+  .accordion summary {
+    list-style: none;
+  }
+  .accordion summary::-webkit-details-marker {
+    display: none;
+  }
+  .accordion-summary {
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .accordion-content {
+    @apply text-body-lg leading-body-lg;
+    color: var(--color-gray-600);
+  }
+}
+
+@layer base {
+  html {
+    font-family: var(--font-poppins);
+    color: var(--color-black);
+  }
+}
