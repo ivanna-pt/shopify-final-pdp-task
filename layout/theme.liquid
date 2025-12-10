@@ -18,7 +18,7 @@
     {% endunless %}
 
     {% # Load and preload the critical CSS %}
-    {{ 'critical.css' | asset_url | stylesheet_tag: preload: true }}
+    {% comment %} {{ 'critical.css' | asset_url | stylesheet_tag: preload: true }} {% endcomment %}
     {{ 'tailwind.output.css' | asset_url | stylesheet_tag }}
 
     {% # Social, title, etc. %}

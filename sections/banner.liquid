@@ -1,0 +1,157 @@
+{%- liquid
+  assign section_id = 'banner-' | append: section.id
+  assign img_alt = section.settings.image.alt | default: section.settings.title | default: 'Banner image'
+  assign loading_strategy = 'eager'
+  if section.index > 1
+    assign loading_strategy = 'lazy'
+  endif
+-%}
+
+{% style %}
+    #{{ section_id }} {
+      --hero-height: {{ section.settings.height | default: 600 }}px;
+      height: var(--hero-height);
+    }
+
+  #{{ section_id }} h2{
+    color: {{ section.settings.title_color }}
+  }
+
+  #{{ section_id }} p{
+    color: {{ section.settings.text_color }}
+  }
+{% endstyle %}
+
+<section
+  id="{{ section_id }}"
+  class="relative w-full overflow-hidden"
+>
+  {%- if section.settings.image -%}
+    {{
+      section.settings.image
+      | image_url: width: 1920, height: 600
+      | image_tag:
+        widths: '375, 550, 750, 1100, 1500, 1780, 2000, 3000',
+        sizes: '100vw',
+        loading: loading_strategy,
+        class: 'absolute inset-0 w-full h-full! object-cover bg-gray-100',
+        alt: img_alt
+    }}
+    <div
+      class="absolute inset-0 bg-black"
+      style="opacity: {{ section.settings.overlay_opacity }}"
+      aria-hidden="true"
+    ></div>
+  {%- endif -%}
+
+  <div class="relative  page-width h-full flex justify-center items-center">
+    <div class="w-full">
+      {%- if section.settings.title != blank -%}
+        <h2 class="h2 mb-4">
+          {{ section.settings.title | escape }}
+        </h2>
+      {%- endif -%}
+
+      {% if section.settings.text != blank %}
+        <p class="body-lg mb-8">
+          {{ section.settings.text | escape }}
+        </p>
+      {% endif %}
+
+      {% if section.settings.button_text != blank %}
+        <a
+          href="{{ section.settings.button_link }}"
+          class="btn {{ section.settings.button_style }} inline-block px-8 py-3 rounded font-semibold transition-all duration-300 hover:opacity-90"
+          {% if section.settings.button_link == 'blank' %}
+            aria-disabled="true"
+          {% endif %}
+        >
+          {{ section.settings.button_text | escape }}
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Banner with ATC",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image",
+      "info": "Recommended: 1920 x 600px for best quality"
+    },
+    {
+      "type": "range",
+      "id": "height",
+      "label": "Height",
+      "min": 300,
+      "max": 800,
+      "step": 50,
+      "unit": "px",
+      "default": 500
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 0.3
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Step Into Next-Level Comfort"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "default": "#111111"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "Discover amazing products and exclusive offers"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#111111"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Shop now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button style",
+      "options": [
+        { "value": "btn-primary", "label": "Primary" },
+        { "value": "btn-secondary", "label": "Secondary" }
+      ],
+      "default": "btn-primary"
+    }
+  ],
+  "presets": [
+    {
+      "name": "banner-with-atc"
+    }
+  ]
+}
+{% endschema %}

@@ -2,7 +2,6 @@
   Welcome to Shopify theme development!
 {% endcomment %}
 
-{% comment %}
   <div class="welcome full-width">
     <div class="welcome-content">
       <div>
@@ -23,7 +22,7 @@
       </div>
     </div>
   </div>
-
+{% comment %} 
   <div class="highlights">
     <div class="highlight">
       <h3>Key Concepts</h3>
@@ -41,18 +40,18 @@
         storefronts. Extend Liquid objects to store and present custom data using metafields.
       </p>
       <p>{{ 'View the Liquid reference' | link_to: 'https://shopify.dev/docs/api/liquid' }}</p>
-    </div>
+    </div> {% endcomment %}
 
-    <div class="highlight">
+    {% comment %} <div class="highlight">
       <h3>Best Practices</h3>
       <p class="highlight-description">
         To optimize your theme development experience, Shopify has established a set of best practices that you can refer
         to when developing your theme and setting up your toolchains and processes.
       </p>
       <p>{{ 'Follow best practices' | link_to: 'https://shopify.dev/docs/storefronts/themes/best-practices' }}</p>
-    </div>
+    </div> {% endcomment %}
   </div>
-{% endcomment %}
+
 
 {% stylesheet %}
   .welcome {

@@ -12,9 +12,19 @@
     "main": {
       "type": "product",
       "settings": {}
+    },
+    "banner": {
+      "type": "banner",
+      "settings": {
+        "image": "shopify://shop_images/Hero_Image.webp",
+        "height": 500,
+        "overlay_opacity": 0.3,
+        "title": "Step Into Next-Level Comfort",
+        "title_color": "#FFFFFF",
+        "text": "Experience the perfect mix of style, support, and all-day cushioning with Nike Air Max Plus.",
+        "text_color": "#FFFFFF"
+      }
     }
   },
-  "order": [
-    "main"
-  ]
+  "order": ["main", "banner"]
 }

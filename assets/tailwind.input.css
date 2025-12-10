@@ -57,7 +57,7 @@
     @apply text-h1 leading-h1 font-bold;
   }
   .h2 {
-    @apply text-h2 leading-h2 font-bold;
+    @apply text-h2 leading-h2;
   }
   .body-lg {
     @apply text-body-lg leading-body-lg;
