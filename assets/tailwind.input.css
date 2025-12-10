@@ -32,10 +32,11 @@
   --btn-px: 32px;
   --btn-gap: 10px;
 
-  --accordion-radius: 8px;
-  --accordion-padding: 24px;
-  --accordion-gap: 24px;
-  --accordion-border: 1px solid var(--color-gray-200);
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --space-lg: 24px;
+  --gap-lg: 24px;
+  --border-default: 1px solid var(--color-gray-200);
 }
 
 @media (min-width: 768px) {
@@ -65,6 +66,16 @@
   .body-md {
     @apply text-body-md leading-body-md;
   }
+
+  .accordion summary {
+    list-style: none;
+  }
+  .accordion summary::-webkit-details-marker {
+    display: none;
+  }
+}
+
+@layer components {
   .btn {
     display: inline-flex;
     align-items: center;
@@ -93,16 +104,10 @@
   .accordion {
     display: flex;
     flex-direction: column;
-    gap: var(--accordion-gap);
-    padding: var(--accordion-padding);
-    border-radius: var(--accordion-radius);
-    border: var(--accordion-border);
-  }
-  .accordion summary {
-    list-style: none;
-  }
-  .accordion summary::-webkit-details-marker {
-    display: none;
+    gap: var(--gap-lg);
+    padding: var(--space-lg);
+    border-radius: var(--radius-md);
+    border: var(--border-default);
   }
   .accordion-summary {
     cursor: pointer;
@@ -114,6 +119,15 @@
   .accordion-content {
     @apply text-body-lg leading-body-lg;
     color: var(--color-gray-600);
+  }
+  .review-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-lg);
+    padding: var(--space-lg);
+    border-radius: var(--radius-md);
+    border: var(--border-default);
+    background-color: var(--color-white);
   }
 }
 

@@ -1,0 +1,34 @@
+{% comment %} {% assign rating = product.metafields.custom.reviews.value.rating | default: 0 %} {% endcomment %}
+{% comment %}
+  Renders product buy-buttons.
+  Accepts:
+  - rating
+
+  Usage:
+  {% render 'star-rating', rating: rating %}
+{% endcomment %}
+{% assign max_stars = 5 %}
+
+<div class="flex" aria-label="{{ 'general.accessibility.product_rating' | t: rating: rating, max_stars: max_stars }}">
+  {% for i in (1..max_stars) %}
+    {% if i <= rating %}
+      <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+        <path d="M9.99999 13.0722L7.11569 14.6667L7.66666 11.2896L5.33333 8.89813L8.55784 8.40579L9.99999 5.33333L11.4421 8.40579L14.6667 8.89813L12.3333 11.2896L12.8843 14.6667L9.99999 13.0722Z"
+              fill="#111111"
+              stroke="#111111"
+              stroke-width="1.33333"
+              stroke-linecap="round"
+              stroke-linejoin="round"/>
+      </svg>
+    {% else %}
+      <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+        <path d="M9.99999 13.0722L7.11569 14.6667L7.66666 11.2896L5.33333 8.89813L8.55784 8.40579L9.99999 5.33333L11.4421 8.40579L14.6667 8.89813L12.3333 11.2896L12.8843 14.6667L9.99999 13.0722Z"
+              fill="none"
+              stroke="#111111"
+              stroke-width="1.33333"
+              stroke-linecap="round"
+              stroke-linejoin="round"/>
+      </svg>
+    {% endif %}
+  {% endfor %}
+</div>

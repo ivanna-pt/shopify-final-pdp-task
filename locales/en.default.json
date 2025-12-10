@@ -4,7 +4,8 @@
       "main_navigation": "Main navigation",
       "toggle_navigation": "Toggle navigation menu",
       "cart": "Open a shopping cart",
-      "footer_navigation": "Footer navigation"
+      "footer_navigation": "Footer navigation",
+      "product_rating": "Rating: {{ rating }} out of {{ max_stars }}"
     }
   },
   "404": {
@@ -63,6 +64,9 @@
     },
     "footer": {
       "copyright_text": "© {{ year }} {{ shop_name }}. All rights reserved."
+    },
+    "product-reviews": {
+      "no_reviews": "Be the first to review this product"
     }
   }
 }

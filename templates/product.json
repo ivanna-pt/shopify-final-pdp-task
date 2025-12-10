@@ -24,7 +24,13 @@
         "text": "Experience the perfect mix of style, support, and all-day cushioning with Nike Air Max Plus.",
         "text_color": "#FFFFFF"
       }
+    },
+    "reviews": {
+      "type": "product-reviews",
+      "settings": {
+        "title": "Reviews"
+      }
     }
   },
-  "order": ["main", "banner"]
+  "order": ["reviews", "main", "banner"]
 }
