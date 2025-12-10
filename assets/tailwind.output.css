@@ -251,17 +251,32 @@
   .inline-block {
     display: inline-block;
   }
+  .h-\[54px\] {
+    height: 54px;
+  }
+  .h-\[70\%\] {
+    height: 70%;
+  }
   .h-full {
     height: 100%;
   }
   .h-full\! {
     height: 100% !important;
   }
+  .w-\[54px\] {
+    width: 54px;
+  }
+  .w-\[70\%\] {
+    width: 70%;
+  }
   .w-full {
     width: 100%;
   }
   .flex-shrink {
     flex-shrink: 1;
+  }
+  .flex-shrink-0 {
+    flex-shrink: 0;
   }
   .flex-grow {
     flex-grow: 1;
@@ -280,6 +295,12 @@
   }
   .justify-center {
     justify-content: center;
+  }
+  .gap-0\.5 {
+    gap: calc(var(--spacing) * 0.5);
+  }
+  .gap-2 {
+    gap: calc(var(--spacing) * 2);
   }
   .gap-3 {
     gap: calc(var(--spacing) * 3);
@@ -305,6 +326,9 @@
   }
   .bg-gray-100 {
     background-color: var(--color-gray-100);
+  }
+  .bg-gray-200 {
+    background-color: var(--color-gray-200);
   }
   .object-cover {
     object-fit: cover;

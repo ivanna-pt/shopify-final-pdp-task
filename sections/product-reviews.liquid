@@ -1,4 +1,6 @@
 {%- liquid
+  assign reviews = product.metafields.custom.reviews.value
+  assign reviews_to_show = section.settings.reviews_to_show
   assign section_id = 'product-reviews-' | append: section.id
 -%}
 
@@ -21,19 +23,30 @@
     {%- if section.settings.title != blank -%}
       <h2 class="h2 mb-12 text-center">{{ section.settings.title }}</h2>
     {%- endif -%}
-    {% if product.metafields.custom.reviews != blank %}
+    {% if reviews != blank %}
       <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {%- for review in product.metafields.custom.reviews.value -%}
+        {%- for review in reviews limit: reviews_to_show -%}
           {% assign review_author = review.reviewer.value %}
           <li class="review-card">
-            {% render 'star-rating', rating: review.rating %}
+            {% render 'star-rating', rating: review.rating, show_count: false %}
             <p>{{ review.text }}</p>
             <div class="flex gap-3 items-center">
-              {{
-                review_author.image
-                | image_url: width: 54, height: 54
-                | image_tag: width: 54, height: 54, alt: review_author.name, loading: 'lazy', class: 'rounded-full'
-              }}
+              {% if review_author.image %}
+                {{
+                  review_author.image
+                  | image_url: width: 108
+                  | image_tag:
+                    width: 54,
+                    height: 54,
+                    sizes: '54px',
+                    widths: '54, 108',
+                    alt: '',
+                    loading: 'lazy',
+                    class: 'rounded-full flex-shrink-0 w-[54px] h-[54px] object-cover bg-gray-200'
+                }}
+              {% else %}
+                {{ 'image' | placeholder_svg_tag: 'rounded-full bg-gray-200 w-[54px] h-[54px]' }}
+              {% endif %}
               <div>
                 <p>{{ review_author.name }}</p>
                 <p class="text-gray-600 mt-1">{{ review_author.city }}</p>
@@ -84,6 +97,15 @@
       "unit": "px",
       "label": "Padding bottom",
       "default": 80
+    },
+    {
+      "type": "range",
+      "id": "reviews_to_show",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "default": 3,
+      "label": "Reviews to show"
     }
   ],
   "blocks": [

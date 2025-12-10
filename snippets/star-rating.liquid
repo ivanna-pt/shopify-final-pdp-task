@@ -2,33 +2,46 @@
 {% comment %}
   Renders product buy-buttons.
   Accepts:
-  - rating
+  - rating: {Number} Rating value (0-5)
+  - show_count: {Boolean} Whether to show review count (optional)
+  - count: {Number} Number of reviews (optional)
 
   Usage:
-  {% render 'star-rating', rating: rating %}
+  {% render 'star-rating', rating: rating, , show_count: true, count: 120 %}
 {% endcomment %}
-{% assign max_stars = 5 %}
+{%- liquid
+  assign rating = rating | default: 0 | times: 1.0
+  assign max_stars = 5
+  assign show_count = show_count | default: false
+  assign count = count | default: 0
+-%}
+<div class="flex items-center gap-2">
+  <div
+    class="flex gap-0.5"
+    aria-label="{{ 'general.accessibility.product_rating' | t: rating: rating, max_stars: max_stars }}"
+  >
+    {% for i in (1..max_stars) %}
+      {%- liquid
+        assign fill_color = '#111111'
+        assign fill_opacity = 'none'
+        if i <= rating
+          assign fill_opacity = fill_color
+        endif
+      -%}
 
-<div class="flex" aria-label="{{ 'general.accessibility.product_rating' | t: rating: rating, max_stars: max_stars }}">
-  {% for i in (1..max_stars) %}
-    {% if i <= rating %}
-      <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
-        <path d="M9.99999 13.0722L7.11569 14.6667L7.66666 11.2896L5.33333 8.89813L8.55784 8.40579L9.99999 5.33333L11.4421 8.40579L14.6667 8.89813L12.3333 11.2896L12.8843 14.6667L9.99999 13.0722Z"
-              fill="#111111"
-              stroke="#111111"
+      <svg width="11" height="11" viewBox="0 0 11 11" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+        <path d="M5.33335 8.40555L2.44905 10L3.00002 6.62291L0.666687 4.23147L3.8912 3.73913L5.33335 0.666672L6.77551 3.73913L10 4.23147L7.66669 6.62291L8.21766 10L5.33335 8.40555Z"
+              fill="{{ fill_opacity }}"
+            stroke="{{ fill_color }}"
               stroke-width="1.33333"
               stroke-linecap="round"
               stroke-linejoin="round"/>
       </svg>
-    {% else %}
-      <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
-        <path d="M9.99999 13.0722L7.11569 14.6667L7.66666 11.2896L5.33333 8.89813L8.55784 8.40579L9.99999 5.33333L11.4421 8.40579L14.6667 8.89813L12.3333 11.2896L12.8843 14.6667L9.99999 13.0722Z"
-              fill="none"
-              stroke="#111111"
-              stroke-width="1.33333"
-              stroke-linecap="round"
-              stroke-linejoin="round"/>
-      </svg>
-    {% endif %}
-  {% endfor %}
+    {% endfor %}
+  </div>
+  {%- if show_count and count > 0 -%}
+    <span class="body-md">
+      {{ rating }}
+    </span>
+  {%- endif -%}
 </div>
