@@ -1,0 +1,15 @@
+{% comment %}
+  Footer navigation snippet
+  - Renders a footer navigation menu based on the provided navigation object.
+  - Expects a 'navigation' object with 'title' and 'links' properties.
+{% endcomment %}
+<nav class="footer-nav" aria-label="{{ 'general.accessibility.footer_navigation' | t }}">
+  <h4 class="footer-nav-title">{{ navigation.title }}</h4>
+  <ul class="footer-nav-list">
+    {%- for link in navigation.links -%}
+      <li class="footer-nav-item">
+        <a href="{{ link.url }}" class="footer-link">{{ link.title }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+</nav>

@@ -1,39 +1,111 @@
 <footer>
-  <div class="footer__copyright">
-    &copy;
-    {{ 'now' | date: '%Y' }}
-    {{ shop.name | link_to: routes.root_url }}, {{ powered_by_link }}
-  </div>
-
-  <div class="footer__links">
-    {% for link in section.settings.menu.links %}
-      {{ link.title | link_to: link.url }}
-    {% endfor %}
-  </div>
-
-  <div class="footer__payment">
-    {% if section.settings.show_payment_icons %}
-      {% for type in shop.enabled_payment_types %}
-        {{ type | payment_type_svg_tag }}
-      {% endfor %}
-    {% endif %}
+  <div class="container">
+    {% assign current_year = 'now' | date: '%Y' %}
+    {% assign footer_menu = linklists.footer %}
+    {% assign policies_menu = linklists['policies-menu'] %}
+    <div class="footer-grid">
+      {% comment %} {% render 'logo', class: 'footer-logo' %} {% endcomment %}
+      {% if footer_menu.links.size > 0 %}
+        {% render 'footer-nav', navigation: footer_menu %}
+      {% endif %}
+    </div>
+    <div class="footer-copyright">
+      <div class="copyright-content">
+        {{ 'sections.footer.copyright_text' | t: year: current_year, shop_name: shop.name }}
+      </div>
+      {% if policies_menu.links.size > 0 %}
+        <ul class="policies-list">
+          {%- for link in policies_menu.links -%}
+            <li>
+              <a href="{{ link.url }}" class="footer-link">{{ link.title }}</a>
+            </li>
+          {%- endfor -%}
+        </ul>
+      {% endif %}
+    </div>
   </div>
 </footer>
+{% comment %}
+  <footer>
+    <div class="footer__copyright">
+      &copy;
+      {{ 'now' | date: '%Y' }}
+      {{ shop.name | link_to: routes.root_url }}, {{ powered_by_link }}
+    </div>
+
+    <div class="footer__links">
+      {% for link in section.settings.menu.links %}
+        {{ link.title | link_to: link.url }}
+      {% endfor %}
+    </div>
+
+    <div class="footer__payment">
+      {% if section.settings.show_payment_icons %}
+        {% for type in shop.enabled_payment_types %}
+          {{ type | payment_type_svg_tag }}
+        {% endfor %}
+      {% endif %}
+    </div>
+  </footer>
+{% endcomment %}
 
 {% stylesheet %}
   footer {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 2rem;
+    padding-top: 3.75rem;
+    padding-bottom: 1.5rem;
   }
-  footer a {
-    text-decoration: none;
-    color: var(--color-foreground);
+
+  .footer-grid {
+    margin-bottom: 3rem;
   }
-  footer .footer__links,
-  footer .footer__payment {
+
+  .footer-nav-list > li + li {
+    margin-top: 0.75rem;
+  }
+
+  .footer-link,
+  .copyright-content {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+  }
+
+  .footer-link:hover,
+  .footer-link.active {
+    color: var(--text-primary);
+  }
+
+  .footer-copyright,
+  .policies-list {
     display: flex;
-    gap: 1rem;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  footer .footer-logo {
+    align-self: center;
+  }
+  footer .footer-logo .h2 {
+    font-size: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .footer-nav-list {
+      margin-top: 1rem;
+      opacity: 1;
+      max-height: none;
+      height: auto;
+    }
+    .footer-copyright,
+    .policies-list {
+      flex-direction: row;
+      gap: 2rem;
+    }
   }
 {% endstylesheet %}
 
