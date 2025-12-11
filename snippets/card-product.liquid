@@ -1,0 +1,29 @@
+{% comment %}
+  Renders a product card
+
+  Accepts:
+  - card_product: {Object} Product Liquid object (optional)
+
+  Usage:
+  {% render 'card-product', card_product: product %}
+{% endcomment %}
+
+<a href="{{ card_product.url }}">
+  <div>
+    {{
+      card_product.featured_image
+      | image_url: width: 300, height: 300
+      | image_tag:
+        width: 300,
+        height: 300,
+        alt: card_product.featured_image.alt,
+        loading: 'lazy',
+        class: 'lazy-images',
+        sizes: '(min-width: 1200px) 25vw, (min-width: 750px) 50vw, 100vw'
+    }}
+  </div>
+  <div>
+    <h3 class="text-base mb-2 mt-4">{{ card_product.title | escape }}</h3>
+    <p class="text-base text-gray-600">{{ card_product.price | money }}</p>
+  </div>
+</a>
