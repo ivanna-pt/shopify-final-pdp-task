@@ -8,6 +8,28 @@
       "product_rating": "Rating: {{ rating }} out of {{ max_stars }}"
     }
   },
+  "products": {
+    "product": {
+      "add_to_cart": "Add to cart",
+      "description": "Description",
+      "inventory_in_stock": "In stock",
+      "inventory_in_stock_show_count": "{{ quantity }} in stock",
+      "inventory_low_stock": "Low stock",
+      "inventory_low_stock_show_count": "Low stock: {{ quantity }} left",
+      "inventory_out_of_stock": "Out of stock",
+      "inventory_out_of_stock_continue_selling": "In stock",
+      "sku": "SKU",
+      "on_sale": "Sale",
+      "product_variants": "Product variants",
+      "sold_out": "Sold out",
+      "unavailable": "Unavailable",
+      "select_option": "Select {{ option_name}}",
+      "price": {
+        "regular_price": "Regular price",
+        "sale_price": "Sale price"
+      }
+    }
+  },
   "404": {
     "title": "404",
     "not_found": "Page not found.",
