@@ -30,7 +30,16 @@
       "settings": {
         "title": "Reviews"
       }
+    },
+    "related_products": {
+      "type": "related-products",
+      "settings": {
+        "title": "You may also like",
+        "limit": 4,
+        "padding_top": 40,
+        "padding_bottom": 40
+      }
     }
   },
-  "order": ["reviews", "main", "banner"]
+  "order": ["reviews", "related_products", "main", "banner"]
 }

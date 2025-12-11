@@ -1,0 +1,123 @@
+{{ 'component-product-recommendations.css' | asset_url | stylesheet_tag }}
+{%- style -%}
+  .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+    }
+
+    @media screen and (min-width: 750px) {
+      .section-{{ section.id }}-padding {
+        padding-top: {{ section.settings.padding_top }}px;
+        padding-bottom: {{ section.settings.padding_bottom }}px;
+      }
+    }
+{%- endstyle -%}
+
+<div class="section-{{ section.id }}-padding">
+  <div
+    class="page-width"
+  >
+    <product-recommendations
+      data-url="{{ routes.product_recommendations_url }}?limit=4"
+      data-product-id="{{ product.id }}"
+      data-section-id="{{ section.id }}"
+    >
+      {%- if recommendations.performed? and recommendations.products_count > 0 -%}
+        {% if section.settings.title != blank %}
+          <h2 class="h2 text-center mb-9 md:mb-12">
+            {{ section.settings.title }}
+          </h2>
+        {% endif %}
+        <div
+          class="swiper-container product-recommendations-swiper"
+          role="group"
+          aria-roledescription="carousel"
+          aria-label="Related products"
+        >
+          <ul class="swiper-wrapper">
+            {%- for product in recommendations.products -%}
+              <li class="swiper-slide">
+                <a href="{{ product.url }}">
+                  {{
+                    product.featured_image
+                    | image_url: width: 300, height: 300
+                    | image_tag:
+                      width: 300,
+                      height: 300,
+                      alt: product.featured_image.alt,
+                      loading: 'lazy',
+                      class: 'lazy-images',
+                      sizes: '(min-width: 1200px) 25vw, (min-width: 750px) 50vw, 100vw'
+                  }}
+                  <p class="text-base mb-2 mt-4">{{ product.title }}</p>
+                  <p class="text-base text-gray">{{ product.price | money }}</p>
+                </a>
+              </li>
+            {%- endfor -%}
+          </ul>
+          <div class="swiper-button-prev-custom" role="button" aria-label="Next Slide">
+            {{ 'arrow-btn.svg' | inline_asset_content }}
+          </div>
+          <div class="swiper-button-next-custom" role="button" aria-label="Prev Slide">
+            {{ 'arrow-btn.svg' | inline_asset_content }}
+          </div>
+        </div>
+      {% endif %}
+    </product-recommendations>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Related Products",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "default": "You may also like",
+      "label": "Section title"
+    },
+    {
+      "type": "range",
+      "id": "limit",
+      "label": "Products to show",
+      "default": 10,
+      "min": 1,
+      "max": 10,
+      "step": 1
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 40
+    }
+  ],
+  "presets": [
+    {
+      "name": "Related Products"
+    }
+  ],
+  "enabled_on": {
+    "templates": ["product"]
+  }
+}
+{% endschema %}
