@@ -27,9 +27,9 @@ class ProductRecommendations extends HTMLElement {
         if (recommendations && recommendations.innerHTML.trim().length) {
           this.innerHTML = recommendations.innerHTML;
 
-          setTimeout(() => {
-            this.initSwiper();
-          }, 300);
+          // setTimeout(() => {
+          //   this.initSwiper();
+          // }, 300);
         } else {
           this.style.display = "none";
         }
@@ -86,3 +86,64 @@ class ProductRecommendations extends HTMLElement {
 }
 
 customElements.define("product-recommendations", ProductRecommendations);
+
+class SwiperCarousel extends HTMLElement {
+  constructor() {
+    super();
+    this.swiper = null;
+  }
+
+  connectedCallback() {
+    setTimeout(() => {
+      this.init();
+    }, 100);
+  }
+
+  disconnectedCallback() {
+    if (this.swiper) {
+      this.swiper.destroy(true, true);
+    }
+  }
+
+  getConfig() {
+    const script = this.querySelector(".swiper-config");
+    if (!script) return {};
+
+    try {
+      return JSON.parse(script.textContent.trim());
+    } catch (e) {
+      console.error("Invalid JSON config:", e);
+      return {};
+    }
+  }
+  init() {
+    if (typeof Swiper === "undefined") {
+      console.warn("Swiper library not loaded");
+      return;
+    }
+
+    const swiperContainer = this.querySelector(".swiper-container");
+
+    const config = this.getConfig();
+
+    // Always enforce DOM-bound selectors
+    config.navigation = config.navigation?.enabled
+      ? {
+          nextEl: this.querySelector(".swiper-button-next-custom"),
+          prevEl: this.querySelector(".swiper-button-prev-custom"),
+        }
+      : false;
+
+    config.pagination = config.pagination?.enabled
+      ? {
+          el: this.querySelector(".swiper-pagination"),
+          clickable: true,
+        }
+      : false;
+
+    if (!swiperContainer) return;
+    this.swiper = new Swiper(swiperContainer, config);
+  }
+}
+
+customElements.define("swiper-carousel", SwiperCarousel);

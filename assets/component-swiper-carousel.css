@@ -1,4 +1,4 @@
-.product-recommendations-swiper {
+.swiper-container {
   position: relative;
 }
 
@@ -7,7 +7,7 @@
   flex-shrink: 0;
 }
 
-@media screen and (min-width: 750px) {
+@media screen and (min-width: 768px) {
   .product-recommendations-swiper .swiper-slide {
     width: 320px;
   }
@@ -58,12 +58,12 @@
 }
 .swiper-button-prev-custom.swiper-button-disabled,
 .swiper-button-next-custom.swiper-button-disabled {
-  opacity: 0.3;
+  opacity: 0;
   pointer-events: none;
   display: flex;
 }
 
-@media screen and (max-width: 749px) {
+@media screen and (max-width: 767px) {
   .swiper-button-next-custom,
   .swiper-button-prev-custom {
     display: none;
