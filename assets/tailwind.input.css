@@ -129,8 +129,20 @@
     border: var(--border-default);
     background-color: var(--color-white);
   }
+  .price-block {
+    @apply flex items-center gap-3 py-2;
+  }
+  .price-block .price-regular,
+  .price-block .price-sale {
+    @apply text-base text-gray-600;
+  }
+  .price-block.main-product .price-sale {
+    @apply text-black;
+  }
+  .price-badge {
+    @apply inline-block px-2 py-1 rounded-sm text-white text-xs font-semibold;
+  }
 }
-
 @layer base {
   html {
     color: var(--color-black);
