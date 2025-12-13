@@ -7,6 +7,12 @@
       "footer_navigation": "Footer navigation",
       "product_rating": "Rating: {{ rating }} out of {{ max_stars }}",
       "collapsible_content_title": "Collapsible content"
+    },
+    "cart": {
+      "item_added": "Item added to your cart"
+    },
+    "form": {
+      "error_heading": "Please adjust the following:"
     }
   },
   "products": {

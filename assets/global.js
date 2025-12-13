@@ -1,3 +1,156 @@
+class VariantSelector extends HTMLElement {
+  constructor() {
+    super();
+  }
+
+  get section() {
+    return this.closest(".section__product-banner");
+  }
+
+  get form() {
+    return document.getElementById(`product-form-${this.sectionId}`);
+  }
+
+  get hiddenInput() {
+    return this.form?.querySelector('input[name="id"]');
+  }
+
+  get sectionId() {
+    return this.dataset.sectionId;
+  }
+
+  get productHandle() {
+    return this.dataset.productHandle;
+  }
+
+  get variants() {
+    if (!this._variants) {
+      const jsonEl = document.querySelector(
+        `#ProductVariants-${this.sectionId}`
+      );
+      try {
+        this._variants = JSON.parse(jsonEl?.textContent || "[]");
+      } catch (e) {
+        console.error("Failed to parse variants JSON", e);
+        this._variants = [];
+      }
+    }
+    return this._variants;
+  }
+
+  get optionInputs() {
+    return this.querySelectorAll('input[type="radio"]');
+  }
+
+  connectedCallback() {
+    this.optionInputs.forEach((input) => {
+      input.addEventListener("change", (e) => this.onChange(e.target));
+    });
+
+    this.syncInitialState();
+  }
+
+  onChange(input) {
+    this.updateActiveForGroup(input);
+    this.updateFromSelection();
+  }
+
+  syncInitialState() {
+    this.updateFromSelection();
+  }
+
+  updateFromSelection() {
+    const options = this.getSelectedOptions();
+    const variant = this.findVariant(options);
+
+    if (variant) {
+      this.hiddenInput.value = variant.id;
+      this.updateButtonState(!variant.available);
+      this.renderSection(variant.id);
+    } else {
+      this.updateButtonState(true);
+    }
+  }
+
+  getSelectedOptions() {
+    const groups = Array.from(this.querySelectorAll('input[type="radio"]'))
+      .map((i) => i.name)
+      .filter((v, i, arr) => arr.indexOf(v) === i);
+
+    return groups.map((groupName) => {
+      const checked = this.querySelector(`input[name="${groupName}"]:checked`);
+      return checked ? checked.value : null;
+    });
+  }
+
+  findVariant(optionValues) {
+    return (
+      this.variants.find((v) =>
+        optionValues.every((value, index) => {
+          if (!value) return true;
+          return v[`option${index + 1}`] === value;
+        })
+      ) || null
+    );
+  }
+
+  updateActiveForGroup(input) {
+    const group = input.name;
+    this.querySelectorAll(`input[name="${group}"]`).forEach((i) => {
+      const label = i.nextElementSibling;
+      if (label) label.classList.toggle("active", i === input);
+    });
+  }
+
+  updateButtonState(disable = true) {
+    const btn = this.form.querySelector('button[type="submit"]');
+    const btnText = btn.querySelector("[data-atc-text]");
+
+    if (!btn) return;
+
+    if (disable) {
+      btn.setAttribute("disabled", "disabled");
+      btn.classList.add("button--disabled");
+      btnText.textContent = window.variantStrings?.soldOut || "Sold out";
+    } else {
+      btn.removeAttribute("disabled");
+      btn.classList.remove("button--disabled");
+      btnText.textContent = window.variantStrings?.addToCart || "Add to cart";
+    }
+  }
+
+  renderSection(variantId) {
+    const url = `/products/${this.productHandle}?variant=${variantId}&sections=${this.sectionId}`;
+
+    fetch(url)
+      .then((r) => r.json())
+      .then((data) => {
+        const html = data[this.sectionId];
+        if (!html) return;
+
+        const temp = document.createElement("div");
+        temp.innerHTML = html;
+
+        this.updateBlock("[data-price-container]", temp);
+        this.updateBlock("[data-inventory-quantity]", temp);
+        this.updateBlock("[data-product-images]", temp, true);
+      })
+      .catch(console.error);
+  }
+
+  updateBlock(selector, temp, reInit = false) {
+    const newNode = temp.querySelector(selector);
+    const current = this.section.querySelector(selector);
+    if (!newNode || !current) return;
+
+    current.innerHTML = newNode.innerHTML;
+
+    if (reInit) initProductGallery(this.section);
+  }
+}
+
+customElements.define("variant-selector", VariantSelector);
+
 class ProductRecommendations extends HTMLElement {
   constructor() {
     super();

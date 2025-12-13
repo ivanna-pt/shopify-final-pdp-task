@@ -1,0 +1,78 @@
+{% unless product.has_only_default_variant %}
+  <variant-selector
+    class="product-variants my-6"
+    data-product-handle="{{ product.handle }}"
+    data-section-id="{{ section.id }}"
+  >
+    {% for option in product.options_with_values %}
+      {% assign option_name = option.name | downcase %}
+      {% if option_name == 'color' or option_name == 'colour' %}
+        {% assign is_color = true %}
+      {% else %}
+        {% assign is_color = false %}
+      {% endif %}
+      <fieldset class="product-form__option">
+        <legend class="product-form__option-name text-sm mb-3">
+          {{ 'products.product.select_option' | t: option_name: option.name | default: option.name -}}
+          :
+        </legend>
+        <div class="product-form__option-values tw-options-list  {% if is_color %}product-form__option-values--color flex align-center {% else %} grid grid-cols-2 lg:grid-cols-3{% endif %}">
+          {% for value in option.values %}
+            {% comment %} {% assign variant = value.variant %} {% endcomment %}
+            {% assign variant_image_alt = value | append: ' - ' | append: product.title %}
+            {% assign option_key = 'option' | append: option.position %}
+            {% assign matching_variants = product.variants | where: option_key, value %}
+            {% assign variant = matching_variants.first %}
+            {% assign input_value = variant[option_key] %}
+            {% assign is_available = variant.available %}
+            <div class="product-form__option-value {% unless is_available %}product-form__option-value--unavailable{% endunless %}">
+              <input
+                type="radio"
+                id="option-{{ option.position }}-{{ forloop.index }}"
+                name="option-{{ option.position }}"
+                value="{{ input_value }}"
+                class="sr-only"
+                {% if option.selected_value == value %}
+                  checked
+                {% endif %}
+                data-variant-available="{{ is_available }}"
+                data-variant-id="{{ variant.id }}"
+              >
+              <label
+                for="option-{{ option.position }}-{{ forloop.index }}"
+                class="tw-option-label inline-block cursor-pointer {% if is_color %} tw-color-swatch {% else %} tw-generic-button w-full{% endif %} {% if option.selected_value == value %} active{% endif %}"
+              >
+                {% if is_color %}
+                  {% if variant.image %}
+                    {{
+                      variant.image
+                      | image_url: width: 136, height: 136
+                      | image_tag:
+                        width: 88,
+                        height: 88,
+                        alt: variant_image_alt,
+                        class: 'rounded-md object-cover',
+                        sizes: '88px',
+                        loading: 'lazy'
+                    }}
+                  {% else %}
+                    {{ 'image' | placeholder_svg_tag: 'rounded-md w-22 h-22' }}
+                    <span class="sr-only">{{ variant_image_alt }}</span>
+                  {% endif %}
+                {% else %}
+                  {{ value }}
+                {% endif %}
+                {% unless is_available %}
+                  <span class="sr-only">{{ 'products.product.sold_out' | t }}</span>
+                {% endunless %}
+              </label>
+            </div>
+          {% endfor %}
+        </div>
+      </fieldset>
+    {% endfor %}
+    <script type="application/json" id="ProductVariants-{{ section.id }}">
+      {{ product.variants | json }}
+    </script>
+  </variant-selector>
+{% endunless %}
