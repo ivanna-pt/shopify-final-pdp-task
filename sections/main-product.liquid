@@ -124,6 +124,65 @@
         </div>
       </div>
       <div class="md:flex-1">
+        {%- assign product_form_id = 'product-form-' | append: section.id -%}
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {%- when '@app' -%}
+              {% render block %}
+            {% when 'title' %}
+              <h2 class="text-2xl! md:text-3xl font-normal!">{{ product.title | escape }}</h2>
+            {% when 'price' %}
+              {% render 'price',
+                product: product,
+                show_badges: true,
+                show_compare_at_price: true,
+                price_class: 'main-product'
+              %}
+            {% when 'description' %}
+              {% if product.description != blank %}
+                <div class="mt-6 text-gray text-sm" aria-label="{{ 'products.product.description' | t }}">
+                  {{ product.description }}
+                </div>
+              {% endif %}
+            {% when 'variant_picker' %}
+              {% render 'product-variant-selector',
+                product: product,
+                section: section,
+                product_form_id: product_form_id
+              %}
+            {% when 'quantity_selector' %}
+              {% comment %} Quantity selector block {% endcomment %}
+            {% when 'buy_buttons' %}
+              {% comment %}
+              {% endcomment %}
+            {% when 'collapsible_row' %}
+              <div>
+                <details
+                  class="accordion"
+                  {% if block.settings.default_open %}
+                    open
+                  {% endif %}
+                  name="Details-{{ section.id }}"
+                >
+                  <summary class="accordion-summary{% if block.settings.default_open %} active{% endif %}">
+                    <h3 class="uppercase">{{ block.settings.title | escape }}</h3>
+                    <span class="accordion-icon" aria-hidden="true"></span>
+                  </summary>
+                  <div class="accordion-content">
+                    {{ block.settings.content }}
+                  </div>
+                </details>
+              </div>
+            {% when 'icon_with_text' %}
+              {% comment %} Render 'icon_with_text' snippet {% endcomment %}
+            {% when 'rating' %}
+              {% comment %} Render 'product-rating' snippet {% endcomment %}
+            {% when 'text' %}
+              <div class="mt-6">
+                {{ block.settings.custom_text }}
+              </div>
+          {% endcase %}
+        {% endfor %}
         <div>
           {% if product.title != blank %}
             <h2 class="text-2xl! md:text-3xl font-normal!">{{ product.title | escape }}</h2>
@@ -264,6 +323,18 @@
       "type": "rating",
       "name": "Rating",
       "limit": 1
+    },
+    {
+      "type": "text",
+      "name": "Custom Text",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "custom_text",
+          "label": "Text",
+          "default": "<p>Your custom text goes here.</p>"
+        }
+      ]
     },
     {
       "type": "icon_with_text",
