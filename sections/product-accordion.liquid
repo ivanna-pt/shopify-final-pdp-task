@@ -1,0 +1,109 @@
+<div class="py-6 md:py-8">
+  <div class="page-width">
+    <div class="{{ section.settings.heading_alignment }}">
+      {% if section.settings.heading != blank %}
+        <h2>{{ section.settings.heading }}</h2>
+      {% else %}
+        <h2 class="sr-only">{{ 'general.accessibility.collapsible_content_title' | t }}</h2>
+      {% endif %}
+    </div>
+
+    <div class="flex flex-col gap-2">
+      {% for block in section.blocks %}
+        <details
+          class="accordion"
+          {% if block.settings.default_open %}
+            open
+          {% endif %}
+          name="Details-{{ section.id }}"
+        >
+          <summary class="accordion-summary{% if block.settings.default_open %} active{% endif %}">
+            <h3 class="uppercase">{{ block.settings.accordion_title | escape }}</h3>
+            <span class="accordion-icon" aria-hidden="true"></span>
+          </summary>
+          <div class="accordion-content">
+            {{ block.settings.accordion_content }}
+          </div>
+        </details>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Product Accordion",
+  "tag": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Accordion Settings"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "SectionHeading",
+      "default": "Product Information"
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment",
+      "label": "Heading Alignment",
+      "options": [
+        {
+          "value": "text-left",
+          "label": "Left"
+        },
+        {
+          "value": "text-center",
+          "label": "Center"
+        },
+        {
+          "value": "text-right",
+          "label": "Right"
+        }
+      ],
+      "default": "text-center"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "accordion_item",
+      "name": "Accordion Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "accordion_title",
+          "label": "Accordion Title",
+          "default": "Product Details"
+        },
+        {
+          "type": "richtext",
+          "id": "accordion_content",
+          "label": "Accordion Content",
+          "default": "<p>Here you can add detailed information about the product.</p>"
+        },
+        {
+          "type": "checkbox",
+          "id": "default_open",
+          "label": "Open Accordion by Default",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Accordion",
+      "category": "Product",
+      "blocks": [
+        {
+          "type": "accordion_item"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

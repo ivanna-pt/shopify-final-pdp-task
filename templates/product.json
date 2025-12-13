@@ -39,7 +39,36 @@
         "padding_top": 40,
         "padding_bottom": 40
       }
+    },
+    "product_accordion": {
+      "type": "product-accordion",
+      "settings": {
+        "heading": ""
+      },
+      "blocks": {
+        "accordion_item_1": {
+          "type": "accordion_item",
+          "settings": {
+            "accordion_title": "Size & fit",
+            "accordion_content": "<ul><li>Colour Shown: Black/Black/Anthracite/Black</li></ul>"
+          }
+        },
+        "accordion_item_2": {
+          "type": "accordion_item",
+          "settings": {
+            "accordion_title": "PRODUCT NOTES",
+            "accordion_content": "<p>Performance-ready innovation, engineered for the city. The Nike Ava Rover elevates your everyday with a stacked ReactX midsole and an ultralight outsole designed with the streets in mind. Top it all off with a sleek, breathable upper that looks as good as it feels.</p>"
+          }
+        }
+      },
+      "block_order": ["accordion_item_1", "accordion_item_2"]
     }
   },
-  "order": ["reviews", "related_products", "main", "banner"]
+  "order": [
+    "reviews",
+    "related_products",
+    "main",
+    "product_accordion",
+    "banner"
+  ]
 }

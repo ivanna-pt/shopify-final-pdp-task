@@ -5,7 +5,8 @@
       "toggle_navigation": "Toggle navigation menu",
       "cart": "Open a shopping cart",
       "footer_navigation": "Footer navigation",
-      "product_rating": "Rating: {{ rating }} out of {{ max_stars }}"
+      "product_rating": "Rating: {{ rating }} out of {{ max_stars }}",
+      "collapsible_content_title": "Collapsible content"
     }
   },
   "products": {

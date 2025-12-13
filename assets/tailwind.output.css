@@ -274,6 +274,9 @@
   .inline-block {
     display: inline-block;
   }
+  .table {
+    display: table;
+  }
   .h-\[54px\] {
     height: 54px;
   }
@@ -298,6 +301,9 @@
   .flex-grow {
     flex-grow: 1;
   }
+  .border-collapse {
+    border-collapse: collapse;
+  }
   .transform {
     transform: var(--tw-rotate-x,) var(--tw-rotate-y,) var(--tw-rotate-z,) var(--tw-skew-x,) var(--tw-skew-y,);
   }
@@ -307,6 +313,9 @@
   .grid-cols-1 {
     grid-template-columns: repeat(1, minmax(0, 1fr));
   }
+  .flex-col {
+    flex-direction: column;
+  }
   .flex-wrap {
     flex-wrap: wrap;
   }
@@ -315,6 +324,9 @@
   }
   .justify-center {
     justify-content: center;
+  }
+  .gap-0 {
+    gap: calc(var(--spacing) * 0);
   }
   .gap-0\.5 {
     gap: calc(var(--spacing) * 0.5);
@@ -362,8 +374,20 @@
   .py-3 {
     padding-block: calc(var(--spacing) * 3);
   }
+  .py-6 {
+    padding-block: calc(var(--spacing) * 6);
+  }
+  .py-8 {
+    padding-block: calc(var(--spacing) * 8);
+  }
   .text-center {
     text-align: center;
+  }
+  .text-left {
+    text-align: left;
+  }
+  .text-right {
+    text-align: right;
   }
   .text-base {
     font-size: var(--text-base);
@@ -376,14 +400,24 @@
   .text-gray-600 {
     color: var(--color-gray-600);
   }
+  .uppercase {
+    text-transform: uppercase;
+  }
   .italic {
     font-style: italic;
   }
   .line-through {
     text-decoration-line: line-through;
   }
+  .underline {
+    text-decoration-line: underline;
+  }
   .opacity-60 {
     opacity: 60%;
+  }
+  .outline {
+    outline-style: var(--tw-outline-style);
+    outline-width: 1px;
   }
   .filter {
     filter: var(--tw-blur,) var(--tw-brightness,) var(--tw-contrast,) var(--tw-grayscale,) var(--tw-hue-rotate,) var(--tw-invert,) var(--tw-saturate,) var(--tw-sepia,) var(--tw-drop-shadow,);
@@ -420,6 +454,11 @@
   .md\:grid-cols-2 {
     @media (width >= 768px) {
       grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  .md\:py-8 {
+    @media (width >= 768px) {
+      padding-block: calc(var(--spacing) * 8);
     }
   }
   .lg\:grid-cols-3 {
@@ -504,9 +543,6 @@
     background: var(--color-gray-600);
   }
   .accordion {
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap-lg);
     padding: var(--space-lg);
     border-radius: var(--radius-md);
     border: var(--border-default);
@@ -519,10 +555,50 @@
     align-items: center;
   }
   .accordion-content {
+    margin-top: calc(var(--spacing) * 4);
     font-size: var(--text-body-lg);
     --tw-leading: var(--leading-body-lg);
     line-height: var(--leading-body-lg);
     color: var(--color-gray-600);
+  }
+  .accordion-content ul > li {
+    list-style-type: disc;
+    margin-left: 1.5rem;
+  }
+  .accordion-icon {
+    position: relative;
+    display: grid;
+    height: calc(var(--spacing) * 3.5);
+    width: calc(var(--spacing) * 3.5);
+    flex-shrink: 0;
+    place-items: center;
+    border-radius: calc(infinity * 1px);
+    border-style: var(--tw-border-style);
+    border-width: 1px;
+    --tw-border-style: solid;
+    border-style: solid;
+    border-color: var(--color-black);
+  }
+  .accordion-icon::before, .accordion-icon::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background-color: currentColor;
+    transform: translate(-50%, -50%);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  .accordion-icon::before {
+    width: 8px;
+    height: 1px;
+  }
+  .accordion-icon::after {
+    width: 1px;
+    height: 8px;
+  }
+  .accordion[open] .accordion-icon::after {
+    opacity: 0;
+    transform: translate(-50%, -50%) scaleY(0);
   }
   .review-card {
     display: flex;
@@ -592,6 +668,11 @@
 @property --tw-font-weight {
   syntax: "*";
   inherits: false;
+}
+@property --tw-outline-style {
+  syntax: "*";
+  inherits: false;
+  initial-value: solid;
 }
 @property --tw-blur {
   syntax: "*";
@@ -664,6 +745,7 @@
       --tw-skew-y: initial;
       --tw-border-style: solid;
       --tw-font-weight: initial;
+      --tw-outline-style: solid;
       --tw-blur: initial;
       --tw-brightness: initial;
       --tw-contrast: initial;

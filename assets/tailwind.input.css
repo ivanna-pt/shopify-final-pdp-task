@@ -102,9 +102,9 @@
     background: var(--color-gray-600);
   }
   .accordion {
-    display: flex;
+    /* display: flex;
     flex-direction: column;
-    gap: var(--gap-lg);
+    gap: var(--gap-lg); */
     padding: var(--space-lg);
     border-radius: var(--radius-md);
     border: var(--border-default);
@@ -117,8 +117,41 @@
     align-items: center;
   }
   .accordion-content {
-    @apply text-body-lg leading-body-lg;
+    @apply text-body-lg leading-body-lg mt-4;
     color: var(--color-gray-600);
+  }
+
+  .accordion-content ul > li {
+    list-style-type: disc;
+    margin-left: 1.5rem;
+  }
+  .accordion-icon {
+    @apply relative border-solid border border-black w-3.5 h-3.5 rounded-full grid place-items-center shrink-0;
+  }
+  .accordion-icon::before,
+/* vertical bar */
+.accordion-icon::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background-color: currentColor;
+    transform: translate(-50%, -50%);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  .accordion-icon::before {
+    width: 8px;
+    height: 1px;
+  }
+
+  /* vertical */
+  .accordion-icon::after {
+    width: 1px;
+    height: 8px;
+  }
+  .accordion[open] .accordion-icon::after {
+    opacity: 0;
+    transform: translate(-50%, -50%) scaleY(0);
   }
   .review-card {
     display: flex;
