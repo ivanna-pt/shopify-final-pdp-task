@@ -11,8 +11,9 @@
 
 {% comment %} <script src="{{ 'banner-product.js' | asset_url }}" defer="defer"></script> {% endcomment %}
 
-<div
+<product-info
   class="section__product-banner pt-11 pb-9"
+  id="MainProduct-{{ section.id }}"
   data-selected-variant-id="{{ target.id }}"
   data-product-handle="{{ product.handle }}"
 >
@@ -275,7 +276,7 @@
       </div>
     </div>
   </div>
-</div>
+</product-info>
 
 {% schema %}
 {

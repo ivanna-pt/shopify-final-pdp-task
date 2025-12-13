@@ -1,151 +1,122 @@
+class ProductInfo extends HTMLElement {
+  connectedCallback() {
+    this.sectionId = this.dataset.sectionId;
+    this.onPopState = this.onPopState.bind(this);
+    window.addEventListener("popstate", this.onPopState);
+  }
+
+  disconnectedCallback() {
+    window.removeEventListener("popstate", this.onPopState);
+  }
+
+  async onPopState() {
+    const url = `${location.pathname}${location.search}&section_id=${this.sectionId}`;
+
+    try {
+      const res = await fetch(url);
+      const html = await res.text();
+      const doc = new DOMParser().parseFromString(html, "text/html");
+      const newSection = doc.querySelector(`#MainProduct-${this.sectionId}`);
+
+      if (newSection) {
+        this.replaceWith(newSection);
+        //  ProductInfo.reinitialize(newSection);
+      }
+    } catch (err) {
+      console.error("Failed to restore state:", err);
+    }
+  }
+
+  async updateSection(variantId, productPath = null) {
+    ProductInfo.updateProductSection(this.sectionId, variantId, productPath);
+  }
+
+  static async updateProductSection(sectionId, variantId, productPath = null) {
+    const path = productPath || location.pathname;
+    const url = `${path}?variant=${variantId}&section_id=${sectionId}`;
+
+    try {
+      const res = await fetch(url);
+      const html = await res.text();
+      const doc = new DOMParser().parseFromString(html, "text/html");
+      const newSection = doc.querySelector(`#MainProduct-${sectionId}`);
+
+      if (newSection) {
+        const currentSection = document.querySelector(
+          `#MainProduct-${sectionId}`
+        );
+        if (currentSection) {
+          currentSection.replaceWith(newSection);
+          // ProductInfo.reinitialize(newSection);
+        }
+      }
+    } catch (err) {
+      console.error("Failed to update section:", err);
+    }
+  }
+  static reinitialize(section) {
+    // Reinitialize any gallery or other interactive components
+  }
+}
+
 class VariantSelector extends HTMLElement {
   constructor() {
     super();
   }
-
-  get section() {
-    return this.closest(".section__product-banner");
-  }
-
-  get form() {
-    return document.getElementById(`product-form-${this.sectionId}`);
-  }
-
-  get hiddenInput() {
-    return this.form?.querySelector('input[name="id"]');
-  }
-
-  get sectionId() {
-    return this.dataset.sectionId;
-  }
-
-  get productHandle() {
-    return this.dataset.productHandle;
-  }
-
-  get variants() {
-    if (!this._variants) {
-      const jsonEl = document.querySelector(
-        `#ProductVariants-${this.sectionId}`
-      );
-      try {
-        this._variants = JSON.parse(jsonEl?.textContent || "[]");
-      } catch (e) {
-        console.error("Failed to parse variants JSON", e);
-        this._variants = [];
-      }
-    }
-    return this._variants;
-  }
-
-  get optionInputs() {
-    return this.querySelectorAll('input[type="radio"]');
-  }
-
   connectedCallback() {
-    this.optionInputs.forEach((input) => {
-      input.addEventListener("change", (e) => this.onChange(e.target));
+    this.productUrl = this.dataset.url;
+    this.sectionId = this.dataset.sectionId;
+    this.productInfo = this.closest("product-info");
+
+    this.querySelectorAll('input[type="radio"]').forEach((input) => {
+      input.addEventListener("change", () => this.onVariantChange(input));
     });
 
-    this.syncInitialState();
+    this.querySelectorAll(".color-family-link").forEach((link) => {
+      link.addEventListener("click", (e) => this.onColorChange(e, link));
+    });
   }
 
-  onChange(input) {
-    this.updateActiveForGroup(input);
-    this.updateFromSelection();
+  onVariantChange(input) {
+    const variantId = input.value;
+
+    this.updateActiveState(input);
+
+    const url = `${this.productUrl}?variant=${variantId}`;
+    window.history.replaceState({ variantId }, "", url);
+
+    ProductInfo.updateProductSection(this.sectionId, variantId);
   }
 
-  syncInitialState() {
-    this.updateFromSelection();
-  }
+  onColorChange(e, link) {
+    if (link.getAttribute("aria-disabled") === "true") {
+      e.preventDefault();
+      return;
+    }
 
-  updateFromSelection() {
-    const options = this.getSelectedOptions();
-    const variant = this.findVariant(options);
+    e.preventDefault();
+    const url = link.href;
+    window.history.pushState({}, "", url);
 
-    if (variant) {
-      this.hiddenInput.value = variant.id;
-      this.updateButtonState(!variant.available);
-      this.renderSection(variant.id);
-    } else {
-      this.updateButtonState(true);
+    // Extract variant ID and path from URL
+    const urlObj = new URL(url);
+    const variantId = urlObj.searchParams.get("variant");
+    const productPath = urlObj.pathname;
+
+    // Update product info with new product path
+    if (this.productInfo && variantId) {
+      ProductInfo.updateProductSection(this.sectionId, variantId, productPath);
     }
   }
 
-  getSelectedOptions() {
-    const groups = Array.from(this.querySelectorAll('input[type="radio"]'))
-      .map((i) => i.name)
-      .filter((v, i, arr) => arr.indexOf(v) === i);
-
-    return groups.map((groupName) => {
-      const checked = this.querySelector(`input[name="${groupName}"]:checked`);
-      return checked ? checked.value : null;
-    });
-  }
-
-  findVariant(optionValues) {
-    return (
-      this.variants.find((v) =>
-        optionValues.every((value, index) => {
-          if (!value) return true;
-          return v[`option${index + 1}`] === value;
-        })
-      ) || null
-    );
-  }
-
-  updateActiveForGroup(input) {
-    const group = input.name;
-    this.querySelectorAll(`input[name="${group}"]`).forEach((i) => {
+  updateActiveState(input) {
+    const groupName = input.name;
+    this.querySelectorAll(`input[name="${groupName}"]`).forEach((i) => {
       const label = i.nextElementSibling;
-      if (label) label.classList.toggle("active", i === input);
+      if (label) {
+        label.classList.toggle("active", i === input);
+      }
     });
-  }
-
-  updateButtonState(disable = true) {
-    const btn = this.form.querySelector('button[type="submit"]');
-    const btnText = btn.querySelector("[data-atc-text]");
-
-    if (!btn) return;
-
-    if (disable) {
-      btn.setAttribute("disabled", "disabled");
-      btn.classList.add("button--disabled");
-      btnText.textContent = window.variantStrings?.soldOut || "Sold out";
-    } else {
-      btn.removeAttribute("disabled");
-      btn.classList.remove("button--disabled");
-      btnText.textContent = window.variantStrings?.addToCart || "Add to cart";
-    }
-  }
-
-  renderSection(variantId) {
-    const url = `/products/${this.productHandle}?variant=${variantId}&sections=${this.sectionId}`;
-
-    fetch(url)
-      .then((r) => r.json())
-      .then((data) => {
-        const html = data[this.sectionId];
-        if (!html) return;
-
-        const temp = document.createElement("div");
-        temp.innerHTML = html;
-
-        this.updateBlock("[data-price-container]", temp);
-        this.updateBlock("[data-inventory-quantity]", temp);
-        this.updateBlock("[data-product-images]", temp, true);
-      })
-      .catch(console.error);
-  }
-
-  updateBlock(selector, temp, reInit = false) {
-    const newNode = temp.querySelector(selector);
-    const current = this.section.querySelector(selector);
-    if (!newNode || !current) return;
-
-    current.innerHTML = newNode.innerHTML;
-
-    if (reInit) initProductGallery(this.section);
   }
 }
 
