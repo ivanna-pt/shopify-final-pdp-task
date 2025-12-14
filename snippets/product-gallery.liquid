@@ -7,21 +7,36 @@
   Usage:
   {% render 'product-gallery', product: product, enable_image_badges: true %}
 {% endcomment %}
+{% style %}
+  .swiper-carousel--thumbnails {
+    display: block;
+    overflow: hidden;
+    height: 100%;
+  }
+  .swiper-carousel--thumbnails .swiper-container {
+    height: 100%;
+    width: 100%;
+  }
+  .swiper-carousel--thumbnails .swiper-slide {
+    width: auto;
+    height: auto;
+  }
+
+  @media (min-width: 1200px) {
+    .swiper-carousel--thumbnails {
+      height: 536px;
+    }
+  }
+{% endstyle %}
+
 <product-gallery>
   <div
-    class="flex flex-col xl:flex-row-reverse gap-6 shrink-0 md:flex-1"
+    class="flex flex-col xl:flex-row-reverse gap-6"
     data-product-images
   >
-    <div class="relative" data-main-image>
+    <div class="relative aspect-square" data-main-image>
       {% if enable_image_badges == true %}
         {% render 'product-badges', product: product %}
-
-        {% comment %}
-          <div class="absolute top-4 left-4 flex items-center gap-2 bg-white bg-opacity-90 p-2 rounded-sm shadow-md">
-            {{ 'star-icon.svg' | inline_asset_content }}
-            <span class="text-sm capitalize">highly rated</span>
-          </div>
-        {% endcomment %}
       {% endif %}
       {% assign featured_image_alt = product.featured_image.alt | default: product.title | escape %}
       {% assign variant_image = target.image %}
@@ -56,25 +71,9 @@
     </div>
 
     <swiper-carousel
-      class="w-full max-w-full overflow-hidden swiper-carousel--thumbnails mt-4 xl:mt-0 xl:w-28"
+      class="swiper-carousel--thumbnails"
       data-gallery-thumbs
     >
-      <script type="application/json" class="swiper-config">
-        {
-          "slidesPerView": "auto",
-          "spaceBetween": 16,
-          "direction": "horizontal",
-          "breakpoints": {
-            "1024": {
-              "direction": "vertical"
-            }
-          },
-          "navigation": {
-            "enabled": false
-          },
-          "watchOverflow": true
-        }
-      </script>
       <div
         class="swiper-container"
         role="group"
@@ -91,7 +90,7 @@
             {%- assign image_data_sizes = '(max-width: 600px) 100vw, 536px' -%}
             <li class="swiper-slide">
               <div
-                class="relative overflow-hidden rounded-lg w-full h-full {% if forloop.first %}active{% endif %}"
+                class="relative aspect-square overflow-hidden rounded-lg w-full h-full {% if forloop.first %}active{% endif %}"
                 data-gallery-item
               >
                 {{
@@ -101,7 +100,7 @@
                     width: 88,
                     height: 88,
                     alt: image_alt,
-                    class: 'object-cover lazy-image',
+                    class: 'object-cover w-full h-full lazy-image',
                     sizes: '88px',
                     loading: 'lazy',
                     data-gallery-thumb: true,
@@ -114,6 +113,22 @@
           {% endfor %}
         </ul>
       </div>
+      <script type="application/json" class="swiper-config">
+        {
+          "slidesPerView": "auto",
+          "spaceBetween": 16,
+          "direction": "horizontal",
+          "breakpoints": {
+            "1200": {
+              "direction": "vertical"
+            }
+          },
+          "navigation": {
+            "enabled": false
+          },
+          "watchOverflow": true
+        }
+      </script>
     </swiper-carousel>
   </div>
 </product-gallery>
