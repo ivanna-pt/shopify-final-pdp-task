@@ -1,3 +1,33 @@
+{% style %}
+  .swiper-carousel--thumbnails {
+    display: block;
+    /* width: 100%;
+    max-width: 100%; */
+    overflow: hidden;
+    /* flex-shrink: 1; */
+  }
+
+  .swiper-carousel--thumbnails .swiper-container {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .swiper-carousel--thumbnails .swiper-wrapper {
+    display: flex;
+  }
+
+  .swiper-carousel--thumbnails .swiper-slide {
+    flex-shrink: 0;
+    width: auto;
+    height: auto;
+  }
+
+  .swiper-carousel--thumbnails .swiper-slide {
+    width: 88px;
+    height: 88px;
+  }
+{% endstyle %}
 {%- liquid
   unless template.name contains 'product'
     assign product = all_products[section.settings.product]
@@ -61,33 +91,93 @@
             {{ 'image' | placeholder_svg_tag: 'placeholder-svg-class' }}
           {% endif %}
         </div>
-        <div class="flex gap-4 xl:flex-col">
-          {% for image in product.images %}
-            {% assign image_alt = image.alt | default: product.title | escape %}
-            {%- assign image_data_large = image | image_url: width: 536 -%}
-            {%- capture image_data_srcset -%}
+
+        <swiper-carousel
+          class="w-full max-w-full overflow-hidden swiper-carousel--thumbnails mt-4 xl:mt-0 xl:w-28"
+          data-gallery-thumbs
+        >
+          <script type="application/json" class="swiper-config">
+            {
+              "slidesPerView": "auto",
+              "spaceBetween": 16,
+              "direction": "horizontal",
+              "breakpoints": {
+                "1024": {
+                  "direction": "vertical"
+                }
+              },
+              "navigation": {
+                "enabled": false
+              },
+              "watchOverflow": true
+            }
+          </script>
+          <div
+            class="swiper-container"
+            role="group"
+            aria-roledescription="carousel"
+            aria-label="Main product images thumbnails"
+          >
+            <ul class="swiper-wrapper">
+              {% for image in product.images %}
+                {% assign image_alt = image.alt | default: product.title | escape %}
+                {%- assign image_data_large = image | image_url: width: 536 -%}
+                {%- capture image_data_srcset -%}
                     {{ image | image_url: width: 200 }} 200w, {{ image | image_url: width: 400 }} 400w, {{ image | image_url: width: 800 }} 800w, {{ image | image_url: width: 1200 }} 1200w                  
               {%- endcapture -%}
-            {%- assign image_data_sizes = '(max-width: 600px) 100vw, 536px' -%}
-            <div class="relative overflow-hidden rounded-lg" data-gallery-item>
-              {{
-                image
-                | image_url: width: 136
-                | image_tag:
-                  width: 88,
-                  height: 88,
-                  alt: image_alt,
-                  class: 'object-cover lazy-image',
-                  sizes: '88px',
-                  loading: 'lazy',
-                  data-gallery-thumb: true,
-                  data-large: image_data_large,
-                  data-srcset: image_data_srcset,
-                  data-sizes: image_data_sizes
-              }}
-            </div>
-          {% endfor %}
-        </div>
+                {%- assign image_data_sizes = '(max-width: 600px) 100vw, 536px' -%}
+                <li class="swiper-slide">
+                  <div class="relative overflow-hidden rounded-lg w-full h-full" data-gallery-item>
+                    {{
+                      image
+                      | image_url: width: 136
+                      | image_tag:
+                        width: 88,
+                        height: 88,
+                        alt: image_alt,
+                        class: 'object-cover lazy-image',
+                        sizes: '88px',
+                        loading: 'lazy',
+                        data-gallery-thumb: true,
+                        data-large: image_data_large,
+                        data-srcset: image_data_srcset,
+                        data-sizes: image_data_sizes
+                    }}
+                  </div>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </swiper-carousel>
+        {% comment %}
+          <div class="flex gap-4 xl:flex-col">
+            {% for image in product.images %}
+              {% assign image_alt = image.alt | default: product.title | escape %}
+              {%- assign image_data_large = image | image_url: width: 536 -%}
+              {%- capture image_data_srcset -%}
+                      {{ image | image_url: width: 200 }} 200w, {{ image | image_url: width: 400 }} 400w, {{ image | image_url: width: 800 }} 800w, {{ image | image_url: width: 1200 }} 1200w
+                {%- endcapture -%}
+              {%- assign image_data_sizes = '(max-width: 600px) 100vw, 536px' -%}
+              <div class="relative overflow-hidden rounded-lg" data-gallery-item>
+                {{
+                  image
+                  | image_url: width: 136
+                  | image_tag:
+                    width: 88,
+                    height: 88,
+                    alt: image_alt,
+                    class: 'object-cover lazy-image',
+                    sizes: '88px',
+                    loading: 'lazy',
+                    data-gallery-thumb: true,
+                    data-large: image_data_large,
+                    data-srcset: image_data_srcset,
+                    data-sizes: image_data_sizes
+                }}
+              </div>
+            {% endfor %}
+          </div>
+        {% endcomment %}
       </div>
       <div class="md:flex-1">
         {%- assign product_form_id = 'product-form-' | append: section.id -%}

@@ -287,14 +287,21 @@ class SwiperCarousel extends HTMLElement {
   }
 
   connectedCallback() {
-    setTimeout(() => {
+    // setTimeout(() => {
+    //   this.init();
+    // }, 100);
+    if (this._initialized) return;
+    this._initialized = true;
+    requestAnimationFrame(() => {
+      console.log("Initializing SwiperCarousel");
       this.init();
-    }, 100);
+    });
   }
 
   disconnectedCallback() {
     if (this.swiper) {
       this.swiper.destroy(true, true);
+      this.swiper = null;
     }
   }
 

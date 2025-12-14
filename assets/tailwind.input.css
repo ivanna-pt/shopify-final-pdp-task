@@ -4,6 +4,7 @@
   --breakpoint-*: initial;
   --breakpoint-md: 768px;
   --breakpoint-lg: 990px;
+  --breakpoint-xl: 1200px;
 
   --color-black: #111111;
   --color-white: #ffffff;
