@@ -3,17 +3,15 @@
   Renders product buy-buttons.
   Accepts:
   - rating: {Number} Rating value (0-5)
-  - show_count: {Boolean} Whether to show review count (optional)
-  - count: {Number} Number of reviews (optional)
+  - show_number: {Boolean} Whether to show rating value (optional)
 
   Usage:
-  {% render 'star-rating', rating: rating, , show_count: true, count: 120 %}
+  {% render 'star-rating', rating: rating, , show_number: true %}
 {% endcomment %}
 {%- liquid
   assign rating = rating | default: 0 | times: 1.0
   assign max_stars = 5
-  assign show_count = show_count | default: false
-  assign count = count | default: 0
+  assign show_number = show_number | default: false
 -%}
 <div class="flex items-center gap-2">
   <div
@@ -39,7 +37,7 @@
       </svg>
     {% endfor %}
   </div>
-  {%- if show_count and count > 0 -%}
+  {%- if show_number -%}
     <span class="body-md">
       {{ rating }}
     </span>
