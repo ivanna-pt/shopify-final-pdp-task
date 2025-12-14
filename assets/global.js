@@ -45,9 +45,15 @@ class ProductInfo extends HTMLElement {
         const currentSection = document.querySelector(
           `#MainProduct-${sectionId}`
         );
-        if (currentSection) {
+        if (productPath && productPath !== location.pathname) {
           currentSection.replaceWith(newSection);
-          // ProductInfo.reinitialize(newSection);
+          ProductInfo.reinitialize(newSection);
+        } else {
+          ProductInfo.updatePartialContent(
+            currentSection,
+            newSection,
+            sectionId
+          );
         }
       }
     } catch (err) {
@@ -79,14 +85,12 @@ class ProductInfo extends HTMLElement {
         hiddenInput.value = newHiddenInput.value;
       }
 
-      // Update button state
       const submitBtn = currentForm.querySelector('button[type="submit"]');
       const newSubmitBtn = newForm.querySelector('button[type="submit"]');
       if (submitBtn && newSubmitBtn) {
         const btnText = submitBtn.querySelector("[data-atc-text]");
         const newBtnText = newSubmitBtn.querySelector("[data-atc-text]");
 
-        // Copy disabled state
         if (newSubmitBtn.hasAttribute("disabled")) {
           submitBtn.setAttribute("disabled", "disabled");
           submitBtn.classList.add("button--disabled");
@@ -95,7 +99,6 @@ class ProductInfo extends HTMLElement {
           submitBtn.classList.remove("button--disabled");
         }
 
-        // Copy button text
         if (btnText && newBtnText) {
           btnText.textContent = newBtnText.textContent;
         }

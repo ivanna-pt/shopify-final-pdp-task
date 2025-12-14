@@ -160,6 +160,7 @@
             {% when 'buy_buttons' %}
               {% comment %}
               {% endcomment %}
+              {% render 'buy-buttons', product: product, section_id: section.id %}
             {% when 'collapsible_row' %}
               <div>
                 <details
