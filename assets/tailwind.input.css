@@ -73,6 +73,9 @@
   .accordion summary::-webkit-details-marker {
     display: none;
   }
+  .unavaliable {
+    @apply opacity-50 cursor-not-allowed!;
+  }
 }
 
 @layer components {
@@ -100,6 +103,9 @@
   }
   .btn-secondary:hover {
     background: var(--color-gray-600);
+  }
+  .btn--disabled {
+    @apply opacity-50 cursor-not-allowed!;
   }
   .accordion {
     /* display: flex;
@@ -180,6 +186,9 @@
   }
   .option-value--unavailable .option-label {
     @apply opacity-50 cursor-not-allowed!;
+  }
+  .option-value--unavailable .option-label:hover {
+    @apply border-gray-200!;
   }
   .option-label.active {
     @apply border-black;

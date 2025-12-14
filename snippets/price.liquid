@@ -32,7 +32,7 @@
     {%- if compare_at_price > price and show_compare_at_price -%}
       <div>
         <span class="sr-only">{{ 'products.product.price.regular_price' | t }}</span>
-        <span class="price-regular line-through{% unless available %}opacity-60{% endunless %}">
+        <span class="price-regular line-through {% unless available %}opacity-60{% endunless %}">
           {{- compare_at_price | money_without_trailing_zeros -}}
         </span>
       </div>

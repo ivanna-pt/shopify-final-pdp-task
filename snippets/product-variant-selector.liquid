@@ -20,7 +20,7 @@
                 assign is_current = true
               endif
             %}
-            <div class="w-22 h-22 p-0 bg-gray-200 overflow-hidden rounded-md border {% if is_current %}border-black{% else %}border-transparent{% endif %} hover:border-black ">
+            <div class="w-22 h-22 p-0 bg-gray-200 overflow-hidden rounded-md border {% if is_current %}border-black{% else %}border-transparent{% endif %} hover:border-black {% unless item.available %}opacity-50{% endunless %}">
               <a
                 class="color-family-link"
                 href="{{ item.url }}?variant={{ item.selected_or_first_available_variant.id }}"
@@ -57,12 +57,12 @@
 
     {% for option in product.options_with_values %}
       {% assign option_name = option.name | downcase %}
-      <fieldset class="product-form__option">
-        <legend class="product-form__option-name text-sm mb-3">
+      <fieldset>
+        <legend class="text-sm mb-3">
           {{ 'products.product.select_option' | t: option_name: option_name | default: option.name -}}
           :
         </legend>
-        <div class="product-form__option-values text-center grid grid-cols-2 lg:grid-cols-3 gap-2 mb-6">
+        <div class="text-center grid grid-cols-2 lg:grid-cols-3 gap-2 mb-6">
           {% for value in option.values %}
             {% liquid
               assign option_key = 'option' | append: option.position

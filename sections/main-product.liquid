@@ -62,66 +62,31 @@
           {% endif %}
         </div>
         <div class="flex gap-4 xl:flex-col">
-          {% comment %}
-            Display images that match the selected color option
-            If no images match, display the first image
-          {% endcomment %}
-          {% assign selected_color = target.options[0] | downcase %}
-          {% assign found_image = false %}
           {% for image in product.images %}
-            {% assign image_url = image | image_url: width: 536 | downcase %}
-            {% if image_url contains selected_color %}
-              {% assign image_alt = image.alt | default: product.title | escape %}
-              {%- assign image_data_large = image | image_url: width: 536 -%}
-              {%- capture image_data_srcset -%}
+            {% assign image_alt = image.alt | default: product.title | escape %}
+            {%- assign image_data_large = image | image_url: width: 536 -%}
+            {%- capture image_data_srcset -%}
                     {{ image | image_url: width: 200 }} 200w, {{ image | image_url: width: 400 }} 400w, {{ image | image_url: width: 800 }} 800w, {{ image | image_url: width: 1200 }} 1200w                  
               {%- endcapture -%}
-              {%- assign image_data_sizes = '(max-width: 600px) 100vw, 536px' -%}
-              <div class="relative overflow-hidden rounded-lg" data-gallery-item>
-                {{
-                  image
-                  | image_url: width: 136
-                  | image_tag:
-                    width: 88,
-                    height: 88,
-                    alt: image_alt,
-                    class: 'object-cover lazy-image',
-                    sizes: '88px',
-                    loading: 'lazy',
-                    data-gallery-thumb: true,
-                    data-large: image_data_large,
-                    data-srcset: image_data_srcset,
-                    data-sizes: image_data_sizes
-                }}
-                {% assign found_image = true %}
-              </div>
-            {% endif %}
-          {% endfor %}
-          {% if found_image == false and product.images.size > 0 %}
-            {% assign found_image_src = product.images[0] | image_url: width: 88, height: 88 %}
-            {% assign found_image_alt = product.images[0].alt | default: product.title | escape %}
-            {%- assign found_image_data_large = product.images[0] | image_url: width: 536 -%}
-            {%- capture found_image_data_srcset -%}
-                    {{ product.images[0] | image_url: width: 200 }} 200w, {{ product.images[0] | image_url: width: 400 }} 400w, {{ product.images[0] | image_url: width: 800 }} 800w, {{ product.images[0] | image_url: width: 1200 }} 1200w                  
-              {%- endcapture -%}
+            {%- assign image_data_sizes = '(max-width: 600px) 100vw, 536px' -%}
             <div class="relative overflow-hidden rounded-lg" data-gallery-item>
               {{
-                found_image_src
+                image
                 | image_url: width: 136
                 | image_tag:
                   width: 88,
                   height: 88,
-                  alt: found_image_alt,
+                  alt: image_alt,
                   class: 'object-cover lazy-image',
                   sizes: '88px',
                   loading: 'lazy',
                   data-gallery-thumb: true,
-                  data-large: found_image_data_large,
-                  data-srcset: found_image_data_srcset,
+                  data-large: image_data_large,
+                  data-srcset: image_data_srcset,
                   data-sizes: image_data_sizes
               }}
             </div>
-          {% endif %}
+          {% endfor %}
         </div>
       </div>
       <div class="md:flex-1">
@@ -142,9 +107,8 @@
             {% when 'description' %}
               {% if product.description != blank %}
                 <div
-                  class="mt-6 text-gray text-sm"
+                  class="mt-6 text-gray-600 body-md"
                   aria-label="{{ 'products.product.description' | t }}"
-                  data-product-description
                 >
                   {{ product.description }}
                 </div>
@@ -158,11 +122,9 @@
             {% when 'quantity_selector' %}
               {% comment %} Quantity selector block {% endcomment %}
             {% when 'buy_buttons' %}
-              {% comment %}
-              {% endcomment %}
               {% render 'buy-buttons', product: product, section_id: section.id %}
             {% when 'collapsible_row' %}
-              <div>
+              <div class="my-2">
                 <details
                   class="accordion"
                   {% if block.settings.default_open %}
