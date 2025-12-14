@@ -11,10 +11,53 @@
   "sections": {
     "main": {
       "type": "product",
+
       "settings": {}
     },
     "main-product": {
       "type": "main-product",
+      "blocks": {
+        "title": {
+          "type": "title",
+          "settings": {}
+        },
+        "price": {
+          "type": "price",
+          "settings": {}
+        },
+        "description": {
+          "type": "description",
+          "settings": {}
+        },
+        "inventory": {
+          "type": "inventory",
+          "sections": {}
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {}
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {}
+        },
+        "collapsible_row_1": {
+          "type": "collapsible_row",
+          "settings": {
+            "collapsible_title": "More information",
+            "collapsible_content": "<p>Here at Nike, we believe that sport has the power to change lives. That's why we work every day to create innovative products, experiences and services to help you reach your potential.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "title",
+        "price",
+        "inventory",
+        "variant_picker",
+        "buy_buttons",
+        "description",
+        "collapsible_row_1"
+      ],
       "settings": {}
     },
     "banner": {

@@ -19,6 +19,8 @@ class ProductInfo extends HTMLElement {
       const newSection = doc.querySelector(`#MainProduct-${this.sectionId}`);
 
       if (newSection) {
+        console.log("Replaced section with new content from history state.");
+
         this.replaceWith(newSection);
         //  ProductInfo.reinitialize(newSection);
       }
@@ -45,15 +47,31 @@ class ProductInfo extends HTMLElement {
         const currentSection = document.querySelector(
           `#MainProduct-${sectionId}`
         );
-        if (productPath && productPath !== location.pathname) {
-          currentSection.replaceWith(newSection);
-          ProductInfo.reinitialize(newSection);
-        } else {
-          ProductInfo.updatePartialContent(
-            currentSection,
-            newSection,
-            sectionId
-          );
+        if (currentSection) {
+          const currentHandle =
+            currentSection.querySelector("variant-selector")?.dataset.url;
+          const newHandle =
+            newSection.querySelector("variant-selector")?.dataset.url;
+
+          const isProductChange =
+            currentHandle && newHandle && currentHandle !== newHandle;
+          if (isProductChange) {
+            currentSection.replaceWith(newSection);
+            // ProductInfo.reinitialize(newSection);
+            const variantSelector =
+              newSection.querySelector("variant-selector");
+            if (variantSelector && !variantSelector._initialized) {
+              variantSelector.connectedCallback();
+            }
+            console.log("Replaced entire section due to product path change.");
+          } else {
+            console.log("Updating partial content of the product section.");
+            ProductInfo.updatePartialContent(
+              currentSection,
+              newSection,
+              sectionId
+            );
+          }
         }
       }
     } catch (err) {
@@ -110,6 +128,8 @@ class ProductInfo extends HTMLElement {
   }
 }
 
+customElements.define("product-info", ProductInfo);
+
 class VariantSelector extends HTMLElement {
   constructor() {
     super();
@@ -149,13 +169,11 @@ class VariantSelector extends HTMLElement {
     const url = link.href;
     window.history.pushState({}, "", url);
 
-    // Extract variant ID and path from URL
     const urlObj = new URL(url);
     const variantId = urlObj.searchParams.get("variant");
     const productPath = urlObj.pathname;
 
-    // Update product info with new product path
-    if (this.productInfo && variantId) {
+    if (variantId) {
       ProductInfo.updateProductSection(this.sectionId, variantId, productPath);
     }
   }

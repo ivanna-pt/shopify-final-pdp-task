@@ -7,12 +7,12 @@
     {% assign family = product.metafields.custom.color_family.value %}
 
     {% if family %}
-      <fieldset>
-        <legend class="product-form__option-name text-sm mb-3">
+      <fieldset class="my-6">
+        <legend class="sr-only">
           {{ 'products.product.select_color' | t -}}
           :
         </legend>
-        <div class="tw-options-list flex align-center gap-2">
+        <div class="flex align-center gap-2">
           {% for item in family.products.value %}
             {% liquid
               assign is_current = false
@@ -20,34 +20,36 @@
                 assign is_current = true
               endif
             %}
-            <a
-              class="color-family-link"
-              href="{{ item.url }}?variant={{ item.selected_or_first_available_variant.id }}"
-              aria-current="{% if is_current %}page{% endif %}"
-              {% unless item.available %}
-                aria-disabled="true"
-              {% endunless %}
-            >
-              {% if item.featured_image %}
-                {{
-                  item.featured_image
-                  | image_url: width: 136, height: 136
-                  | image_tag:
-                    width: 88,
-                    height: 88,
-                    alt: item.title,
-                    class: 'rounded-md object-cover',
-                    sizes: '88px',
-                    loading: 'lazy'
-                }}
-              {% else %}
-                {{ 'image' | placeholder_svg_tag: 'rounded-md w-22 h-22' }}
-                <span class="sr-only">{{ item.title }}</span>
-              {% endif %}
-              {% unless item.available %}
-                <span class="sr-only">{{ 'products.product.sold_out' | t }}</span>
-              {% endunless %}
-            </a>
+            <div class="w-22 h-22 p-0 bg-gray-200 overflow-hidden rounded-md border {% if is_current %}border-black{% else %}border-transparent{% endif %} hover:border-black ">
+              <a
+                class="color-family-link"
+                href="{{ item.url }}?variant={{ item.selected_or_first_available_variant.id }}"
+                aria-current="{% if is_current %}page{% endif %}"
+                {% unless item.available %}
+                  aria-disabled="true"
+                {% endunless %}
+              >
+                {% if item.featured_image %}
+                  {{
+                    item.featured_image
+                    | image_url: width: 136, height: 136
+                    | image_tag:
+                      width: 88,
+                      height: 88,
+                      alt: item.title,
+                      class: 'w-full h-full aspect-square object-cover',
+                      sizes: '88px',
+                      loading: 'lazy'
+                  }}
+                {% else %}
+                  {{ 'image' | placeholder_svg_tag: 'rounded-md w-22 h-22' }}
+                  <span class="sr-only">{{ item.title }}</span>
+                {% endif %}
+                {% unless item.available %}
+                  <span class="sr-only">{{ 'products.product.sold_out' | t }}</span>
+                {% endunless %}
+              </a>
+            </div>
           {% endfor %}
         </div>
       </fieldset>
@@ -60,19 +62,20 @@
           {{ 'products.product.select_option' | t: option_name: option_name | default: option.name -}}
           :
         </legend>
-        <div class="product-form__option-values tw-options-list  grid grid-cols-2 lg:grid-cols-3">
+        <div class="product-form__option-values text-center grid grid-cols-2 lg:grid-cols-3 gap-2 mb-6">
           {% for value in option.values %}
             {% liquid
               assign option_key = 'option' | append: option.position
               assign matching_variants = product.variants | where: option_key, value
               assign variant = matching_variants.first
               assign is_available = variant.available
+              assign is_selected = false
               if option.selected_value == value
                 assign is_selected = true
               endif
             %}
 
-            <div class="product-form__option-value {% unless is_available %}product-form__option-value--unavailable{% endunless %}">
+            <div class="option-value {% unless is_available %}option-value--unavailable{% endunless %}">
               <input
                 type="radio"
                 id="option-{{ section.id }}-{{ option.position }}-{{ forloop.index }}"
@@ -88,7 +91,7 @@
               >
               <label
                 for="option-{{ section.id }}-{{ option.position }}-{{ forloop.index }}"
-                class="tw-option-label inline-block cursor-pointer tw-generic-button w-full {% if is_selected %}active{% endif %}"
+                class="option-label inline-block cursor-pointer tw-generic-button w-full {% if is_selected %}active{% endif %}"
               >
                 {{ value }}
                 {% unless is_available %}

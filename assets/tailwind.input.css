@@ -175,6 +175,15 @@
   .price-badge {
     @apply inline-block px-2 py-1 rounded-sm text-white text-xs font-semibold;
   }
+  .option-label {
+    @apply p-4 rounded-md border border-gray-200 overflow-hidden text-black hover:border-black focus:border-black cursor-pointer transition;
+  }
+  .option-value--unavailable .option-label {
+    @apply opacity-50 cursor-not-allowed!;
+  }
+  .option-label.active {
+    @apply border-black;
+  }
 }
 @layer base {
   html {
