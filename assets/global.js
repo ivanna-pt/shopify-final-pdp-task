@@ -347,3 +347,75 @@ class SwiperCarousel extends HTMLElement {
 }
 
 customElements.define("swiper-carousel", SwiperCarousel);
+
+class ProductGallery extends HTMLElement {
+  constructor() {
+    super();
+    this.mainImage = null;
+    this.thumbs = [];
+    this._onThumbClick = this._onThumbClick.bind(this);
+  }
+
+  connectedCallback() {
+    requestAnimationFrame(() => {
+      this.init();
+    });
+  }
+
+  disconnectedCallback() {
+    this.cleanup();
+  }
+
+  init() {
+    this.mainImage = this.querySelector("[data-main-image] img");
+    this.thumbs = Array.from(this.querySelectorAll("[data-gallery-thumb]"));
+
+    if (!this.mainImage || !this.thumbs.length) return;
+
+    this.thumbs.forEach((thumb) => {
+      thumb.addEventListener("click", this._onThumbClick);
+    });
+  }
+
+  cleanup() {
+    this.thumbs.forEach((thumb) => {
+      thumb.removeEventListener("click", this._onThumbClick);
+    });
+  }
+
+  _onThumbClick(event) {
+    event.preventDefault();
+
+    const thumb = event.currentTarget;
+    const wrapper = thumb.closest("[data-gallery-item]");
+    if (!wrapper) return;
+
+    const { large, srcset, sizes } = thumb.dataset;
+
+    if (!large) return;
+
+    this.mainImage.src = large;
+    this.mainImage.alt = thumb.alt || "";
+
+    if (srcset) {
+      this.mainImage.srcset = srcset;
+      this.mainImage.sizes = sizes;
+    } else {
+      this.mainImage.removeAttribute("srcset");
+      this.mainImage.removeAttribute("sizes");
+    }
+
+    this._setActiveThumb(thumb);
+  }
+
+  _setActiveThumb(activeThumb) {
+    this.querySelectorAll("[data-gallery-item].active").forEach((el) =>
+      el.classList.remove("active")
+    );
+
+    const wrapper = activeThumb.closest("[data-gallery-item]");
+    if (wrapper) wrapper.classList.add("active");
+  }
+}
+
+customElements.define("product-gallery", ProductGallery);

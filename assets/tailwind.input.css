@@ -194,6 +194,9 @@
   .option-label.active {
     @apply border-black;
   }
+  [data-gallery-item].active::before {
+    @apply content-[''] absolute inset-0 bg-black  opacity-20 rounded-md;
+  }
 }
 @layer base {
   html {

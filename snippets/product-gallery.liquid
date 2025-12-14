@@ -1,0 +1,115 @@
+{% comment %}
+  Renders a product gallery with main image and thumbnails.
+  Accepts:
+  - product: {Object} Product Liquid object
+  - enable_image_badges: {Boolean} Whether to show image badges (optional)
+
+  Usage:
+  {% render 'product-gallery', product: product, enable_image_badges: true %}
+{% endcomment %}
+<product-gallery>
+  <div
+    class="flex flex-col xl:flex-row-reverse gap-6 shrink-0 md:flex-1"
+    data-product-images
+  >
+    <div class="relative" data-main-image>
+      {% if enable_image_badges == true %}
+        <div class="absolute top-4 left-4 flex items-center gap-2 bg-white bg-opacity-90 p-2 rounded-sm shadow-md">
+          {{ 'star-icon.svg' | inline_asset_content }}
+          <span class="text-sm capitalize">highly rated</span>
+        </div>
+      {% endif %}
+      {% assign featured_image_alt = product.featured_image.alt | default: product.title | escape %}
+      {% assign variant_image = target.image %}
+      {% assign main_image_classes = 'aspect-square object-cover rounded-lg' %}
+      {% if variant_image %}
+        {{
+          variant_image
+          | image_url: width: 536
+          | image_tag:
+            width: 536,
+            height: 536,
+            alt: featured_image_alt,
+            class: main_image_classes,
+            sizes: '(max-width: 600px) 100vw, 536px',
+            loading: 'lazy'
+        }}
+      {% elsif product.featured_image %}
+        {{
+          product.featured_image
+          | image_url: width: 536
+          | image_tag:
+            width: 536,
+            height: 536,
+            alt: featured_image_alt,
+            class: main_image_classes,
+            sizes: '(max-width: 600px) 100vw, 536px',
+            loading: 'lazy'
+        }}
+      {% else %}
+        {{ 'image' | placeholder_svg_tag: 'placeholder-svg-class' }}
+      {% endif %}
+    </div>
+
+    <swiper-carousel
+      class="w-full max-w-full overflow-hidden swiper-carousel--thumbnails mt-4 xl:mt-0 xl:w-28"
+      data-gallery-thumbs
+    >
+      <script type="application/json" class="swiper-config">
+        {
+          "slidesPerView": "auto",
+          "spaceBetween": 16,
+          "direction": "horizontal",
+          "breakpoints": {
+            "1024": {
+              "direction": "vertical"
+            }
+          },
+          "navigation": {
+            "enabled": false
+          },
+          "watchOverflow": true
+        }
+      </script>
+      <div
+        class="swiper-container"
+        role="group"
+        aria-roledescription="carousel"
+        aria-label="Main product images thumbnails"
+      >
+        <ul class="swiper-wrapper">
+          {% for image in product.images %}
+            {% assign image_alt = image.alt | default: product.title | escape %}
+            {%- assign image_data_large = image | image_url: width: 536 -%}
+            {%- capture image_data_srcset -%}
+                    {{ image | image_url: width: 200 }} 200w, {{ image | image_url: width: 400 }} 400w, {{ image | image_url: width: 800 }} 800w, {{ image | image_url: width: 1200 }} 1200w                  
+              {%- endcapture -%}
+            {%- assign image_data_sizes = '(max-width: 600px) 100vw, 536px' -%}
+            <li class="swiper-slide">
+              <div
+                class="relative overflow-hidden rounded-lg w-full h-full {% if forloop.first %}active{% endif %}"
+                data-gallery-item
+              >
+                {{
+                  image
+                  | image_url: width: 136
+                  | image_tag:
+                    width: 88,
+                    height: 88,
+                    alt: image_alt,
+                    class: 'object-cover lazy-image',
+                    sizes: '88px',
+                    loading: 'lazy',
+                    data-gallery-thumb: true,
+                    data-large: image_data_large,
+                    data-srcset: image_data_srcset,
+                    data-sizes: image_data_sizes
+                }}
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </swiper-carousel>
+  </div>
+</product-gallery>
