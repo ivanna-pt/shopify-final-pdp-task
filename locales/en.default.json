@@ -35,7 +35,8 @@
       "price": {
         "regular_price": "Regular price",
         "sale_price": "Sale price"
-      }
+      },
+      "product_badges": "Product badges"
     }
   },
   "404": {

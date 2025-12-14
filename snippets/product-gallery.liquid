@@ -14,10 +14,14 @@
   >
     <div class="relative" data-main-image>
       {% if enable_image_badges == true %}
-        <div class="absolute top-4 left-4 flex items-center gap-2 bg-white bg-opacity-90 p-2 rounded-sm shadow-md">
-          {{ 'star-icon.svg' | inline_asset_content }}
-          <span class="text-sm capitalize">highly rated</span>
-        </div>
+        {% render 'product-badges', product: product %}
+
+        {% comment %}
+          <div class="absolute top-4 left-4 flex items-center gap-2 bg-white bg-opacity-90 p-2 rounded-sm shadow-md">
+            {{ 'star-icon.svg' | inline_asset_content }}
+            <span class="text-sm capitalize">highly rated</span>
+          </div>
+        {% endcomment %}
       {% endif %}
       {% assign featured_image_alt = product.featured_image.alt | default: product.title | escape %}
       {% assign variant_image = target.image %}
