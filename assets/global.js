@@ -54,6 +54,54 @@ class ProductInfo extends HTMLElement {
       console.error("Failed to update section:", err);
     }
   }
+
+  static updatePartialContent(currentSection, newSection, sectionId) {
+    const updateElement = (selector, updateFn = null) => {
+      const current = currentSection.querySelector(selector);
+      const newEl = newSection.querySelector(selector);
+
+      if (current && newEl) {
+        if (updateFn) {
+          updateFn(current, newEl);
+        } else {
+          current.innerHTML = newEl.innerHTML;
+        }
+      }
+    };
+
+    updateElement("[data-price-container]");
+    updateElement("[data-inventory-quantity]");
+
+    updateElement(`#product-form-${sectionId}`, (currentForm, newForm) => {
+      const hiddenInput = currentForm.querySelector('input[name="id"]');
+      const newHiddenInput = newForm.querySelector('input[name="id"]');
+      if (hiddenInput && newHiddenInput) {
+        hiddenInput.value = newHiddenInput.value;
+      }
+
+      // Update button state
+      const submitBtn = currentForm.querySelector('button[type="submit"]');
+      const newSubmitBtn = newForm.querySelector('button[type="submit"]');
+      if (submitBtn && newSubmitBtn) {
+        const btnText = submitBtn.querySelector("[data-atc-text]");
+        const newBtnText = newSubmitBtn.querySelector("[data-atc-text]");
+
+        // Copy disabled state
+        if (newSubmitBtn.hasAttribute("disabled")) {
+          submitBtn.setAttribute("disabled", "disabled");
+          submitBtn.classList.add("button--disabled");
+        } else {
+          submitBtn.removeAttribute("disabled");
+          submitBtn.classList.remove("button--disabled");
+        }
+
+        // Copy button text
+        if (btnText && newBtnText) {
+          btnText.textContent = newBtnText.textContent;
+        }
+      }
+    });
+  }
   static reinitialize(section) {
     // Reinitialize any gallery or other interactive components
   }
