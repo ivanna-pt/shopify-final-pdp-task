@@ -35,12 +35,14 @@
             {% when 'title' %}
               <h2 class="text-2xl! md:text-3xl font-normal!">{{ product.title | escape }}</h2>
             {% when 'price' %}
-              {% render 'price',
-                product: product,
-                show_badges: true,
-                show_compare_at_price: true,
-                price_class: 'main-product'
-              %}
+              <div class="my-6">
+                {% render 'price',
+                  product: product,
+                  show_badges: true,
+                  show_compare_at_price: true,
+                  price_class: 'main-product'
+                %}
+              </div>
             {% when 'description' %}
               {% if product.description != blank %}
                 <div
@@ -81,7 +83,6 @@
             {% when 'icon_with_text' %}
               {% comment %} Render 'icon_with_text' snippet {% endcomment %}
             {% when 'rating' %}
-              {% comment %} Render 'product-rating' snippet {% endcomment %}
               {% liquid
                 assign reviews = product.metafields.custom.reviews.value
                 assign rating_sum = 0
@@ -98,7 +99,7 @@
                 {% render 'star-rating', rating: total_rating, , show_number: true %}
               </div>
             {% when 'text' %}
-              <div class="mt-6">
+              <div class="mt-3 {{ block.settings.text_style }}">
                 {{ block.settings.custom_text }}
               </div>
             {% when 'inventory' %}
@@ -181,10 +182,30 @@
       "name": "Custom Text",
       "settings": [
         {
-          "type": "richtext",
+          "type": "inline_richtext",
           "id": "custom_text",
           "label": "Text",
-          "default": "<p>Your custom text goes here.</p>"
+          "default": "Performance-ready innovation, engineered for the city. The Nike Ava Rover elevates your everyday with a stacked ReactX midsole and an ultralight outsole designed with the streets in mind."
+        },
+        {
+          "type": "select",
+          "id": "text_style",
+          "label": "Text Style",
+          "options": [
+            {
+              "value": "product-text-muted",
+              "label": "Body Medium Muted"
+            },
+            {
+              "value": "body-md",
+              "label": "Body Medium"
+            },
+            {
+              "value": "product-subtitle",
+              "label": "Subtitle"
+            }
+          ],
+          "default": "product-text-muted"
         }
       ]
     },

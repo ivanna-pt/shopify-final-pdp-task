@@ -67,7 +67,12 @@
   .body-md {
     @apply text-body-md leading-body-md;
   }
-
+  .product-text-muted {
+    @apply text-body-md leading-body-md text-gray-600;
+  }
+  .product-subtitle {
+    @apply text-body-lg leading-body-lg capitalize;
+  }
   .accordion summary {
     list-style: none;
   }

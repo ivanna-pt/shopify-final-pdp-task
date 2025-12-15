@@ -22,7 +22,6 @@
     --color-black: #111111;
     --color-white: #ffffff;
     --spacing: 0.25rem;
-    --container-xl: 36rem;
     --text-xs: 0.75rem;
     --text-xs--line-height: calc(1 / 0.75);
     --text-sm: 0.875rem;
@@ -271,6 +270,9 @@
   }
   .mt-2 {
     margin-top: calc(var(--spacing) * 2);
+  }
+  .mt-3 {
+    margin-top: calc(var(--spacing) * 3);
   }
   .mt-4 {
     margin-top: calc(var(--spacing) * 4);
@@ -687,6 +689,18 @@
     font-size: var(--text-body-md);
     --tw-leading: var(--leading-body-md);
     line-height: var(--leading-body-md);
+  }
+  .product-text-muted {
+    font-size: var(--text-body-md);
+    --tw-leading: var(--leading-body-md);
+    line-height: var(--leading-body-md);
+    color: var(--color-gray-600);
+  }
+  .product-subtitle {
+    font-size: var(--text-body-lg);
+    --tw-leading: var(--leading-body-lg);
+    line-height: var(--leading-body-lg);
+    text-transform: capitalize;
   }
   .accordion summary {
     list-style: none;
