@@ -53,6 +53,10 @@
             "custom_text": "Performance-ready innovation, engineered for the city. The Nike Ava Rover elevates your everyday with a stacked ReactX midsole and an ultralight outsole designed with the streets in mind.",
             "text_style": "text-gray-600 body-md"
           }
+        },
+        "icon_with_text": {
+          "type": "icon_with_text",
+          "settings": {}
         }
       },
       "block_order": [
@@ -63,6 +67,7 @@
         "inventory",
         "variant_picker",
         "buy_buttons",
+        "icon_with_text",
         "description",
         "collapsible_row_1"
       ],

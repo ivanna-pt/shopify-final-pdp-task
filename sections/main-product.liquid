@@ -81,7 +81,7 @@
                 </details>
               </div>
             {% when 'icon_with_text' %}
-              {% comment %} Render 'icon_with_text' snippet {% endcomment %}
+              {% render 'icon_with_text', items: product.metafields.custom.shipping_benefits.value %}
             {% when 'rating' %}
               {% liquid
                 assign reviews = product.metafields.custom.reviews.value
