@@ -11,7 +11,7 @@
     <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
     <button
       type="submit"
-      class="btn w-full border-black bg-black text-white {% unless product.selected_or_first_available_variant.available %}btn--disabled{% endunless %}"
+      class="btn w-full btn-secondary {% unless product.selected_or_first_available_variant.available %}btn--disabled{% endunless %}"
       {% unless product.selected_or_first_available_variant.available %}
         disabled
       {% endunless %}

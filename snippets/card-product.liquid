@@ -8,7 +8,7 @@
   {% render 'card-product', card_product: product %}
 {% endcomment %}
 
-<a href="{{ card_product.url }}">
+<a href="{{ card_product.url }}" class="product-card">
   <div>
     {{
       card_product.featured_image
@@ -18,7 +18,7 @@
         height: 300,
         alt: card_product.featured_image.alt,
         loading: 'lazy',
-        class: 'lazy-images',
+        class: 'lazy-images product-card__image',
         sizes: '(min-width: 1200px) 25vw, (min-width: 750px) 50vw, 100vw'
     }}
   </div>

@@ -7,19 +7,13 @@
       "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
       "Courier New", monospace;
-    --color-red-50: oklch(97.1% 0.013 17.38);
-    --color-red-200: oklch(88.5% 0.062 18.334);
     --color-red-400: oklch(70.4% 0.191 22.216);
     --color-red-600: oklch(57.7% 0.245 27.325);
-    --color-red-700: oklch(50.5% 0.213 27.518);
-    --color-red-800: oklch(44.4% 0.177 26.899);
-    --color-green-50: oklch(98.2% 0.018 155.826);
-    --color-green-200: oklch(92.5% 0.084 155.995);
-    --color-green-800: oklch(44.8% 0.119 151.328);
     --color-gray-100: #f5f5f5;
     --color-gray-200: #ebebeb;
     --color-gray-300: #cacacb;
     --color-gray-600: #737373;
+    --color-gray-800: oklch(27.8% 0.033 256.848);
     --color-black: #111111;
     --color-white: #ffffff;
     --spacing: 0.25rem;
@@ -40,6 +34,7 @@
     --radius-sm: 4px;
     --radius-md: 8px;
     --radius-lg: 0.5rem;
+    --ease-out: cubic-bezier(0, 0, 0.2, 1);
     --default-transition-duration: 150ms;
     --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     --default-font-family: var(--font-sans);
@@ -541,9 +536,6 @@
   .text-red-600 {
     color: var(--color-red-600);
   }
-  .text-white {
-    color: var(--color-white);
-  }
   .capitalize {
     text-transform: capitalize;
   }
@@ -785,7 +777,7 @@
     color: var(--color-white);
   }
   .btn-secondary:hover {
-    background: var(--color-gray-600);
+    background: var(--color-gray-800);
   }
   .btn--disabled {
     cursor: not-allowed !important;
@@ -926,7 +918,7 @@
   .option-label.active {
     border-color: var(--color-black);
   }
-  [data-gallery-item].active::before {
+  .product-gallery__item.active::before {
     position: absolute;
     inset: calc(var(--spacing) * 0);
     border-radius: var(--radius-md);
@@ -934,6 +926,31 @@
     opacity: 20%;
     --tw-content: '';
     content: var(--tw-content);
+  }
+  .product-card {
+    transition-property: all;
+    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+    transition-duration: var(--tw-duration, var(--default-transition-duration));
+    --tw-duration: 200ms;
+    transition-duration: 200ms;
+    --tw-ease: var(--ease-out);
+    transition-timing-function: var(--ease-out);
+  }
+  .product-card:hover, .product-card:focus-within {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  }
+  .product-card__image {
+    transition-property: transform, translate, scale, rotate;
+    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+    transition-duration: var(--tw-duration, var(--default-transition-duration));
+    --tw-duration: 300ms;
+    transition-duration: 300ms;
+    --tw-ease: var(--ease-out);
+    transition-timing-function: var(--ease-out);
+  }
+  .product-card:hover .product-card__image, .product-card:focus-within .product-card__image {
+    transform: scale(1.03);
   }
 }
 @layer base {
@@ -1106,6 +1123,10 @@
   inherits: false;
   initial-value: "";
 }
+@property --tw-ease {
+  syntax: "*";
+  inherits: false;
+}
 @layer properties {
   @supports ((-webkit-hyphens: none) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color:rgb(from red r g b)))) {
     *, ::before, ::after, ::backdrop {
@@ -1147,6 +1168,7 @@
       --tw-duration: initial;
       --tw-leading: initial;
       --tw-content: "";
+      --tw-ease: initial;
     }
   }
 }

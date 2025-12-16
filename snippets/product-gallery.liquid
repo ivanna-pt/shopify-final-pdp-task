@@ -34,7 +34,7 @@
     class="flex flex-col xl:flex-row-reverse gap-6"
     data-product-images
   >
-    <div class="relative aspect-square" data-main-image>
+    <div class="product-gallery__main-image relative aspect-square">
       {% if enable_image_badges == true %}
         {% render 'product-badges', product: product %}
       {% endif %}
@@ -78,8 +78,7 @@
             {%- assign image_data_sizes = '(max-width: 600px) 100vw, 536px' -%}
             <li class="swiper-slide">
               <div
-                class="relative aspect-square overflow-hidden rounded-lg w-full h-full {% if forloop.first %}active{% endif %}"
-                data-gallery-item
+                class="product-gallery__item relative aspect-square overflow-hidden rounded-lg w-full h-full {% if forloop.first %}active{% endif %}"
               >
                 {{
                   image
@@ -88,10 +87,9 @@
                     width: 88,
                     height: 88,
                     alt: image_alt,
-                    class: 'object-cover w-full h-full lazy-image',
+                    class: 'product-gallery__thumb object-cover w-full h-full lazy-image',
                     sizes: '88px',
                     loading: 'lazy',
-                    data-gallery-thumb: true,
                     data-large: image_data_large,
                     data-srcset: image_data_srcset,
                     data-sizes: image_data_sizes

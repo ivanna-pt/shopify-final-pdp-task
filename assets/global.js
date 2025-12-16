@@ -484,8 +484,8 @@ class ProductGallery extends HTMLElement {
   }
 
   init() {
-    this.mainImage = this.querySelector("[data-main-image] img");
-    this.thumbs = Array.from(this.querySelectorAll("[data-gallery-thumb]"));
+    this.mainImage = this.querySelector(".product-gallery__main-image img");
+    this.thumbs = Array.from(this.querySelectorAll(".product-gallery__thumb"));
 
     if (!this.mainImage || !this.thumbs.length) return;
 
@@ -504,7 +504,7 @@ class ProductGallery extends HTMLElement {
     event.preventDefault();
 
     const thumb = event.currentTarget;
-    const wrapper = thumb.closest("[data-gallery-item]");
+    const wrapper = thumb.closest(".product-gallery__item");
     if (!wrapper) return;
 
     const { large, srcset, sizes } = thumb.dataset;
@@ -526,11 +526,11 @@ class ProductGallery extends HTMLElement {
   }
 
   setActiveThumb(activeThumb) {
-    this.querySelectorAll("[data-gallery-item].active").forEach((el) =>
+    this.querySelectorAll(".product-gallery__item.active").forEach((el) =>
       el.classList.remove("active")
     );
 
-    const wrapper = activeThumb.closest("[data-gallery-item]");
+    const wrapper = activeThumb.closest(".product-gallery__item");
     if (wrapper) wrapper.classList.add("active");
   }
 }
