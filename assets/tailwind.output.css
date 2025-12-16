@@ -638,6 +638,16 @@
       }
     }
   }
+  .md\:sticky {
+    @media (width >= 768px) {
+      position: sticky;
+    }
+  }
+  .md\:top-6 {
+    @media (width >= 768px) {
+      top: calc(var(--spacing) * 6);
+    }
+  }
   .md\:mb-12 {
     @media (width >= 768px) {
       margin-bottom: calc(var(--spacing) * 12);
@@ -651,6 +661,11 @@
   .md\:grid-cols-2 {
     @media (width >= 768px) {
       grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  .md\:grid-cols-3 {
+    @media (width >= 768px) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }
   .md\:flex-row {
