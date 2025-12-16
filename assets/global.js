@@ -353,7 +353,7 @@ class ProductGallery extends HTMLElement {
     super();
     this.mainImage = null;
     this.thumbs = [];
-    this._onThumbClick = this._onThumbClick.bind(this);
+    this.onThumbClick = this.onThumbClick.bind(this);
   }
 
   connectedCallback() {
@@ -373,17 +373,17 @@ class ProductGallery extends HTMLElement {
     if (!this.mainImage || !this.thumbs.length) return;
 
     this.thumbs.forEach((thumb) => {
-      thumb.addEventListener("click", this._onThumbClick);
+      thumb.addEventListener("click", this.onThumbClick);
     });
   }
 
   cleanup() {
     this.thumbs.forEach((thumb) => {
-      thumb.removeEventListener("click", this._onThumbClick);
+      thumb.removeEventListener("click", this.onThumbClick);
     });
   }
 
-  _onThumbClick(event) {
+  onThumbClick(event) {
     event.preventDefault();
 
     const thumb = event.currentTarget;
@@ -405,10 +405,10 @@ class ProductGallery extends HTMLElement {
       this.mainImage.removeAttribute("sizes");
     }
 
-    this._setActiveThumb(thumb);
+    this.setActiveThumb(thumb);
   }
 
-  _setActiveThumb(activeThumb) {
+  setActiveThumb(activeThumb) {
     this.querySelectorAll("[data-gallery-item].active").forEach((el) =>
       el.classList.remove("active")
     );
@@ -419,3 +419,72 @@ class ProductGallery extends HTMLElement {
 }
 
 customElements.define("product-gallery", ProductGallery);
+
+class AccordionItem extends HTMLElement {
+  constructor() {
+    super();
+    this.toggleButton = null;
+    this.content = null;
+  }
+
+  connectedCallback() {
+    this.toggleButton = this.querySelector(".accordion-toggle");
+    this.content = this.querySelector(".accordion-content");
+    if (!this.toggleButton || !this.content) return;
+
+    this.toggleButton.setAttribute("aria-expanded", this.hasAttribute("open"));
+
+    this.toggleButton.addEventListener("click", () => this.toggle());
+
+    this.toggleButton.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        this.toggle();
+      }
+    });
+
+    if (!this.hasAttribute("open")) {
+      this.content.style.display = "none";
+    }
+  }
+
+  toggle() {
+    const isOpen = this.hasAttribute("open");
+    if (isOpen) {
+      this.close();
+    } else {
+      this.open();
+    }
+  }
+
+  open() {
+    const wrapper = this.closest("[data-allow-multiple]");
+    const allowMultiple =
+      wrapper?.getAttribute("data-allow-multiple") === "true";
+
+    if (!allowMultiple) {
+      const openItems = wrapper?.querySelectorAll("accordion-item[open]");
+      openItems.forEach((item) => {
+        if (item !== this) {
+          item.removeAttribute("open");
+        }
+      });
+    }
+
+    this.setAttribute("open", "");
+    this.toggleButton.setAttribute("aria-expanded", "true");
+    this.content.style.display = "block";
+  }
+  close() {
+    this.removeAttribute("open", "");
+    this.toggleButton.setAttribute("aria-expanded", "false");
+
+    setTimeout(() => {
+      if (!this.hasAttribute("open")) {
+        this.content.style.display = "none";
+      }
+    }, 400);
+  }
+}
+
+customElements.define("accordion-item", AccordionItem);

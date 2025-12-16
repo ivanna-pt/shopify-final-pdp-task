@@ -63,23 +63,11 @@
             {% when 'buy_buttons' %}
               {% render 'buy-buttons', product: product, section_id: section.id %}
             {% when 'collapsible_row' %}
-              <div class="my-2">
-                <details
-                  class="accordion"
-                  {% if block.settings.default_open %}
-                    open
-                  {% endif %}
-                  name="Details-{{ section.id }}"
-                >
-                  <summary class="accordion-summary{% if block.settings.default_open %} active{% endif %}">
-                    <h3 class="uppercase">{{ block.settings.title | escape }}</h3>
-                    <span class="accordion-icon" aria-hidden="true"></span>
-                  </summary>
-                  <div class="accordion-content">
-                    {{ block.settings.content }}
-                  </div>
-                </details>
-              </div>
+              {% render 'accordion-component',
+                list_items: product.metafields.custom.product_details.value,
+                allow_multiple: false,
+                default_open: 1
+              %}
             {% when 'icon_with_text' %}
               {% render 'icon_with_text', items: product.metafields.custom.shipping_benefits.value %}
             {% when 'rating' %}

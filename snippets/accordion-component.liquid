@@ -1,0 +1,41 @@
+{% comment %}
+  Accordion Web Component
+  Accepts:
+    - list_items: Array of items to display in the accordion. Each item should have 'title' and 'content' properties.
+    - allow_multiple: Boolean indicating if multiple sections can be open simultaneously. Default is false.
+    - default_open: Index of the item to be open by default (1-based index). Default is 0 (none open).
+  Render:
+  {% render 'accordion-component' list_items: items, allow_multiple: true, default_open: 0 %}
+{% endcomment %}
+
+<div class="accordion-wrapper mt-8 flex flex-col gap-2" data-allow-multiple="{{ allow_multiple }}">
+  {% for item in list_items %}
+    <accordion-item
+      class="block accordion"
+      {% if forloop.index == default_open %}
+        open
+      {% endif %}
+    >
+      <button class="accordion-toggle w-full" aria-expanded="false">
+        <h3 class="uppercase">
+          {{ item.title | escape }}
+        </h3>
+        <span class="accordion-icon-closed w-3.5 h-3.5 transition-opacity duration-300" aria-hidden="true">
+          {{ 'icon-minus.svg' | inline_asset_content }}
+        </span>
+
+        <span
+          class="accordion-icon-open w-3.5 h-3.5 transition-opacity duration-300 absolute right-0"
+          aria-hidden="true"
+        >
+          {{ 'icon-plus.svg' | inline_asset_content }}
+        </span>
+      </button>
+      <div class="accordion-content">
+        <div class="body-lg mt-4 text-gray-600">
+          {{ item.content | metafield_tag }}
+        </div>
+      </div>
+    </accordion-item>
+  {% endfor %}
+</div>
