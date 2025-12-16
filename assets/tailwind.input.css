@@ -97,6 +97,9 @@
 }
 
 @layer components {
+  .cart-count-bubble {
+    @apply absolute -bottom-1 -right-1 min-w-4 h-4 rounded-full bg-black text-white text-[0.75rem] leading-none flex items-center justify-center font-medium;
+  }
   .btn {
     display: inline-flex;
     align-items: center;

@@ -1,46 +1,48 @@
-{% form 'product', product, id: form_id %}
-  {% comment %} Error Summary Section {% endcomment %}
-  {% if form.errors %}
-    <div
-      class="form-errors mb-4 p-4 bg-red-50 border border-red-200 rounded"
-      role="alert"
-      aria-live="assertive"
-    >
-      <h2 class="text-red-800 font-semibold mb-2">
-        {{ 'general.form.error_heading' | t }}
-      </h2>
-      <ul class="list-disc pl-5 text-red-700">
-        {{ form.errors | default_errors }}
-      </ul>
-    </div>
-  {% endif %}
+<product-form>
+  {% form 'product', product, id: form_id %}
+    {% comment %} Error Summary Section {% endcomment %}
+    {% if form.errors %}
+      <div
+        class="form-errors mb-4 p-4 bg-red-50 border border-red-200 rounded"
+        role="alert"
+        aria-live="assertive"
+      >
+        <h2 class="text-red-800 font-semibold mb-2">
+          {{ 'general.form.error_heading' | t }}
+        </h2>
+        <ul class="list-disc pl-5 text-red-700">
+          {{ form.errors | default_errors }}
+        </ul>
+      </div>
+    {% endif %}
 
-  {% comment %} Success Message {% endcomment %}
-  {% if form.posted_successfully? %}
-    <div
-      class="form-success mb-4 p-4 bg-green-50 border border-green-200 rounded"
-      role="status"
-      aria-live="polite"
+    {% comment %} Success Message {% endcomment %}
+    {% if form.posted_successfully? %}
+      <div
+        class="form-success mb-4 p-4 bg-green-50 border border-green-200 rounded"
+        role="status"
+        aria-live="polite"
+      >
+        <p class="text-green-800">
+          {{ 'general.cart.item_added' | t }}
+        </p>
+      </div>
+    {% endif %}
+    <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+    <button
+      type="submit"
+      class="btn w-full border-black bg-black text-white {% unless product.selected_or_first_available_variant.available %}btn--disabled{% endunless %}"
+      {% unless product.selected_or_first_available_variant.available %}
+        disabled
+      {% endunless %}
     >
-      <p class="text-green-800">
-        {{ 'general.cart.item_added' | t }}
-      </p>
-    </div>
-  {% endif %}
-  <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
-  <button
-    type="submit"
-    class="btn w-full border-black bg-black text-white {% unless product.selected_or_first_available_variant.available %}btn--disabled{% endunless %}"
-    {% unless product.selected_or_first_available_variant.available %}
-      disabled
-    {% endunless %}
-  >
-    <span data-atc-text>
-      {% if product.selected_or_first_available_variant.available %}
-        {{ 'products.product.add_to_cart' | t }}
-      {% else %}
-        {{ 'products.product.sold_out' | t }}
-      {% endif %}
-    </span>
-  </button>
-{% endform %}
+      <span data-atc-text>
+        {% if product.selected_or_first_available_variant.available %}
+          {{ 'products.product.add_to_cart' | t }}
+        {% else %}
+          {{ 'products.product.sold_out' | t }}
+        {% endif %}
+      </span>
+    </button>
+  {% endform %}
+</product-form>

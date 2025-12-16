@@ -267,6 +267,58 @@ class VariantSelector extends HTMLElement {
 
 customElements.define("variant-selector", VariantSelector);
 
+class ProductForm extends HTMLElement {
+  constructor() {
+    super();
+    this.form = null;
+  }
+  connectedCallback() {
+    this.form = this.querySelector("form");
+    if (!this.form) return;
+
+    this.form.addEventListener("submit", this.onSubmit.bind(this));
+  }
+
+  async onSubmit(event) {
+    event.preventDefault();
+
+    const formData = new FormData(this.form);
+
+    try {
+      const addResponse = await fetch("/cart/add.js", {
+        method: "POST",
+        headers: { Accept: "application/json" },
+        body: formData,
+      });
+
+      if (!addResponse.ok) throw new Error("Add to cart failed");
+
+      await this.updateHeaderCartCount();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async updateHeaderCartCount() {
+    const sectionsToRender = ["cart-icon-bubble"];
+    const url = `/?sections=${sectionsToRender.join(",")}`;
+
+    const response = await fetch(url);
+    const data = await response.json();
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = data["cart-icon-bubble"];
+
+    const bubble = document.querySelector("#cart-icon-bubble");
+    const currentCount = bubble.querySelector(".cart-count-bubble");
+    const newCount = tempDiv.querySelector(".cart-count-bubble");
+
+    if (currentCount && tempDiv.querySelector(".cart-count-bubble")) {
+      currentCount.innerHTML = newCount.innerHTML;
+    }
+  }
+}
+customElements.define("product-form", ProductForm);
+
 class ProductRecommendations extends HTMLElement {
   constructor() {
     super();
