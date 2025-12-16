@@ -36,7 +36,13 @@
         "regular_price": "Regular price",
         "sale_price": "Sale price"
       },
-      "product_badges": "Product badges"
+      "product_badges": "Product badges",
+      "quantity": {
+        "label": "Quantity",
+        "input_label": "Quantity for {{ product }}",
+        "increase": "Increase quantity for {{ product }}",
+        "decrease": "Decrease quantity for {{ product }}"
+      }
     }
   },
   "404": {

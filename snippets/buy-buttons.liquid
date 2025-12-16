@@ -1,5 +1,4 @@
-{%- assign product_form_id = 'product-form-' | append: section_id -%}
-{% form 'product', product, id: product_form_id %}
+{% form 'product', product, id: form_id %}
   {% comment %} Error Summary Section {% endcomment %}
   {% if form.errors %}
     <div
@@ -29,7 +28,6 @@
     </div>
   {% endif %}
   <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
-  <input type="hidden" name="quantity" value="1">
   <button
     type="submit"
     class="btn w-full border-black bg-black text-white {% unless product.selected_or_first_available_variant.available %}btn--disabled{% endunless %}"

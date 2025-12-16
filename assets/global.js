@@ -130,9 +130,85 @@ class ProductInfo extends HTMLElement {
 
 customElements.define("product-info", ProductInfo);
 
+class QuantityInput extends HTMLElement {
+  constructor() {
+    super();
+
+    this.changeEvent = new Event("change", { bubbles: true });
+  }
+
+  connectedCallback() {
+    this.input = this.querySelector("input");
+    this.onButtonClick = this.onButtonClick.bind(this);
+    this.onInputChange = this.onInputChange.bind(this);
+    this.input.addEventListener("change", this.onInputChange);
+    this.querySelectorAll("button").forEach((button) => {
+      button.addEventListener("click", this.onButtonClick);
+    });
+
+    this.validateQtyRules();
+  }
+
+  onInputChange() {
+    this.validateQtyRules();
+  }
+
+  onButtonClick(event) {
+    event.preventDefault();
+    const previousValue = this.input.value;
+
+    if (event.currentTarget.name === "plus") {
+      if (
+        parseInt(this.input.dataset.min) > parseInt(this.input.step) &&
+        this.input.value == 0
+      ) {
+        this.input.value = this.input.dataset.min;
+      } else {
+        this.input.stepUp();
+        console.log("Stepped up");
+      }
+    } else {
+      this.input.stepDown();
+      console.log("Stepped down");
+    }
+
+    if (previousValue !== this.input.value)
+      this.input.dispatchEvent(this.changeEvent);
+
+    if (
+      this.input.dataset.min === previousValue &&
+      event.target.name === "minus"
+    ) {
+      this.input.value = parseInt(this.input.min);
+    }
+  }
+
+  validateQtyRules() {
+    const value = parseInt(this.input.value, 10);
+    if (this.input.min) {
+      const buttonMinus = this.querySelector("button[name='minus']");
+      buttonMinus.classList.toggle(
+        "disabled",
+        parseInt(value) < parseInt(this.input.min)
+      );
+    }
+
+    if (this.input.max) {
+      const buttonPlus = this.querySelector("button[name='plus']");
+      buttonPlus.classList.toggle("disabled", value >= this.input.max);
+    }
+  }
+}
+
+customElements.define("quantity-input", QuantityInput);
+
 class VariantSelector extends HTMLElement {
   constructor() {
     super();
+    this.productUrl = null;
+    this.sectionId = null;
+    this.productInfo = null;
+    this._initialized = false;
   }
   connectedCallback() {
     this.productUrl = this.dataset.url;

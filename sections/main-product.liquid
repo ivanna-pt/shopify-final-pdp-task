@@ -59,9 +59,45 @@
                 product_form_id: product_form_id
               %}
             {% when 'quantity_selector' %}
-              {% comment %} Quantity selector block {% endcomment %}
+              <div id="Quantity-Form-{{ section.id }}" class="my-8 flex flex-col">
+                <label class="body-md mb-3" for="Quantity-{{ section.id }}">
+                  {{ 'products.product.quantity.label' | t }}
+                </label>
+                <quantity-input class="block">
+                  <button name="minus" type="button" class="cursor-pointer">
+                    <span class="sr-only">
+                      {{ 'products.product.quantity.decrease' | t: product: product }}
+                    </span>
+                    <span class="">
+                      {{- 'icon-minus.svg' | inline_asset_content -}}
+                    </span>
+                  </button>
+                  <input
+                    type="number"
+                    name="quantity"
+                    id="Quantity-{{ section.id }}"
+                    data-min="{{ product.selected_or_first_available_variant.quantity_rule.min }}"
+                    min="{{ product.selected_or_first_available_variant.quantity_rule.min }}"
+                    {% if product.selected_or_first_available_variant.quantity_rule.max != null %}
+                      max="{{ product.selected_or_first_available_variant.quantity_rule.max }}"
+                    {% endif %}
+                    step="{{ product.selected_or_first_available_variant.quantity_rule.increment }}"
+                    value="{{ product.selected_or_first_available_variant.quantity_rule.min }}"
+                    form="{{ product_form_id }}"
+                    class="no-spinner border-black border text-center w-16 mx-2 px-2 rounded-lg"
+                  >
+                  <button name="plus" type="button" class="cursor-pointer">
+                    <span class="sr-only">
+                      {{ 'products.product.quantity.increase' | t: product: product }}
+                    </span>
+                    <span class="svg-wrapper">
+                      {{- 'icon-plus.svg' | inline_asset_content -}}
+                    </span>
+                  </button>
+                </quantity-input>
+              </div>
             {% when 'buy_buttons' %}
-              {% render 'buy-buttons', product: product, section_id: section.id %}
+              {% render 'buy-buttons', product: product, form_id: product_form_id %}
             {% when 'collapsible_row' %}
               {% render 'accordion-component',
                 list_items: product.metafields.custom.product_details.value,
