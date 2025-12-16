@@ -15,4 +15,18 @@
     --color-foreground: {{ settings.foreground_color }};
     --style-border-radius-inputs: {{ settings.input_corner_radius }}px;
   }
+
+  .color-scheme-{{ settings.default_color_scheme.id }} {
+    --color-background: {{ settings.default_color_scheme.settings.background }};
+    --color-foreground: {{ settings.default_color_scheme.settings.text }};
+    --color-border: {{ settings.default_color_scheme.settings.border }};
+  }
+
+  {% for scheme in settings.color_schemes %}
+    .color-scheme-{{ scheme.id }} {
+      --color-bg: {{ scheme.settings.background }};
+      --color-text: {{ scheme.settings.text }};
+      --color-border: {{ scheme.settings.border }};
+    }
+    {% endfor %}
 {% endstyle %}

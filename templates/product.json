@@ -26,7 +26,7 @@
         },
         "inventory": {
           "type": "inventory",
-          "sections": {}
+          "settings": {}
         },
         "variant_picker": {
           "type": "variant_picker",
@@ -38,10 +38,7 @@
         },
         "collapsible_row_1": {
           "type": "collapsible_row",
-          "settings": {
-            "collapsible_title": "More information",
-            "collapsible_content": "<p>Here at Nike, we believe that sport has the power to change lives. That's why we work every day to create innovative products, experiences and services to help you reach your potential.</p>"
-          }
+          "settings": {}
         },
         "rating": {
           "type": "rating",
@@ -106,5 +103,10 @@
       }
     }
   },
-  "order": ["main-product", "reviews", "related_products", "banner"]
+  "order": [
+    "main-product",
+    "reviews",
+    "related_products",
+    "banner"
+  ]
 }

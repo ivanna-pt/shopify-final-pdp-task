@@ -239,11 +239,12 @@
   }
   .product-card:hover .product-card__image,
   .product-card:focus-within .product-card__image {
-    transform: scale(1.03);
+    transform: scale(1.04);
   }
 }
 @layer base {
   html {
+    font-family: var(--font-primary--family);
     color: var(--color-black);
   }
 }
