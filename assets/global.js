@@ -194,17 +194,10 @@ customElements.define("variant-selector", VariantSelector);
 class ProductRecommendations extends HTMLElement {
   constructor() {
     super();
-    this.swiper = null;
   }
 
   connectedCallback() {
     this.loadRecommendations();
-  }
-
-  disconnectedCallback() {
-    if (this.swiper) {
-      this.swiper.destroy(true, true);
-    }
   }
 
   async loadRecommendations() {
@@ -219,10 +212,6 @@ class ProductRecommendations extends HTMLElement {
 
         if (recommendations && recommendations.innerHTML.trim().length) {
           this.innerHTML = recommendations.innerHTML;
-
-          // setTimeout(() => {
-          //   this.initSwiper();
-          // }, 300);
         } else {
           this.style.display = "none";
         }
@@ -231,50 +220,6 @@ class ProductRecommendations extends HTMLElement {
         console.error("Error loading recommendations:", error);
         this.style.display = "none";
       });
-  }
-
-  initSwiper() {
-    if (typeof Swiper === "undefined") {
-      console.warn("Swiper library not loaded");
-      return;
-    }
-
-    const swiperContainer = this.querySelector(".swiper-container");
-    if (!swiperContainer) return;
-
-    if (this.swiper) {
-      this.swiper.destroy(true, true);
-    }
-
-    this.swiper = new Swiper(swiperContainer, {
-      slidesPerView: 1.2,
-      spaceBetween: 16,
-      grid: {
-        rows: 1,
-        fill: "row",
-      },
-      breakpoints: {
-        520: {
-          slidesPerView: "auto",
-          spaceBetween: 20,
-          grid: {
-            rows: 1,
-          },
-        },
-        1280: {
-          slidesPerView: 4,
-          spaceBetween: 24,
-          grid: {
-            rows: 1,
-          },
-        },
-      },
-      navigation: {
-        nextEl: ".swiper-button-next-custom",
-        prevEl: ".swiper-button-prev-custom",
-      },
-      watchOverflow: true,
-    });
   }
 }
 
@@ -287,15 +232,14 @@ class SwiperCarousel extends HTMLElement {
   }
 
   connectedCallback() {
-    // setTimeout(() => {
-    //   this.init();
-    // }, 100);
-    if (this._initialized) return;
-    this._initialized = true;
-    requestAnimationFrame(() => {
-      console.log("Initializing SwiperCarousel");
+    setTimeout(() => {
       this.init();
-    });
+    }, 200);
+    // if (this._initialized) return;
+    // this._initialized = true;
+    // requestAnimationFrame(() => {
+    //   this.init();
+    // });
   }
 
   disconnectedCallback() {
@@ -323,23 +267,23 @@ class SwiperCarousel extends HTMLElement {
     }
 
     const swiperContainer = this.querySelector(".swiper-container");
-
     const config = this.getConfig();
 
-    // Always enforce DOM-bound selectors
-    config.navigation = config.navigation?.enabled
-      ? {
-          nextEl: this.querySelector(".swiper-button-next-custom"),
-          prevEl: this.querySelector(".swiper-button-prev-custom"),
-        }
-      : false;
+    if (config.navigation?.enabled) {
+      config.navigation = {
+        nextEl: this.querySelector(".swiper-button-next-custom"),
+        prevEl: this.querySelector(".swiper-button-prev-custom"),
+      };
+    }
 
-    config.pagination = config.pagination?.enabled
-      ? {
-          el: this.querySelector(".swiper-pagination"),
-          clickable: true,
-        }
-      : false;
+    if (config.pagination?.enabled) {
+      config.pagination = {
+        el: this.querySelector(".swiper-pagination"),
+        clickable: true,
+      };
+    }
+    config.observer = true;
+    config.observeParents = true;
 
     if (!swiperContainer) return;
     this.swiper = new Swiper(swiperContainer, config);
