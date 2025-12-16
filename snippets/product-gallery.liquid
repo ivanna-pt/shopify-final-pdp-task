@@ -39,21 +39,9 @@
         {% render 'product-badges', product: product %}
       {% endif %}
       {% assign featured_image_alt = product.featured_image.alt | default: product.title | escape %}
-      {% assign variant_image = target.image %}
+
       {% assign main_image_classes = 'aspect-square object-cover rounded-lg' %}
-      {% if variant_image %}
-        {{
-          variant_image
-          | image_url: width: 536
-          | image_tag:
-            width: 536,
-            height: 536,
-            alt: featured_image_alt,
-            class: main_image_classes,
-            sizes: '(max-width: 600px) 100vw, 536px',
-            loading: 'lazy'
-        }}
-      {% elsif product.featured_image %}
+      {% if product.featured_image %}
         {{
           product.featured_image
           | image_url: width: 536
@@ -63,7 +51,7 @@
             alt: featured_image_alt,
             class: main_image_classes,
             sizes: '(max-width: 600px) 100vw, 536px',
-            loading: 'lazy'
+            fetchpriority: 'high'
         }}
       {% else %}
         {{ 'image' | placeholder_svg_tag: 'placeholder-svg-class' }}
