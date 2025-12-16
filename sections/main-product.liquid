@@ -59,6 +59,23 @@
                 product_form_id: product_form_id
               %}
             {% when 'quantity_selector' %}
+              {% liquid
+                assign variant = product.selected_or_first_available_variant
+                assign rule_max = variant.quantity_rule.max
+                assign inventory_max = null
+                if variant.inventory_management == 'shopify' and variant.inventory_policy != 'continue'
+                  assign inventory_max = variant.inventory_quantity
+                endif
+
+                assign effective_max = null
+                if rule_max and inventory_max
+                  assign effective_max = rule_max | at_most: inventory_max
+                elsif rule_max
+                  assign effective_max = rule_max
+                elsif inventory_max
+                  assign effective_max = inventory_max
+                endif
+              %}
               <div id="Quantity-Form-{{ section.id }}" class="my-8 flex flex-col">
                 <label class="body-md mb-3" for="Quantity-{{ section.id }}">
                   {{ 'products.product.quantity.label' | t }}
@@ -78,8 +95,9 @@
                     id="Quantity-{{ section.id }}"
                     data-min="{{ product.selected_or_first_available_variant.quantity_rule.min }}"
                     min="{{ product.selected_or_first_available_variant.quantity_rule.min }}"
-                    {% if product.selected_or_first_available_variant.quantity_rule.max != null %}
-                      max="{{ product.selected_or_first_available_variant.quantity_rule.max }}"
+                    {% if effective_max %}
+                      max="{{ effective_max }}"
+                      data-max="{{ effective_max }}"
                     {% endif %}
                     step="{{ product.selected_or_first_available_variant.quantity_rule.increment }}"
                     value="{{ product.selected_or_first_available_variant.quantity_rule.min }}"

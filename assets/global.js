@@ -205,10 +205,6 @@ customElements.define("quantity-input", QuantityInput);
 class VariantSelector extends HTMLElement {
   constructor() {
     super();
-    this.productUrl = null;
-    this.sectionId = null;
-    this.productInfo = null;
-    this._initialized = false;
   }
   connectedCallback() {
     this.productUrl = this.dataset.url;
@@ -274,6 +270,8 @@ class ProductForm extends HTMLElement {
   }
   connectedCallback() {
     this.form = this.querySelector("form");
+    this.errorWrapper = this.querySelector(".error-message-wrapper");
+    this.errorMessage = this.errorWrapper?.querySelector(".error-message");
     if (!this.form) return;
 
     this.form.addEventListener("submit", this.onSubmit.bind(this));
@@ -281,6 +279,12 @@ class ProductForm extends HTMLElement {
 
   async onSubmit(event) {
     event.preventDefault();
+
+    this.clearError();
+
+    if (!this.validateQuantity()) {
+      return;
+    }
 
     const formData = new FormData(this.form);
 
@@ -291,10 +295,15 @@ class ProductForm extends HTMLElement {
         body: formData,
       });
 
-      if (!addResponse.ok) throw new Error("Add to cart failed");
+      if (!addResponse.ok) {
+        const error = await response.json();
+        this.showError(error.description || error.message);
+        return;
+      }
 
       await this.updateHeaderCartCount();
     } catch (error) {
+      this.showError(error.description);
       console.error(error);
     }
   }
@@ -315,6 +324,42 @@ class ProductForm extends HTMLElement {
     if (currentCount && tempDiv.querySelector(".cart-count-bubble")) {
       currentCount.innerHTML = newCount.innerHTML;
     }
+  }
+
+  validateQuantity() {
+    const qtyInput = this.form.querySelector("input[name='quantity']");
+    if (!qtyInput) return;
+
+    const value = Number(qtyInput.value);
+    const min = Number(input.min || 1);
+    const max = input.max ? Number(input.max) : null;
+
+    if (value < min) {
+      this.showError(`Minimum quantity is ${min}.`);
+      input.focus();
+      return false;
+    }
+
+    if (max !== null && value > max) {
+      this.showError(`Only ${max} item${max > 1 ? "s" : ""} available.`);
+      input.focus();
+      return false;
+    }
+
+    return true;
+  }
+
+  showError(message) {
+    if (!this.errorWrapper || !this.errorMessage) return;
+    this.errorMessage.textContent = message;
+    this.errorWrapper.classList.remove("hidden");
+  }
+
+  clearError() {
+    if (!this.errorWrapper) return;
+
+    this.errorWrapper.classList.add("hidden");
+    this.errorMessage.textContent = "";
   }
 }
 customElements.define("product-form", ProductForm);

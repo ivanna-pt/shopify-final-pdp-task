@@ -9,6 +9,7 @@
       "Courier New", monospace;
     --color-red-50: oklch(97.1% 0.013 17.38);
     --color-red-200: oklch(88.5% 0.062 18.334);
+    --color-red-400: oklch(70.4% 0.191 22.216);
     --color-red-600: oklch(57.7% 0.245 27.325);
     --color-red-700: oklch(50.5% 0.213 27.518);
     --color-red-800: oklch(44.4% 0.177 26.899);
@@ -290,9 +291,6 @@
   .mt-8 {
     margin-top: calc(var(--spacing) * 8);
   }
-  .mb-2 {
-    margin-bottom: calc(var(--spacing) * 2);
-  }
   .mb-3 {
     margin-bottom: calc(var(--spacing) * 3);
   }
@@ -398,9 +396,6 @@
   .resize {
     resize: both;
   }
-  .list-disc {
-    list-style-type: disc;
-  }
   .grid-cols-1 {
     grid-template-columns: repeat(1, minmax(0, 1fr));
   }
@@ -469,12 +464,6 @@
   .border-black {
     border-color: var(--color-black);
   }
-  .border-green-200 {
-    border-color: var(--color-green-200);
-  }
-  .border-red-200 {
-    border-color: var(--color-red-200);
-  }
   .border-transparent {
     border-color: transparent;
   }
@@ -486,12 +475,6 @@
   }
   .bg-gray-200 {
     background-color: var(--color-gray-200);
-  }
-  .bg-green-50 {
-    background-color: var(--color-green-50);
-  }
-  .bg-red-50 {
-    background-color: var(--color-red-50);
   }
   .bg-red-600 {
     background-color: var(--color-red-600);
@@ -508,9 +491,6 @@
   .p-2 {
     padding: calc(var(--spacing) * 2);
   }
-  .p-4 {
-    padding: calc(var(--spacing) * 4);
-  }
   .px-2 {
     padding-inline: calc(var(--spacing) * 2);
   }
@@ -522,9 +502,6 @@
   }
   .py-6 {
     padding-block: calc(var(--spacing) * 6);
-  }
-  .pl-5 {
-    padding-left: calc(var(--spacing) * 5);
   }
   .text-center {
     text-align: center;
@@ -558,17 +535,11 @@
   .text-gray-600 {
     color: var(--color-gray-600);
   }
-  .text-green-800 {
-    color: var(--color-green-800);
+  .text-red-400 {
+    color: var(--color-red-400);
   }
   .text-red-600 {
     color: var(--color-red-600);
-  }
-  .text-red-700 {
-    color: var(--color-red-700);
-  }
-  .text-red-800 {
-    color: var(--color-red-800);
   }
   .text-white {
     color: var(--color-white);
@@ -760,7 +731,7 @@
     list-style-type: disc;
     margin-left: 1.5rem;
   }
-  .unavaliable {
+  .unavaliable, .disabled {
     cursor: not-allowed !important;
     opacity: 50%;
   }

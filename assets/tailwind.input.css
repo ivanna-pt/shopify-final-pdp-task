@@ -83,7 +83,8 @@
     list-style-type: disc;
     margin-left: 1.5rem;
   }
-  .unavaliable {
+  .unavaliable,
+  .disabled {
     @apply opacity-50 cursor-not-allowed!;
   }
   .no-spinner::-webkit-outer-spin-button,
