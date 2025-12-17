@@ -19,8 +19,6 @@ class ProductInfo extends HTMLElement {
       const newSection = doc.querySelector(`#MainProduct-${this.sectionId}`);
 
       if (newSection) {
-        console.log("Replaced section with new content from history state.");
-
         this.replaceWith(newSection);
         //  ProductInfo.reinitialize(newSection);
       }
@@ -63,9 +61,7 @@ class ProductInfo extends HTMLElement {
             if (variantSelector && !variantSelector._initialized) {
               variantSelector.connectedCallback();
             }
-            console.log("Replaced entire section due to product path change.");
           } else {
-            console.log("Updating partial content of the product section.");
             ProductInfo.updatePartialContent(
               currentSection,
               newSection,
@@ -95,6 +91,7 @@ class ProductInfo extends HTMLElement {
 
     updateElement("[data-price-container]");
     updateElement("[data-inventory-quantity]");
+    updateElement("quantity-input");
 
     updateElement(`#product-form-${sectionId}`, (currentForm, newForm) => {
       const hiddenInput = currentForm.querySelector('input[name="id"]');
@@ -123,9 +120,7 @@ class ProductInfo extends HTMLElement {
       }
     });
   }
-  static reinitialize(section) {
-    // Reinitialize any gallery or other interactive components
-  }
+  static reinitialize(section) {}
 }
 
 customElements.define("product-info", ProductInfo);
@@ -165,11 +160,9 @@ class QuantityInput extends HTMLElement {
         this.input.value = this.input.dataset.min;
       } else {
         this.input.stepUp();
-        console.log("Stepped up");
       }
     } else {
       this.input.stepDown();
-      console.log("Stepped down");
     }
 
     if (previousValue !== this.input.value)
@@ -283,6 +276,7 @@ class ProductForm extends HTMLElement {
     this.clearError();
 
     if (!this.validateQuantity()) {
+      console.log("Quantity validation faild");
       return;
     }
 
@@ -327,22 +321,25 @@ class ProductForm extends HTMLElement {
   }
 
   validateQuantity() {
-    const qtyInput = this.form.querySelector("input[name='quantity']");
-    if (!qtyInput) return;
+    const productFormId = this.form.getAttribute("id");
+    const qtyInput = document.querySelector(
+      `input[name="quantity"][form="${productFormId}"]`
+    );
+    if (!qtyInput) return true;
 
     const value = Number(qtyInput.value);
-    const min = Number(input.min || 1);
-    const max = input.max ? Number(input.max) : null;
+    const min = Number(qtyInput.min || 1);
+    const max = qtyInput.max ? Number(qtyInput.max) : null;
 
     if (value < min) {
       this.showError(`Minimum quantity is ${min}.`);
-      input.focus();
+      qtyInput.focus();
       return false;
     }
 
     if (max !== null && value > max) {
       this.showError(`Only ${max} item${max > 1 ? "s" : ""} available.`);
-      input.focus();
+      qtyInput.focus();
       return false;
     }
 
