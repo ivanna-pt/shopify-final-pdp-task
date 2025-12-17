@@ -54,7 +54,6 @@
     --btn-gap: 10px;
     --space-lg: 24px;
     --gap-lg: 24px;
-    --border-default: 1px solid var(--color-gray-200);
   }
 }
 @layer base {
@@ -325,14 +324,8 @@
   .inline-block {
     display: inline-block;
   }
-  .table {
-    display: table;
-  }
   .aspect-square {
     aspect-ratio: 1 / 1;
-  }
-  .h-3 {
-    height: calc(var(--spacing) * 3);
   }
   .h-3\.5 {
     height: calc(var(--spacing) * 3.5);
@@ -351,9 +344,6 @@
   }
   .h-full\! {
     height: 100% !important;
-  }
-  .w-3 {
-    width: calc(var(--spacing) * 3);
   }
   .w-3\.5 {
     width: calc(var(--spacing) * 3.5);
@@ -391,9 +381,6 @@
   .flex-grow {
     flex-grow: 1;
   }
-  .border-collapse {
-    border-collapse: collapse;
-  }
   .transform {
     transform: var(--tw-rotate-x,) var(--tw-rotate-y,) var(--tw-rotate-z,) var(--tw-skew-x,) var(--tw-skew-y,);
   }
@@ -421,9 +408,6 @@
   .justify-center {
     justify-content: center;
   }
-  .gap-0 {
-    gap: calc(var(--spacing) * 0);
-  }
   .gap-0\.5 {
     gap: calc(var(--spacing) * 0.5);
   }
@@ -438,13 +422,6 @@
   }
   .gap-8 {
     gap: calc(var(--spacing) * 8);
-  }
-  .space-x-1 {
-    :where(& > :not(:last-child)) {
-      --tw-space-x-reverse: 0;
-      margin-inline-start: calc(calc(var(--spacing) * 1) * var(--tw-space-x-reverse));
-      margin-inline-end: calc(calc(var(--spacing) * 1) * calc(1 - var(--tw-space-x-reverse)));
-    }
   }
   .space-x-1\.5 {
     :where(& > :not(:last-child)) {
@@ -529,10 +506,6 @@
   .text-right {
     text-align: right;
   }
-  .text-2xl {
-    font-size: var(--text-2xl);
-    line-height: var(--tw-leading, var(--text-2xl--line-height));
-  }
   .text-2xl\! {
     font-size: var(--text-2xl) !important;
     line-height: var(--tw-leading, var(--text-2xl--line-height)) !important;
@@ -544,10 +517,6 @@
   .text-sm {
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
-  }
-  .font-normal {
-    --tw-font-weight: var(--font-weight-normal);
-    font-weight: var(--font-weight-normal);
   }
   .font-normal\! {
     --tw-font-weight: var(--font-weight-normal) !important;
@@ -578,9 +547,6 @@
   .line-through {
     text-decoration-line: line-through;
   }
-  .underline {
-    text-decoration-line: underline;
-  }
   .opacity-50 {
     opacity: 50%;
   }
@@ -594,10 +560,6 @@
   .shadow-md {
     --tw-shadow: 0 4px 6px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 2px 4px -2px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
-  }
-  .outline {
-    outline-style: var(--tw-outline-style);
-    outline-width: 1px;
   }
   .filter {
     filter: var(--tw-blur,) var(--tw-brightness,) var(--tw-contrast,) var(--tw-grayscale,) var(--tw-hue-rotate,) var(--tw-invert,) var(--tw-saturate,) var(--tw-sepia,) var(--tw-drop-shadow,);
@@ -720,6 +682,21 @@
       padding-inline: calc(var(--spacing) * 10);
     }
   }
+  .bg-scheme {
+    background-color: rgb(var(--color-background));
+  }
+  .bg-contrast-scheme {
+    background-color: rgb(var(--color-background-contrast));
+  }
+  .text-scheme {
+    color: rgb(var(--color-foreground));
+  }
+  .text-accent-scheme {
+    color: rgb(var(--color-accent-text));
+  }
+  .border-color-scheme {
+    border-color: rgb(var(--color-border));
+  }
   .h1 {
     font-size: var(--text-h1);
     --tw-leading: var(--leading-h1);
@@ -807,15 +784,15 @@
     transition: background-color 0.2s, opacity 0.2s;
   }
   .btn-primary {
-    background: var(--color-white);
-    color: var(--color-black);
+    background: rgb(var(--color-button));
+    color: rgb(var(--color-button-text));
   }
   .btn-primary:hover {
     background: var(--color-gray-300);
   }
   .btn-secondary {
-    background: var(--color-black);
-    color: var(--color-white);
+    background: rgb(var(--color-secondary-button));
+    color: rgb(var(--color-secondary-button-text));
   }
   .btn-secondary:hover {
     background: var(--color-gray-800);
@@ -827,7 +804,7 @@
   .accordion {
     padding: var(--space-lg);
     border-radius: var(--radius-md);
-    border: var(--border-default);
+    border: 1px solid rgb(var(--color-accent-text));
   }
   .accordion-toggle {
     cursor: pointer;
@@ -900,7 +877,7 @@
     gap: var(--gap-lg);
     padding: var(--space-lg);
     border-radius: var(--radius-md);
-    border: var(--border-default);
+    border: 1px solid rgb(var(--color-accent-text));
     background-color: var(--color-white);
   }
   .price-block {
@@ -915,7 +892,7 @@
     color: var(--color-gray-600);
   }
   .price-block.main-product .price-sale {
-    color: var(--color-black);
+    color: rgb(var(--color-foreground));
   }
   .price-badge {
     display: inline-block;
@@ -932,21 +909,17 @@
     cursor: pointer;
     overflow: hidden;
     border-radius: var(--radius-md);
-    border-style: var(--tw-border-style);
-    border-width: 1px;
-    border-color: var(--color-gray-200);
     padding: calc(var(--spacing) * 4);
-    color: var(--color-black);
     transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to, opacity, box-shadow, transform, translate, scale, rotate, filter, -webkit-backdrop-filter, backdrop-filter, display, content-visibility, overlay, pointer-events;
     transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
     transition-duration: var(--tw-duration, var(--default-transition-duration));
+    color: rgb(var(--color-foreground));
+    border: 1px solid rgb(var(--color-border));
     &:hover {
-      @media (hover: hover) {
-        border-color: var(--color-black);
-      }
+      border-color: rgb(var(--color-accent-text));
     }
     &:focus {
-      border-color: var(--color-black);
+      border-color: rgb(var(--color-accent-text));
     }
   }
   .option-value--unavailable .option-label {
@@ -957,7 +930,7 @@
     border-color: var(--color-gray-200) !important;
   }
   .option-label.active {
-    border-color: var(--color-black);
+    border-color: rgb(var(--color-accent-text));
   }
   .product-gallery__item.active::before {
     position: absolute;
@@ -997,7 +970,7 @@
 @layer base {
   html {
     font-family: var(--font-primary--family);
-    color: var(--color-black);
+    color: var(--color-foreground);
   }
 }
 @property --tw-rotate-x {
@@ -1099,11 +1072,6 @@
   inherits: false;
   initial-value: 0 0 #0000;
 }
-@property --tw-outline-style {
-  syntax: "*";
-  inherits: false;
-  initial-value: solid;
-}
 @property --tw-blur {
   syntax: "*";
   inherits: false;
@@ -1199,7 +1167,6 @@
       --tw-ring-offset-width: 0px;
       --tw-ring-offset-color: #fff;
       --tw-ring-offset-shadow: 0 0 #0000;
-      --tw-outline-style: solid;
       --tw-blur: initial;
       --tw-brightness: initial;
       --tw-contrast: initial;

@@ -4,6 +4,7 @@
   Accepts:
   - rating: {Number} Rating value (0-5)
   - show_number: {Boolean} Whether to show rating value (optional)
+  - star_color: {String} HEX value to define stars color
 
   Usage:
   {% render 'star-rating', rating: rating, , show_number: true %}
@@ -12,6 +13,7 @@
   assign rating = rating | default: 0 | times: 1.0
   assign max_stars = 5
   assign show_number = show_number | default: false
+  assign star_color = star_color | default: '#111111'
 -%}
 <div class="flex items-center gap-2">
   <div
@@ -20,7 +22,7 @@
   >
     {% for i in (1..max_stars) %}
       {%- liquid
-        assign fill_color = '#111111'
+        assign fill_color = star_color
         assign fill_opacity = 'none'
         if i <= rating
           assign fill_opacity = fill_color

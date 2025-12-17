@@ -3,7 +3,7 @@
 -%}
 
 <product-info
-  class="section-{{ section.id }}-padding block"
+  class="section-{{ section.id }}-padding block color-{{ section.settings.color_scheme }} bg-scheme"
   id="MainProduct-{{ section.id }}"
   data-selected-variant-id="{{ target.id }}"
   data-product-handle="{{ product.handle }}"
@@ -22,7 +22,7 @@
       }
   {%- endstyle -%}
   <div class="page-width">
-    <div class="flex flex-col md:flex-row  gap-8">
+    <div class="flex flex-col md:flex-row gap-8 bg-scheme">
       <div class="md:sticky md:top-6 self-start md:flex-1">
         {% render 'product-gallery', product: product, enable_image_badges: section.settings.enable_image_badges %}
       </div>
@@ -33,7 +33,9 @@
             {%- when '@app' -%}
               {% render block %}
             {% when 'title' %}
-              <h2 class="text-2xl! md:text-3xl font-normal!">{{ product.title | split: '[' | first | escape }}</h2>
+              <h2 class="text-scheme text-2xl! md:text-3xl font-normal!">
+                {{ product.title | split: '[' | first | escape }}
+              </h2>
             {% when 'price' %}
               <div class="my-6">
                 {% render 'price',
@@ -46,7 +48,7 @@
             {% when 'description' %}
               {% if product.description != blank %}
                 <div
-                  class="mt-6 text-gray-600 body-md"
+                  class="mt-6 text-accent-scheme body-md"
                   aria-label="{{ 'products.product.description' | t }}"
                 >
                   {{ product.description }}
@@ -68,24 +70,22 @@
                 endif
 
                 assign effective_max = null
-                if rule_max and inventory_max
-                  assign effective_max = rule_max | at_most: inventory_max
-                elsif rule_max
+                if rule_max
                   assign effective_max = rule_max
                 elsif inventory_max
                   assign effective_max = inventory_max
                 endif
               %}
               <div id="Quantity-Form-{{ section.id }}" class="my-8 flex flex-col">
-                <label class="body-md mb-3" for="Quantity-{{ section.id }}">
-                  {{ 'products.product.quantity.label' | t }}
+                <label class="body-md text-scheme mb-3" for="Quantity-{{ section.id }}">
+                  {{ 'products.product.quantity.label' | t }}:
                 </label>
                 <quantity-input class="block">
                   <button name="minus" type="button" class="cursor-pointer">
                     <span class="sr-only">
                       {{ 'products.product.quantity.decrease' | t: product: product }}
                     </span>
-                    <span class="">
+                    <span class="text-scheme">
                       {{- 'icon-minus.svg' | inline_asset_content -}}
                     </span>
                   </button>
@@ -102,13 +102,13 @@
                     step="{{ product.selected_or_first_available_variant.quantity_rule.increment }}"
                     value="{{ product.selected_or_first_available_variant.quantity_rule.min }}"
                     form="{{ product_form_id }}"
-                    class="no-spinner border-black border text-center w-16 mx-2 px-2 rounded-lg"
+                    class="no-spinner text-scheme border-color-scheme border text-center w-16 mx-2 px-2 rounded-lg"
                   >
                   <button name="plus" type="button" class="cursor-pointer">
                     <span class="sr-only">
                       {{ 'products.product.quantity.increase' | t: product: product }}
                     </span>
-                    <span class="svg-wrapper">
+                    <span class="text-scheme">
                       {{- 'icon-plus.svg' | inline_asset_content -}}
                     </span>
                   </button>
@@ -136,23 +136,25 @@
                   endfor
                 endif
                 assign total_rating = rating_sum | divided_by: review_count | round: 1
+                assign scheme = section.settings.color_scheme
+                assign color = scheme.settings.text
               %}
               <div class="mt-2">
-                {% render 'star-rating', rating: total_rating, , show_number: true %}
+                {% render 'star-rating', rating: total_rating, , show_number: true, star_color: color %}
               </div>
             {% when 'text' %}
-              <div class="mt-3 {{ block.settings.text_style }}">
+              <div class="mt-3 text-accent-scheme {{ block.settings.text_style }}">
                 {{ block.settings.custom_text }}
               </div>
             {% when 'inventory' %}
               <div data-inventory-quantity>
                 {%- unless target.available == false -%}
                   {% if target.inventory_management == 'shopify' and target.inventory_policy != 'continue' %}
-                    <span class="font-semibold">
+                    <span class="font-semibold text-scheme">
                       {{ 'products.product.inventory_in_stock_show_count' | t: quantity: target.inventory_quantity }}
                     </span>
                   {%- else -%}
-                    <span class="font-semibold">
+                    <span class="font-semibold text-scheme">
                       {{ 'products.product.inventory_in_stock' | t }}
                     </span>
                   {%- endif -%}

@@ -73,7 +73,9 @@
         "description",
         "collapsible_row_1"
       ],
-      "settings": {}
+      "settings": {
+        "color_scheme": "scheme-1"
+      }
     },
     "banner": {
       "type": "banner",
@@ -103,10 +105,5 @@
       }
     }
   },
-  "order": [
-    "main-product",
-    "reviews",
-    "related_products",
-    "banner"
-  ]
+  "order": ["main-product", "reviews", "related_products", "banner"]
 }

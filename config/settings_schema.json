@@ -99,12 +99,12 @@
             "label": "Text",
             "default": "#111111"
           },
-          // {
-          //   "type": "color",
-          //   "id": "accent_text",
-          //   "label": "Text",
-          //   "default": "#737373"
-          // },
+          {
+            "type": "color",
+            "id": "accent_text",
+            "label": "Accent text",
+            "default": "#737373"
+          },
           {
             "type": "color",
             "id": "button",
@@ -117,12 +117,12 @@
             "label": "Button label",
             "default": "#111111"
           },
-          // {
-          //   "type": "color",
-          //   "id": "secondary_button",
-          //   "label": "Secondary button",
-          //   "default": "#111111"
-          // },
+          {
+            "type": "color",
+            "id": "secondary_button",
+            "label": "Secondary button",
+            "default": "#111111"
+          },
           {
             "type": "color",
             "id": "secondary_button_label",
@@ -131,8 +131,14 @@
           },
           {
             "type": "color",
-            "id": "shadow",
+            "id": "border_color",
             "label": "Border color",
+            "default": "#EBEBEB"
+          },
+          {
+            "type": "color",
+            "id": "shadow",
+            "label": "Shadow",
             "default": "#EBEBEB"
           }
         ],
@@ -147,9 +153,9 @@
           "primary_button": "button",
           "on_primary_button": "button_label",
           "primary_button_border": "button",
-          "secondary_button": "background",
+          "secondary_button": "secondary_button",
           "on_secondary_button": "secondary_button_label",
-          "secondary_button_border": "secondary_button_label"
+          "secondary_button_border": "secondary_button"
         }
       }
     ]

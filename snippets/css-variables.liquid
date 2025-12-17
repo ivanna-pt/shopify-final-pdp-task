@@ -16,17 +16,19 @@
     --style-border-radius-inputs: {{ settings.input_corner_radius }}px;
   }
 
-  .color-scheme-{{ settings.default_color_scheme.id }} {
-    --color-background: {{ settings.default_color_scheme.settings.background }};
-    --color-foreground: {{ settings.default_color_scheme.settings.text }};
-    --color-border: {{ settings.default_color_scheme.settings.border }};
-  }
-
   {% for scheme in settings.color_schemes %}
-    .color-scheme-{{ scheme.id }} {
-      --color-bg: {{ scheme.settings.background }};
-      --color-text: {{ scheme.settings.text }};
-      --color-border: {{ scheme.settings.border }};
+    .color-{{ scheme.id }} {
+      --color-background: {{ scheme.settings.background.red }}, {{ scheme.settings.background.green }}, {{ scheme.settings.background.blue }};
+      --color-foreground: {{ scheme.settings.text.red }}, {{ scheme.settings.text.green }}, {{ scheme.settings.text.blue }};
+      --color-background-contrast: {{ scheme.settings.border_color.red }}, {{ scheme.settings.border_color.green }}, {{ scheme.settings.border_color.blue }};
+      --color-accent-text: {{ scheme.settings.accent_text.red }}, {{ scheme.settings.accent_text.green }}, {{ scheme.settings.accent_text.blue }};
+      --color-button: {{ scheme.settings.button.red }}, {{ scheme.settings.button.green }}, {{ scheme.settings.button.blue }};
+      --color-button-text: {{ scheme.settings.button_label.red }}, {{ scheme.settings.button_label.green }}, {{ scheme.settings.button_label.blue }};
+      --color-secondary-button: {{ scheme.settings.secondary_button.red }}, {{ scheme.settings.secondary_button.green }}, {{ scheme.settings.secondary_button.blue }};
+      --color-secondary-button-text: {{ scheme.settings.secondary_button_label.red }}, {{ scheme.settings.secondary_button_label.green }}, {{ scheme.settings.secondary_button_label.blue }};
+      --color-border: {{ scheme.settings.border_color.red }}, {{ scheme.settings.border_color.green }}, {{ scheme.settings.border_color.blue }};
+      --color-badge-foreground: {{ scheme.settings.text.red }}, {{ scheme.settings.text.green }}, {{ scheme.settings.text.blue }};
+      --color-badge-background: {{ scheme.settings.border_color.red }}, {{ scheme.settings.border_color.green }}, {{ scheme.settings.border_color.blue }};
     }
     {% endfor %}
 {% endstyle %}

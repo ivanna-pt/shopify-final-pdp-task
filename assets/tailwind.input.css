@@ -37,7 +37,6 @@
   --radius-md: 8px;
   --space-lg: 24px;
   --gap-lg: 24px;
-  --border-default: 1px solid var(--color-gray-200);
 }
 
 @media (min-width: 768px) {
@@ -54,6 +53,21 @@
   .page-width {
     max-width: var(--page-width);
     @apply w-full my-0 mx-auto py-0 px-4 md:px-10;
+  }
+  .bg-scheme {
+    background-color: rgb(var(--color-background));
+  }
+  .bg-contrast-scheme {
+    background-color: rgb(var(--color-background-contrast));
+  }
+  .text-scheme {
+    color: rgb(var(--color-foreground));
+  }
+  .text-accent-scheme {
+    color: rgb(var(--color-accent-text));
+  }
+  .border-color-scheme {
+    border-color: rgb(var(--color-border));
   }
   .h1 {
     @apply text-h1 leading-h1 font-bold;
@@ -113,15 +127,15 @@
     transition: background-color 0.2s, opacity 0.2s;
   }
   .btn-primary {
-    background: var(--color-white);
-    color: var(--color-black);
+    background: rgb(var(--color-button));
+    color: rgb(var(--color-button-text));
   }
   .btn-primary:hover {
     background: var(--color-gray-300);
   }
   .btn-secondary {
-    background: var(--color-black);
-    color: var(--color-white);
+    background: rgb(var(--color-secondary-button));
+    color: rgb(var(--color-secondary-button-text));
   }
   .btn-secondary:hover {
     background: var(--color-gray-800);
@@ -132,7 +146,7 @@
   .accordion {
     padding: var(--space-lg);
     border-radius: var(--radius-md);
-    border: var(--border-default);
+    border: 1px solid rgb(var(--color-accent-text));
   }
   .accordion-toggle {
     cursor: pointer;
@@ -195,7 +209,7 @@
     gap: var(--gap-lg);
     padding: var(--space-lg);
     border-radius: var(--radius-md);
-    border: var(--border-default);
+    border: 1px solid rgb(var(--color-accent-text));
     background-color: var(--color-white);
   }
   .price-block {
@@ -206,13 +220,21 @@
     @apply text-base text-gray-600;
   }
   .price-block.main-product .price-sale {
-    @apply text-black;
+    color: rgb(var(--color-foreground));
   }
   .price-badge {
     @apply inline-block px-2 py-1 rounded-sm text-white text-xs font-semibold;
   }
   .option-label {
-    @apply p-4 rounded-md border border-gray-200 overflow-hidden text-black hover:border-black focus:border-black cursor-pointer transition;
+    @apply p-4 rounded-md overflow-hidden cursor-pointer transition;
+    color: rgb(var(--color-foreground));
+    border: 1px solid rgb(var(--color-border));
+    &:hover {
+      border-color: rgb(var(--color-accent-text));
+    }
+    &:focus {
+      border-color: rgb(var(--color-accent-text));
+    }
   }
   .option-value--unavailable .option-label {
     @apply opacity-50 cursor-not-allowed!;
@@ -221,7 +243,7 @@
     @apply border-gray-200!;
   }
   .option-label.active {
-    @apply border-black;
+    border-color: rgb(var(--color-accent-text));
   }
   .product-gallery__item.active::before {
     @apply content-[''] absolute inset-0 bg-black  opacity-20 rounded-md;
@@ -245,6 +267,6 @@
 @layer base {
   html {
     font-family: var(--font-primary--family);
-    color: var(--color-black);
+    color: var(--color-foreground);
   }
 }
