@@ -380,6 +380,9 @@
   .transform {
     transform: var(--tw-rotate-x,) var(--tw-rotate-y,) var(--tw-rotate-z,) var(--tw-skew-x,) var(--tw-skew-y,);
   }
+  .cursor-not-allowed {
+    cursor: not-allowed;
+  }
   .cursor-pointer {
     cursor: pointer;
   }
@@ -734,31 +737,6 @@
   product-info, quantity-input, variant-selector, product-form, product-gallery, accordion-item {
     display: block;
   }
-  swiper-carousel {
-    position: relative;
-    display: block;
-  }
-  swiper-carousel .swiper-container {
-    overflow: hidden;
-  }
-  .swiper-carousel--thumbnails {
-    height: 100%;
-    max-height: 88px;
-  }
-  .swiper-carousel--thumbnails .swiper-container {
-    height: 100%;
-    width: 100%;
-  }
-  .swiper-carousel--thumbnails .swiper-slide {
-    width: auto !important;
-    height: auto !important;
-  }
-  @media (min-width: 1200px) {
-    .swiper-carousel--thumbnails {
-      max-width: 88px;
-      max-height: 536px;
-    }
-  }
   .cart-count-bubble {
     position: absolute;
     right: calc(var(--spacing) * -1);
@@ -926,7 +904,7 @@
     --tw-ease: var(--ease-out);
     transition-timing-function: var(--ease-out);
   }
-  .product-gallery__item.active::before, .product-gallery__item:hover::before {
+  .product-gallery__item.active::before, .product-gallery__item:hover::before, .product-gallery__item:focus-visible::before {
     position: absolute;
     inset: calc(var(--spacing) * 0);
     border-radius: var(--radius-md);

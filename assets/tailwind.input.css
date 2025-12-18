@@ -120,30 +120,6 @@
   accordion-item {
     display: block;
   }
-  swiper-carousel {
-    @apply block relative;
-  }
-
-  swiper-carousel .swiper-container {
-    @apply overflow-hidden;
-  }
-  .swiper-carousel--thumbnails {
-    @apply h-full;
-    max-height: 88px;
-  }
-  .swiper-carousel--thumbnails .swiper-container {
-    @apply h-full w-full;
-  }
-  .swiper-carousel--thumbnails .swiper-slide {
-    width: auto !important;
-    height: auto !important;
-  }
-  @media (min-width: 1200px) {
-    .swiper-carousel--thumbnails {
-      max-width: 88px;
-      max-height: 536px;
-    }
-  }
   .cart-count-bubble {
     @apply absolute -bottom-1 -right-1 min-w-4 h-4 rounded-full bg-black text-white text-[0.75rem] leading-none flex items-center justify-center font-medium;
   }
@@ -259,7 +235,8 @@
     @apply cursor-pointer transition-all duration-200 ease-out;
   }
   .product-gallery__item.active::before,
-  .product-gallery__item:hover::before {
+  .product-gallery__item:hover::before,
+  .product-gallery__item:focus-visible::before {
     @apply content-[''] absolute inset-0 bg-black  opacity-20 rounded-md;
   }
   .product-card {
