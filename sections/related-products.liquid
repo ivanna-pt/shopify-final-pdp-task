@@ -28,7 +28,7 @@
             {{ section.settings.title }}
           </h2>
         {% endif %}
-        <swiper-carousel class="product-recommendations-swiper">
+        <swiper-carousel class="product-recommendations-swiper relative">
           <script type="application/json" class="swiper-config">
             {
               "slidesPerView": 1.2,
@@ -70,12 +70,12 @@
                 </li>
               {%- endfor -%}
             </ul>
-            <div class="swiper-button-prev-custom" role="button" aria-label="Next Slide">
-              {{ 'arrow-btn.svg' | inline_asset_content }}
-            </div>
-            <div class="swiper-button-next-custom" role="button" aria-label="Prev Slide">
-              {{ 'arrow-btn.svg' | inline_asset_content }}
-            </div>
+          </div>
+          <div class="swiper-button-prev-custom" role="button" aria-label="Next Slide">
+            {{ 'arrow-btn.svg' | inline_asset_content }}
+          </div>
+          <div class="swiper-button-next-custom" role="button" aria-label="Prev Slide">
+            {{ 'arrow-btn.svg' | inline_asset_content }}
           </div>
         </swiper-carousel>
       {% endif %}

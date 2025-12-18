@@ -8,18 +8,10 @@
 -%}
 
 {% style %}
-    #{{ section_id }} {
-      --hero-height: {{ section.settings.height | default: 600 }}px;
-      height: var(--hero-height);
-    }
-
-  /* #{{ section_id }} h2{
-    color: {{ section.settings.title_color }}
+  #{{ section_id }} {
+    --hero-height: {{ section.settings.height | default: 600 }}px;
+    height: var(--hero-height);
   }
-
-  #{{ section_id }} p{
-    color: {{ section.settings.text_color }}
-  } */
 {% endstyle %}
 
 <section

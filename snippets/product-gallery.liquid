@@ -7,32 +7,6 @@
   Usage:
   {% render 'product-gallery', product: product, enable_image_badges: true %}
 {% endcomment %}
-{% style %}
-  swiper-carousel {
-    display: block;
-    overflow: hidden;
-  }
-  .swiper-carousel--thumbnails {
-    height: 100%;
-    max-height: 88px;
-    /* width: 100%; */
-  }
-  .swiper-carousel--thumbnails .swiper-container {
-    height: 100%;
-    width: 100%;
-  }
-  .swiper-carousel--thumbnails .swiper-slide {
-    width: auto;
-    height: auto;
-  }
-
-  @media (min-width: 1200px) {
-    .swiper-carousel--thumbnails {
-      max-width: 88px;
-      max-height: 536px;
-    }
-  }
-{% endstyle %}
 
 <product-gallery>
   <div

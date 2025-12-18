@@ -121,7 +121,11 @@
     display: block;
   }
   swiper-carousel {
-    @apply block overflow-hidden;
+    @apply block relative;
+  }
+
+  swiper-carousel .swiper-container {
+    @apply overflow-hidden;
   }
   .swiper-carousel--thumbnails {
     @apply h-full;
@@ -131,8 +135,8 @@
     @apply h-full w-full;
   }
   .swiper-carousel--thumbnails .swiper-slide {
-    width: auto;
-    height: auto;
+    width: auto !important;
+    height: auto !important;
   }
   @media (min-width: 1200px) {
     .swiper-carousel--thumbnails {
@@ -166,7 +170,7 @@
     color: rgb(var(--color-secondary-button-text));
   }
   .btn-secondary:hover {
-    background: var(--color-gray-800);
+    background: var(--color-gray-600);
   }
   .btn--disabled {
     @apply opacity-50 cursor-not-allowed!;
@@ -208,28 +212,6 @@
   }
   .accordion-icon {
     @apply relative border-solid border border-black w-3.5 h-3.5 rounded-full grid place-items-center shrink-0;
-  }
-  .accordion-icon::before,
-  .accordion-icon::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    background-color: currentColor;
-    transform: translate(-50%, -50%);
-    transition: opacity 0.2s ease, transform 0.2s ease;
-  }
-  .accordion-icon::before {
-    width: 8px;
-    height: 1px;
-  }
-  .accordion-icon::after {
-    width: 1px;
-    height: 8px;
-  }
-  .accordion[open] .accordion-icon::after {
-    opacity: 0;
-    transform: translate(-50%, -50%) scaleY(0);
   }
   .review-card {
     display: flex;
@@ -273,7 +255,11 @@
   .option-label.active {
     border-color: rgb(var(--color-accent-text));
   }
-  .product-gallery__item.active::before {
+  .product-gallery__item {
+    @apply cursor-pointer transition-all duration-200 ease-out;
+  }
+  .product-gallery__item.active::before,
+  .product-gallery__item:hover::before {
     @apply content-[''] absolute inset-0 bg-black  opacity-20 rounded-md;
   }
   .product-card {
