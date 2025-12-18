@@ -3,7 +3,7 @@
 -%}
 
 <product-info
-  class="section-{{ section.id }}-padding block color-{{ section.settings.color_scheme }} bg-scheme"
+  class="section-{{ section.id }}-padding color-{{ section.settings.color_scheme }} bg-scheme"
   id="MainProduct-{{ section.id }}"
   data-selected-variant-id="{{ target.id }}"
   data-product-handle="{{ product.handle }}"
@@ -80,7 +80,7 @@
                 <label class="body-md text-scheme mb-3" for="Quantity-{{ section.id }}">
                   {{ 'products.product.quantity.label' | t }}:
                 </label>
-                <quantity-input class="block">
+                <quantity-input>
                   <button name="minus" type="button" class="cursor-pointer">
                     <span class="sr-only">
                       {{ 'products.product.quantity.decrease' | t: product: product }}

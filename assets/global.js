@@ -108,10 +108,10 @@ class ProductInfo extends HTMLElement {
 
         if (newSubmitBtn.hasAttribute("disabled")) {
           submitBtn.setAttribute("disabled", "disabled");
-          submitBtn.classList.add("button--disabled");
+          submitBtn.classList.add("disabled");
         } else {
           submitBtn.removeAttribute("disabled");
-          submitBtn.classList.remove("button--disabled");
+          submitBtn.classList.remove("disabled");
         }
 
         if (btnText && newBtnText) {

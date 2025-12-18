@@ -112,6 +112,34 @@
 }
 
 @layer components {
+  product-info,
+  quantity-input,
+  variant-selector,
+  product-form,
+  product-gallery,
+  accordion-item {
+    display: block;
+  }
+  swiper-carousel {
+    @apply block overflow-hidden;
+  }
+  .swiper-carousel--thumbnails {
+    @apply h-full;
+    max-height: 88px;
+  }
+  .swiper-carousel--thumbnails .swiper-container {
+    @apply h-full w-full;
+  }
+  .swiper-carousel--thumbnails .swiper-slide {
+    width: auto;
+    height: auto;
+  }
+  @media (min-width: 1200px) {
+    .swiper-carousel--thumbnails {
+      max-width: 88px;
+      max-height: 536px;
+    }
+  }
   .cart-count-bubble {
     @apply absolute -bottom-1 -right-1 min-w-4 h-4 rounded-full bg-black text-white text-[0.75rem] leading-none flex items-center justify-center font-medium;
   }
