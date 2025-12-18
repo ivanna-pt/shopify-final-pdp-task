@@ -12,6 +12,8 @@
     display: block;
     overflow: hidden;
     height: 100%;
+    max-height: 88px;
+    width: 100%;
   }
   .swiper-carousel--thumbnails .swiper-container {
     height: 100%;
@@ -24,7 +26,9 @@
 
   @media (min-width: 1200px) {
     .swiper-carousel--thumbnails {
-      height: 536px;
+      max-width: 88px;
+      min-height: 1px;
+      max-height: 536px;
     }
   }
 {% endstyle %}
@@ -89,7 +93,7 @@
                     alt: image_alt,
                     class: 'product-gallery__thumb object-cover w-full h-full lazy-image',
                     sizes: '88px',
-                    loading: 'lazy',
+                    loading: 'eager',
                     data-large: image_data_large,
                     data-srcset: image_data_srcset,
                     data-sizes: image_data_sizes
