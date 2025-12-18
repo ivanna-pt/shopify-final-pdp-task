@@ -13,18 +13,18 @@
       height: var(--hero-height);
     }
 
-  #{{ section_id }} h2{
+  /* #{{ section_id }} h2{
     color: {{ section.settings.title_color }}
   }
 
   #{{ section_id }} p{
     color: {{ section.settings.text_color }}
-  }
+  } */
 {% endstyle %}
 
 <section
   id="{{ section_id }}"
-  class="relative w-full overflow-hidden"
+  class=" color-{{ section.settings.color_scheme }} relative w-full overflow-hidden"
 >
   {%- if section.settings.image -%}
     {{
@@ -44,16 +44,16 @@
     ></div>
   {%- endif -%}
 
-  <div class="relative  page-width h-full flex justify-center items-center">
-    <div class="w-full">
+  <div class="relative  page-width h-full flex  items-center">
+    <div class="basis-1/2">
       {%- if section.settings.title != blank -%}
-        <h2 class="h2 mb-4">
+        <h2 class="h2 mb-4 text-scheme">
           {{ section.settings.title | escape }}
         </h2>
       {%- endif -%}
 
       {% if section.settings.text != blank %}
-        <p class="body-lg mb-8">
+        <p class="body-lg mb-8 text-scheme">
           {{ section.settings.text | escape }}
         </p>
       {% endif %}
@@ -61,7 +61,7 @@
       {% if section.settings.button_text != blank %}
         <a
           href="{{ section.settings.button_link }}"
-          class="btn {{ section.settings.button_style }} inline-block px-8 py-3 rounded font-semibold transition-all duration-300 hover:opacity-90"
+          class="btn {{ section.settings.button_style }} transition-all duration-300"
           {% if section.settings.button_link == 'blank' %}
             aria-disabled="true"
           {% endif %}
@@ -136,6 +136,12 @@
       "type": "url",
       "id": "button_link",
       "label": "Button link"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Section color scheme",
+      "default": "scheme-3"
     },
     {
       "type": "select",
