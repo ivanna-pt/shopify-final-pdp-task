@@ -19,8 +19,9 @@
 
     {% # Load and preload the critical CSS %}
     {% comment %} {{ 'critical.css' | asset_url | stylesheet_tag: preload: true }} {% endcomment %}
-    {{ 'tailwind.output.css' | asset_url | stylesheet_tag }}
+
     {{ 'swiper-bundle.min.css' | asset_url | stylesheet_tag }}
+    {{ 'tailwind.output.css' | asset_url | stylesheet_tag }}
 
     {% # Social, title, etc. %}
     {% render 'meta-tags' %}

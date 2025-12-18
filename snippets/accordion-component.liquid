@@ -1,6 +1,7 @@
 {% comment %}
   Accordion Web Component
   Accepts:
+  - id: String with  ID to accordion item be uniq on the page
     - list_items: Array of items to display in the accordion. Each item should have 'title' and 'content' properties.
     - allow_multiple: Boolean indicating if multiple sections can be open simultaneously. Default is false.
     - default_open: Index of the item to be open by default (1-based index). Default is 0 (none open).
@@ -10,13 +11,25 @@
 
 <div class="accordion-wrapper mt-8 flex flex-col gap-2" data-allow-multiple="{{ allow_multiple }}">
   {% for item in list_items %}
+    {% liquid
+      assign item_id = 'accordion-' | append: id | append: '-' | append: forloop.index
+      assign is_open = false
+      if forloop.index == default_open
+        assign is_open = true
+      endif
+    %}
     <accordion-item
       class="accordion"
-      {% if forloop.index == default_open %}
+      {% if is_open %}
         open
       {% endif %}
     >
-      <button class="accordion-toggle text-scheme w-full" aria-expanded="false">
+      <button
+        id="{{ item_id }}-button"
+        class="accordion-toggle text-scheme w-full"
+        aria-expanded="{{ is_open }}"
+        aria-controls="{{ item_id }}-content"
+      >
         <h3 class="uppercase">
           {{ item.title | escape }}
         </h3>
@@ -31,8 +44,16 @@
           {{ 'icon-plus.svg' | inline_asset_content }}
         </span>
       </button>
-      <div class="accordion-content">
-        <div class="body-lg mt-4 text-gray-600">
+      <div
+        id="{{ item_id }}-content"
+        class="accordion-content"
+        role="region"
+        aria-labelledby="{{ item_id }}-button"
+        {% unless is_open %}
+          hidden
+        {% endunless %}
+      >
+        <div class="body-md mt-4 text-gray-600">
           {{ item.content | metafield_tag }}
         </div>
       </div>

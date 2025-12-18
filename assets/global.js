@@ -476,6 +476,7 @@ class ProductGallery extends HTMLElement {
     this.mainImage = null;
     this.thumbs = [];
     this.onThumbClick = this.onThumbClick.bind(this);
+    this.onThumbKeydown = this.onThumbKeydown.bind(this);
   }
 
   connectedCallback() {
@@ -490,35 +491,46 @@ class ProductGallery extends HTMLElement {
 
   init() {
     this.mainImage = this.querySelector(".product-gallery__main-image img");
-    this.thumbs = Array.from(this.querySelectorAll(".product-gallery__thumb"));
+    this.thumbs = Array.from(this.querySelectorAll(".product-gallery__item"));
 
     if (!this.mainImage || !this.thumbs.length) return;
 
     this.thumbs.forEach((thumb) => {
       thumb.addEventListener("click", this.onThumbClick);
+      thumb.addEventListener("keydown", this.onThumbKeydown);
     });
   }
 
   cleanup() {
     this.thumbs.forEach((thumb) => {
       thumb.removeEventListener("click", this.onThumbClick);
+      thumb.removeEventListener("keydown", this.onThumbKeydown);
     });
   }
 
   onThumbClick(event) {
     event.preventDefault();
 
-    const thumb = event.currentTarget;
-    const wrapper = thumb.closest(".product-gallery__item");
-    if (!wrapper) return;
+    const wrapper = event.currentTarget;
+    const img = wrapper.querySelector(".product-gallery__thumb");
+    if (!img) return;
 
-    const { large, srcset, sizes } = thumb.dataset;
+    this.updateMainImage(img);
+    this.setActiveThumb(wrapper);
+  }
 
+  onThumbKeydown(event) {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      event.currentTarget.click();
+    }
+  }
+
+  updateMainImage(img) {
+    const { large, srcset, sizes } = img.dataset;
     if (!large) return;
-
     this.mainImage.src = large;
-    this.mainImage.alt = thumb.alt || "";
-
+    this.mainImage.alt = img.alt || "";
     if (srcset) {
       this.mainImage.srcset = srcset;
       this.mainImage.sizes = sizes;
@@ -526,17 +538,16 @@ class ProductGallery extends HTMLElement {
       this.mainImage.removeAttribute("srcset");
       this.mainImage.removeAttribute("sizes");
     }
-
-    this.setActiveThumb(thumb);
   }
 
-  setActiveThumb(activeThumb) {
-    this.querySelectorAll(".product-gallery__item.active").forEach((el) =>
-      el.classList.remove("active")
-    );
+  setActiveThumb(activeWrapper) {
+    this.querySelectorAll(".product-gallery__item.active").forEach((el) => {
+      el.classList.remove("active");
+      el.setAttribute("aria-pressed", false);
+    });
 
-    const wrapper = activeThumb.closest(".product-gallery__item");
-    if (wrapper) wrapper.classList.add("active");
+    activeWrapper.classList.add("active");
+    activeWrapper.setAttribute("aria-pressed", true);
   }
 }
 
@@ -554,20 +565,9 @@ class AccordionItem extends HTMLElement {
     this.content = this.querySelector(".accordion-content");
     if (!this.toggleButton || !this.content) return;
 
-    this.toggleButton.setAttribute("aria-expanded", this.hasAttribute("open"));
+    this.sync();
 
     this.toggleButton.addEventListener("click", () => this.toggle());
-
-    this.toggleButton.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        this.toggle();
-      }
-    });
-
-    if (!this.hasAttribute("open")) {
-      this.content.style.display = "none";
-    }
   }
 
   toggle() {
@@ -594,18 +594,27 @@ class AccordionItem extends HTMLElement {
     }
 
     this.setAttribute("open", "");
-    this.toggleButton.setAttribute("aria-expanded", "true");
-    this.content.style.display = "block";
+    this.sync();
+    // this.toggleButton.setAttribute("aria-expanded", "true");
+    // this.content.style.display = "block";
   }
   close() {
     this.removeAttribute("open", "");
-    this.toggleButton.setAttribute("aria-expanded", "false");
+    this.sync();
+    // this.toggleButton.setAttribute("aria-expanded", "false");
 
-    setTimeout(() => {
-      if (!this.hasAttribute("open")) {
-        this.content.style.display = "none";
-      }
-    }, 400);
+    // setTimeout(() => {
+    //   if (!this.hasAttribute("open")) {
+    //     this.content.style.display = "none";
+    //   }
+    // }, 400);
+  }
+  sync() {
+    const isOpen = this.hasAttribute("open");
+
+    this.toggleButton.setAttribute("aria-expanded", isOpen ? "true" : "false");
+
+    this.content.hidden = !isOpen;
   }
 }
 

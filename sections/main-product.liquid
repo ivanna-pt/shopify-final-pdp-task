@@ -118,6 +118,7 @@
               {% render 'buy-buttons', product: product, form_id: product_form_id %}
             {% when 'collapsible_row' %}
               {% render 'accordion-component',
+                id: block.id,
                 list_items: product.metafields.custom.product_details.value,
                 allow_multiple: false,
                 default_open: 1

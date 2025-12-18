@@ -19,6 +19,10 @@
     "product": {
       "add_to_cart": "Add to cart",
       "description": "Description",
+      "image_gallery": {
+        "thumbnails_label": "Product image thumbnails",
+        "thumbnail_aria_label": "View product image {{ count }} of {{ total }}"
+      },
       "inventory_in_stock": "In stock",
       "inventory_in_stock_show_count": "{{ quantity }} in stock",
       "inventory_low_stock": "Low stock",
@@ -32,6 +36,7 @@
       "unavailable": "Unavailable",
       "select_option": "Select {{ option_name}}",
       "select_color": "Select color",
+      "shipping_info": "Shipping info",
       "price": {
         "regular_price": "Regular price",
         "sale_price": "Sale price"
@@ -107,7 +112,8 @@
       "copyright_text": "© {{ year }} {{ shop_name }}. All rights reserved."
     },
     "product-reviews": {
-      "no_reviews": "Be the first to review this product"
+      "no_reviews": "Be the first to review this product",
+      "reviewer_image": "Photo of {{ person }} from {{ city }}"
     }
   }
 }

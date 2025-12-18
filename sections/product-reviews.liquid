@@ -1,4 +1,6 @@
 {%- liquid
+  assign section_id = 'product-reviews-' | append: section.id
+  assign heading_id = section_id | append: '-title'
   assign reviews = product.metafields.custom.reviews.value
   assign reviews_to_show = section.settings.reviews_to_show
   assign section_id = 'product-reviews-' | append: section.id
@@ -18,18 +20,23 @@
     }
 {%- endstyle -%}
 
-<section id="{{ section_id }}" class="section-{{ section.id }}-padding">
+<section id="{{ section_id }}" class="section-{{ section.id }}-padding" aria-labelledby="{{ heading_id }}">
   <div class="page-width">
     {%- if section.settings.title != blank -%}
-      <h2 class="h2 mb-12 text-center">{{ section.settings.title }}</h2>
+      <h2 id="{{ heading_id }}" class="h2 mb-12 text-center">{{ section.settings.title }}</h2>
     {%- endif -%}
     {% if reviews != blank %}
       <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {%- for review in reviews limit: reviews_to_show -%}
           {% assign review_author = review.reviewer.value %}
+          {% assign image_alt = 'sections.product-reviews.reviewer_image'
+            | t: person: review_author.name, city: review_author.city
+          %}
           <li class="review-card">
             {% render 'star-rating', rating: review.rating, show_count: false %}
-            <p>{{ review.text }}</p>
+            <blockquote>
+              <p>{{ review.text }}</p>
+            </blockquote>
             <div class="flex gap-3 items-center">
               {% if review_author.image %}
                 {{
@@ -40,7 +47,7 @@
                     height: 54,
                     sizes: '54px',
                     widths: '54, 108',
-                    alt: '',
+                    alt: image_alt,
                     loading: 'lazy',
                     class: 'rounded-full flex-shrink-0 w-[54px] h-[54px] object-cover bg-gray-200'
                 }}
@@ -48,15 +55,21 @@
                 {{ 'image' | placeholder_svg_tag: 'rounded-full bg-gray-200 w-[54px] h-[54px]' }}
               {% endif %}
               <div>
-                <p>{{ review_author.name }}</p>
-                <p class="text-gray-600 mt-1">{{ review_author.city }}</p>
+                <p>
+                  <cite class="not-italic font-normal">{{ review_author.name }}</cite>
+                </p>
+                {% if review_author.city != blank %}
+                  <p class="text-gray-600 mt-1">
+                    {{ review_author.city }}
+                  </p>
+                {% endif %}
               </div>
             </div>
           </li>
         {%- endfor -%}
       </ul>
     {% else %}
-      <p class="text-gray-600">{{ 'sections.product-reviews.no_reviews' | t }}</p>
+      <p class="text-gray-600 text-center" role="status">{{ 'sections.product-reviews.no_reviews' | t }}</p>
     {% endif %}
   </div>
 </section>

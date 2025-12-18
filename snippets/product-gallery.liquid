@@ -7,13 +7,14 @@
   Usage:
   {% render 'product-gallery', product: product, enable_image_badges: true %}
 {% endcomment %}
+{{ 'component-swiper-carousel.css' | asset_url | stylesheet_tag }}
 
 <product-gallery>
   <div
     class="flex flex-col xl:flex-row-reverse gap-6"
     data-product-images
   >
-    <div class="product-gallery__main-image relative aspect-square">
+    <div class="product-gallery__main-image relative aspect-square" aria-live="polite" aria-atomic="true">
       {% if enable_image_badges == true %}
         {% render 'product-badges', product: product %}
       {% endif %}
@@ -43,9 +44,7 @@
     >
       <div
         class="swiper-container"
-        role="group"
-        aria-roledescription="carousel"
-        aria-label="Main product images thumbnails"
+        aria-label="{{ 'products.product.image_gallery.thumbnails_label' | t }}"
       >
         <ul class="swiper-wrapper">
           {% for image in product.images %}
@@ -58,6 +57,10 @@
             <li class="swiper-slide">
               <div
                 class="product-gallery__item relative aspect-square overflow-hidden rounded-lg w-full h-full {% if forloop.first %}active{% endif %}"
+                role="button"
+                tabindex="0"
+                aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}"
+                aria-label="{{ 'products.product.image_gallery.thumbnail_aria_label' | t: count: forloop.index, total: product.images.size }}"
               >
                 {{
                   image

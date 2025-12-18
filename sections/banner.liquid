@@ -1,6 +1,6 @@
 {%- liquid
   assign section_id = 'banner-' | append: section.id
-  assign img_alt = section.settings.image.alt | default: section.settings.title | default: 'Banner image'
+  assign heading_id = section_id | append: '-title'
   assign loading_strategy = 'eager'
   if section.index > 1
     assign loading_strategy = 'lazy'
@@ -17,6 +17,7 @@
 <section
   id="{{ section_id }}"
   class=" color-{{ section.settings.color_scheme }} relative w-full overflow-hidden"
+  aria-labeledby="{{ heading_id }}"
 >
   {%- if section.settings.image -%}
     {{
@@ -27,7 +28,7 @@
         sizes: '100vw',
         loading: loading_strategy,
         class: 'absolute inset-0 w-full h-full! object-cover bg-gray-100',
-        alt: img_alt
+        alt: ''
     }}
     <div
       class="absolute inset-0 bg-black"
@@ -39,7 +40,7 @@
   <div class="relative  page-width h-full flex  items-center">
     <div class="basis-1/2">
       {%- if section.settings.title != blank -%}
-        <h2 class="h2 mb-4 text-scheme">
+        <h2 id="{{ heading_id }}" class="h2 mb-4 text-scheme">
           {{ section.settings.title | escape }}
         </h2>
       {%- endif -%}
@@ -51,15 +52,24 @@
       {% endif %}
 
       {% if section.settings.button_text != blank %}
-        <a
-          href="{{ section.settings.button_link }}"
-          class="btn {{ section.settings.button_style }} transition-all duration-300"
-          {% if section.settings.button_link == 'blank' %}
+        {% if section.settings.button_link != blank %}
+          <a
+            href="{{ section.settings.button_link }}"
+            class="btn {{ section.settings.button_style }} transition-all duration-300"
+            {% if section.settings.button_link == 'blank' %}
+              aria-disabled="true"
+            {% endif %}
+          >
+            {{ section.settings.button_text | escape }}
+          </a>
+        {% else %}
+          <span
+            class="btn {{ section.settings.button_style }} opacity-50 cursor-not-allowed"
             aria-disabled="true"
-          {% endif %}
-        >
-          {{ section.settings.button_text | escape }}
-        </a>
+          >
+            {{ section.settings.button_text | escape }}
+          </span>
+        {% endif %}
       {% endif %}
     </div>
   </div>
@@ -101,22 +111,10 @@
       "default": "Step Into Next-Level Comfort"
     },
     {
-      "type": "color",
-      "id": "title_color",
-      "label": "Title color",
-      "default": "#111111"
-    },
-    {
       "type": "inline_richtext",
       "id": "text",
       "label": "Text",
       "default": "Discover amazing products and exclusive offers"
-    },
-    {
-      "type": "color",
-      "id": "text_color",
-      "label": "Text color",
-      "default": "#111111"
     },
     {
       "type": "text",
