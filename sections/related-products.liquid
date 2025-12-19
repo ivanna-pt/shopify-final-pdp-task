@@ -17,7 +17,7 @@
   <div
     class="page-width"
   >
-    {% if template contains 'product' and section.settings.collection == blank %}
+    {% if section.settings.collection == blank %}
       <related-products
         data-url="{{ routes.product_recommendations_url }}"
         data-limit={{ section.settings.limit }}
