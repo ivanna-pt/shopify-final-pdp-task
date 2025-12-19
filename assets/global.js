@@ -378,7 +378,7 @@ class RelatedProducts extends HTMLElement {
       .then((text) => {
         const html = document.createElement("div");
         html.innerHTML = text;
-        const recommendations = html.querySelector("product-recommendations");
+        const recommendations = html.querySelector("related-products");
 
         if (recommendations && recommendations.innerHTML.trim().length) {
           this.innerHTML = recommendations.innerHTML;
