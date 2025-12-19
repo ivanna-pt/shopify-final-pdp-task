@@ -372,7 +372,7 @@ class ProductRecommendations extends HTMLElement {
 
   async loadRecommendations() {
     fetch(
-      `${this.dataset.url}&product_id=${this.dataset.productId}&limit=${this.dataset.limit}&section_id=${this.dataset.sectionId}`
+      `${this.dataset.url}?product_id=${this.dataset.productId}&limit=${this.dataset.limit}&section_id=${this.dataset.sectionId}`
     )
       .then((response) => response.text())
       .then((text) => {
