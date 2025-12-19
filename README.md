@@ -1,3 +1,16 @@
+## Project Overview
+
+This repository contains a final Product Detail Page (PDP) implementation for Shopify.
+The goal of the task was to demonstrate scalable PDP architecture, accessibility best practices,
+and dynamic content management using metafields and metaobjects without third-party apps.
+
+## Contents
+
+- [How to Run the Project](#how-to-run-the-project)
+- [Implemented Features](#what-has-been-implemented)
+- [Metafields & Metaobjects](#metafields--metaobjects-used)
+- [Beyond Requirements](#beyond-basic-requirements)
+
 ## How to Run the Project
 
 ### 1. Prerequisites
@@ -72,14 +85,14 @@ This final PDP (Product Details Page) task includes the following features:
 
 ### Technical Implementation
 
-- **Custom Web Components** (ProductInfo, VariantSelector, ProductForm, etc.)
+- **Custom Web Components** for PDP logic separation (ProductInfo, VariantSelector, ProductForm, etc.)
 - **Metafield and Metaobjects** for extended product data
 - **CSS variables** for theming and customization
 - **Tailwind CSS** for utility-first styling
 - **Section schema** for merchant customization via Shopify admin
 - **Swiper.js**: gallery and thumbnail navigation, safe initialization and teardown
 
-## Metafields Used
+## Metafields & Metaobjects Used
 
 This theme utilizes the following metafields for enhanced product functionality:
 
@@ -93,7 +106,7 @@ This theme utilizes the following metafields for enhanced product functionality:
 - **`custom.reviews`** (List of entries - Metaobject reference: Review item) – Customer reviews with ratings and reviewer information
   - Contains review text, star rating, and reviewer details (Metaobject Person profile) (name, city, image)
 
-### Additional Features
+### Beyond Basic Requirements
 
 - **Scroll-aware product gallery behavior**
 - **Product Stock Indicator**
