@@ -361,7 +361,7 @@ class ProductForm extends HTMLElement {
 }
 customElements.define("product-form", ProductForm);
 
-class RelatedProducts extends HTMLElement {
+class ProductRecommendations extends HTMLElement {
   constructor() {
     super();
   }
@@ -372,13 +372,13 @@ class RelatedProducts extends HTMLElement {
 
   async loadRecommendations() {
     fetch(
-      `${this.dataset.url}&product_id=${this.dataset.productId}&section_id=${this.dataset.sectionId}`
+      `${this.dataset.url}&product_id=${this.dataset.productId}&limit=${this.dataset.limit}&section_id=${this.dataset.sectionId}`
     )
       .then((response) => response.text())
       .then((text) => {
         const html = document.createElement("div");
         html.innerHTML = text;
-        const recommendations = html.querySelector("related-products");
+        const recommendations = html.querySelector("product-recommendations");
 
         if (recommendations && recommendations.innerHTML.trim().length) {
           this.innerHTML = recommendations.innerHTML;
@@ -393,7 +393,7 @@ class RelatedProducts extends HTMLElement {
   }
 }
 
-customElements.define("related-products", ProductRecommendations);
+customElements.define("product-recommendations", ProductRecommendations);
 
 class SwiperCarousel extends HTMLElement {
   constructor() {
