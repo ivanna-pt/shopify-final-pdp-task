@@ -9,10 +9,6 @@
  */
 {
   "sections": {
-    "main": {
-      "type": "hello-world",
-      "settings": {}
-    },
     "banner": {
       "type": "banner",
       "settings": {
@@ -33,5 +29,5 @@
       }
     }
   },
-  "order": ["banner", "related-products", "main"]
+  "order": ["banner", "related-products"]
 }
