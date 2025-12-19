@@ -84,9 +84,7 @@
         "height": 500,
         "overlay_opacity": 0.3,
         "title": "Step Into Next-Level Comfort",
-        "title_color": "#FFFFFF",
-        "text": "Experience the perfect mix of style, support, and all-day cushioning with Nike Air Max Plus.",
-        "text_color": "#FFFFFF"
+        "text": "Experience the perfect mix of style, support, and all-day cushioning with Nike Air Max Plus."
       }
     },
     "reviews": {
@@ -105,5 +103,10 @@
       }
     }
   },
-  "order": ["main-product", "reviews", "related_products", "banner"]
+  "order": [
+    "main-product",
+    "reviews",
+    "related_products",
+    "banner"
+  ]
 }
