@@ -402,22 +402,7 @@ class SwiperCarousel extends HTMLElement {
   }
 
   connectedCallback() {
-    const images = this.querySelectorAll(".swiper-slide img");
-
-    if (images.length === 0) {
-      this.init();
-      return;
-    }
-
-    Promise.all(
-      Array.from(images).map((img) =>
-        img.complete
-          ? Promise.resolve()
-          : new Promise((resolve) => {
-              img.onload = img.onerror = resolve;
-            })
-      )
-    ).then(() => this.init());
+    requestAnimationFrame(() => this.init());
   }
 
   disconnectedCallback() {

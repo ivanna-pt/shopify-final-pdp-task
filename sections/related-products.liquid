@@ -80,6 +80,12 @@
               {{ 'arrow-btn.svg' | inline_asset_content }}
             </div>
           </swiper-carousel>
+        {% else %}
+          <div class="max-w-xl mx-auto">
+            <p class="body-lg text-center text-gray-600">
+              {{ 'sections.related-products.no_products' | t }}
+            </p>
+          </div>
         {% endif %}
       </product-recommendations>
     {% else %}
