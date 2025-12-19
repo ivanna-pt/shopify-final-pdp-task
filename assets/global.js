@@ -361,7 +361,7 @@ class ProductForm extends HTMLElement {
 }
 customElements.define("product-form", ProductForm);
 
-class ProductRecommendations extends HTMLElement {
+class RelatedProducts extends HTMLElement {
   constructor() {
     super();
   }
@@ -393,7 +393,7 @@ class ProductRecommendations extends HTMLElement {
   }
 }
 
-customElements.define("product-recommendations", ProductRecommendations);
+customElements.define("related-products", ProductRecommendations);
 
 class SwiperCarousel extends HTMLElement {
   constructor() {

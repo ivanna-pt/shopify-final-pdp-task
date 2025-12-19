@@ -18,7 +18,7 @@
     class="page-width"
   >
     {% if template contains 'product' and section.settings.collection == blank %}
-      <product-recommendations
+      <related-products
         data-url="{{ routes.product_recommendations_url }}?limit={{ section.settings.limit }}"
         data-product-id="{{ product.id }}"
         data-section-id="{{ section.id }}"
@@ -86,7 +86,7 @@
             </p>
           </div>
         {% endif %}
-      </product-recommendations>
+      </related-products>
     {% elsif section.settings.collection != blank %}
       {% if section.settings.title != blank %}
         <h2 class="h2 text-center mb-9 md:mb-12">

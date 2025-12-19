@@ -1,8 +1,9 @@
 ## Project Overview
 
-This repository contains a final Product Detail Page (PDP) implementation for Shopify.
-The goal of the task was to demonstrate scalable PDP architecture, accessibility best practices,
-and dynamic content management using metafields and metaobjects without third-party apps.
+This project was created to practice core Shopify theme development skills by building a complete
+Product Detail Page (PDP) using the Skeleton theme as a clean starting point.
+The implementation demonstrates how product data, metafields, variants, and theme settings
+can be connected to the UI in a scalable and accessible way.
 
 ## Contents
 
