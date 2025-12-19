@@ -393,7 +393,7 @@ class RelatedProducts extends HTMLElement {
   }
 }
 
-customElements.define("related-products", ProductRecommendations);
+customElements.define("related-products", RelatedProducts);
 
 class SwiperCarousel extends HTMLElement {
   constructor() {
