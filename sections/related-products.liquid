@@ -17,69 +17,139 @@
   <div
     class="page-width"
   >
-    <product-recommendations
-      data-url="{{ routes.product_recommendations_url }}?limit={{ section.settings.limit }}"
-      data-product-id="{{ product.id }}"
-      data-section-id="{{ section.id }}"
-    >
-      {%- if recommendations.performed? and recommendations.products_count > 0 -%}
-        {% if section.settings.title != blank %}
-          <h2 class="h2 text-center mb-9 md:mb-12">
-            {{ section.settings.title }}
-          </h2>
+    {% if template contains 'product' and section.settings.collection == blank %}
+      <product-recommendations
+        data-url="{{ routes.product_recommendations_url }}?limit={{ section.settings.limit }}"
+        data-product-id="{{ product.id }}"
+        data-section-id="{{ section.id }}"
+      >
+        {%- if recommendations.performed? and recommendations.products_count > 0 -%}
+          {% if section.settings.title != blank %}
+            <h2 class="h2 text-center mb-9 md:mb-12">
+              {{ section.settings.title }}
+            </h2>
+          {% endif %}
+          <swiper-carousel class="product-recommendations-swiper relative">
+            <script type="application/json" class="swiper-config">
+              {
+                "slidesPerView": 1.2,
+                "spaceBetween": 16,
+                "grid": {
+                  "rows": 1,
+                  "fill": "row"
+                },
+                "navigation": {
+                  "enabled": true
+                },
+                "breakpoints": {
+                  "480": {
+                    "slidesPerView": 2,
+                    "spaceBetween": 16
+                  },
+                  "768": {
+                    "slidesPerView": 3,
+                    "spaceBetween": 20
+                  },
+                  "1200": {
+                    "slidesPerView": 4,
+                    "spaceBetween": 24
+                  }
+                },
+                "watchOverflow": true
+              }
+            </script>
+            <div
+              class="swiper-container"
+              role="group"
+              aria-roledescription="carousel"
+              aria-label="Related products"
+            >
+              <ul class="swiper-wrapper">
+                {%- for recommended_product in recommendations.products -%}
+                  <li class="swiper-slide">
+                    {% render 'card-product', card_product: recommended_product %}
+                  </li>
+                {%- endfor -%}
+              </ul>
+            </div>
+            <div class="swiper-button-prev-custom" role="button" aria-label="Next Slide">
+              {{ 'arrow-btn.svg' | inline_asset_content }}
+            </div>
+            <div class="swiper-button-next-custom" role="button" aria-label="Prev Slide">
+              {{ 'arrow-btn.svg' | inline_asset_content }}
+            </div>
+          </swiper-carousel>
+        {% else %}
+          <div class="max-w-xl mx-auto">
+            <p class="body-lg text-center text-gray-600">
+              {{ 'sections.related-products.no_products' | t }}
+            </p>
+          </div>
         {% endif %}
-        <swiper-carousel class="product-recommendations-swiper relative">
-          <script type="application/json" class="swiper-config">
-            {
-              "slidesPerView": 1.2,
-              "spaceBetween": 16,
-              "grid": {
-                "rows": 1,
-                "fill": "row"
-              },
-              "navigation": {
-                "enabled": true
-              },
-              "breakpoints": {
-                "480": {
-                  "slidesPerView": 2,
-                  "spaceBetween": 16
-                },
-                "768": {
-                  "slidesPerView": 3,
-                  "spaceBetween": 20
-                },
-                "1200": {
-                  "slidesPerView": 4,
-                  "spaceBetween": 24
-                }
-              },
-              "watchOverflow": true
-            }
-          </script>
-          <div
-            class="swiper-container"
-            role="group"
-            aria-roledescription="carousel"
-            aria-label="Related products"
-          >
-            <ul class="swiper-wrapper">
-              {%- for recommended_product in recommendations.products -%}
-                <li class="swiper-slide">
-                  {% render 'card-product', card_product: recommended_product %}
-                </li>
-              {%- endfor -%}
-            </ul>
-          </div>
-          <div class="swiper-button-prev-custom" role="button" aria-label="Next Slide">
-            {{ 'arrow-btn.svg' | inline_asset_content }}
-          </div>
-          <div class="swiper-button-next-custom" role="button" aria-label="Prev Slide">
-            {{ 'arrow-btn.svg' | inline_asset_content }}
-          </div>
-        </swiper-carousel>
+      </product-recommendations>
+    {% elsif section.settings.collection != blank %}
+      {% if section.settings.title != blank %}
+        <h2 class="h2 text-center mb-9 md:mb-12">
+          {{ section.settings.title }}
+        </h2>
       {% endif %}
-    </product-recommendations>
+      <swiper-carousel class="product-recommendations-swiper relative">
+        <script type="application/json" class="swiper-config">
+          {
+            "slidesPerView": 1.2,
+            "spaceBetween": 16,
+            "grid": {
+              "rows": 1,
+              "fill": "row"
+            },
+            "navigation": {
+              "enabled": true
+            },
+            "breakpoints": {
+              "480": {
+                "slidesPerView": 2,
+                "spaceBetween": 16
+              },
+              "768": {
+                "slidesPerView": 3,
+                "spaceBetween": 20
+              },
+              "1200": {
+                "slidesPerView": 4,
+                "spaceBetween": 24
+              }
+            },
+            "watchOverflow": true
+          }
+        </script>
+        <div
+          class="swiper-container"
+          role="group"
+          aria-roledescription="carousel"
+          aria-label="Related products"
+        >
+          <ul class="swiper-wrapper">
+            {%- for product_item in section.settings.collection.products -%}
+              <li class="swiper-slide">
+                {% render 'card-product', card_product: product_item %}
+              </li>
+            {%- endfor -%}
+          </ul>
+        </div>
+        <div class="swiper-button-prev-custom" role="button" aria-label="Next Slide">
+          {{ 'arrow-btn.svg' | inline_asset_content }}
+        </div>
+        <div class="swiper-button-next-custom" role="button" aria-label="Prev Slide">
+          {{ 'arrow-btn.svg' | inline_asset_content }}
+        </div>
+      </swiper-carousel>
+    {% else %}
+      <div class="max-w-xl mx-auto">
+        <p class="body-lg text-center text-gray-600">
+          {{ 'sections.related-products.no_products' | t }}
+        </p>
+      </div>
+    {% endif %}
   </div>
 </div>
 {% schema %}
@@ -87,6 +157,11 @@
   "name": "Related Products",
   "tag": "section",
   "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Select featured collection"
+    },
     {
       "type": "text",
       "id": "title",
@@ -132,8 +207,8 @@
       "name": "Related Products"
     }
   ],
-  "enabled_on": {
-    "templates": ["product"]
+  "disabled_on": {
+    "groups": ["header", "footer"]
   }
 }
 {% endschema %}

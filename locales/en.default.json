@@ -114,6 +114,9 @@
     "product-reviews": {
       "no_reviews": "Be the first to review this product",
       "reviewer_image": "Photo of {{ person }} from {{ city }}"
+    },
+    "related-products": {
+      "no_products": "No products found"
     }
   }
 }
