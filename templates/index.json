@@ -16,18 +16,26 @@
         "height": 500,
         "overlay_opacity": 0.3,
         "title": "Step Into Next-Level Comfort",
-        "title_color": "#FFFFFF",
         "text": "Experience the perfect mix of style, support, and all-day cushioning with Nike Air Max Plus.",
-        "text_color": "#FFFFFF"
+        "button_text": "Shop now",
+        "button_link": "shopify://products/nike-air-max-plus-black",
+        "color_scheme": "",
+        "button_style": "btn-primary"
       }
     },
     "related-products": {
       "type": "related-products",
       "settings": {
+        "collection": "frontpage",
         "title": "Featured collection",
-        "collection": "frontpage"
+        "limit": 4,
+        "padding_top": 40,
+        "padding_bottom": 80
       }
     }
   },
-  "order": ["banner", "related-products"]
+  "order": [
+    "banner",
+    "related-products"
+  ]
 }
