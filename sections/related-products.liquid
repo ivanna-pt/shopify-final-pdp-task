@@ -19,7 +19,8 @@
   >
     {% if template contains 'product' and section.settings.collection == blank %}
       <related-products
-        data-url="{{ routes.product_recommendations_url }}?limit={{ section.settings.limit }}"
+        data-url="{{ routes.product_recommendations_url }}"
+        data-limit={{ section.settings.limit }}
         data-product-id="{{ product.id }}"
         data-section-id="{{ section.id }}"
       >
