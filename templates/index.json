@@ -9,6 +9,15 @@
  */
 {
   "sections": {
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "settings": {
+        "enable": true,
+        "text": "Free shipping on orders over $75",
+        "link_text": "Shop now",
+        "link_url": ""
+      }
+    },
     "banner": {
       "type": "banner",
       "settings": {
@@ -35,6 +44,7 @@
     }
   },
   "order": [
+    "announcement-bar",
     "banner",
     "related-products"
   ]

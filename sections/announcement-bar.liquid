@@ -1,0 +1,167 @@
+{%- liquid
+  assign is_homepage = false
+  if request.page_type == 'index'
+    assign is_homepage = true
+  endif
+-%}
+
+{%- if section.settings.enable and is_homepage -%}
+  <announcement-bar
+    class="block"
+    role="region"
+    aria-label="{{ 'sections.announcement_bar.region_label' | t }}"
+    data-storage-key="announcement-bar-{{ section.id }}"
+    style="
+      --announcement-bg: {{ section.settings.bg_color }};
+      --announcement-text: {{ section.settings.text_color }};
+      --announcement-link: {{ section.settings.link_color }};
+      background-color: var(--announcement-bg);
+      color: var(--announcement-text);
+    "
+  >
+    <div class="flex flex-wrap items-center gap-3 py-3 px-4 max-w-[var(--page-width)] mx-auto">
+      <div class="flex flex-wrap items-center gap-3 min-w-0 break-words">
+        {%- if section.settings.text != blank -%}
+          <p class="m-0 text-body-md leading-body-md">{{ section.settings.text }}</p>
+        {%- endif -%}
+
+        {%- if section.settings.link_text != blank and section.settings.link_url != blank -%}
+          <a
+            class="underline underline-offset-4"
+            href="{{ section.settings.link_url }}"
+            style="color: var(--announcement-link);"
+          >
+            {{ section.settings.link_text | escape }}
+          </a>
+        {%- endif -%}
+      </div>
+
+      <button
+        class="ml-auto min-w-[44px] min-h-[44px] px-3 py-2 rounded-sm border border-current bg-transparent text-current leading-none transition-opacity hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+        type="button"
+        data-announcement-close
+        aria-label="{{ 'sections.announcement_bar.close' | t }}"
+      >
+        {{ 'sections.announcement_bar.close' | t }}
+      </button>
+    </div>
+  </announcement-bar>
+{%- endif -%}
+
+{% javascript %}
+  class AnnouncementBar extends HTMLElement {
+    connectedCallback() {
+      this.closeButton = this.querySelector('[data-announcement-close]');
+      this.closeHandler = this.handleClose.bind(this);
+
+      if (!this.isDesignMode() && this.isDismissed()) {
+        this.hide();
+        return;
+      }
+
+      this.closeButton?.addEventListener('click', this.closeHandler);
+    }
+
+    disconnectedCallback() {
+      this.closeButton?.removeEventListener('click', this.closeHandler);
+    }
+
+    handleClose() {
+      this.storeDismissed();
+      this.hide();
+    }
+
+    hide() {
+      this.setAttribute('hidden', '');
+      this.setAttribute('aria-hidden', 'true');
+    }
+
+    storageKey() {
+      return this.dataset.storageKey || 'announcement-bar-dismissed';
+    }
+
+    isDesignMode() {
+      return document.documentElement.classList.contains('shopify-design-mode')
+        || Boolean(window.Shopify && window.Shopify.designMode);
+    }
+
+    isDismissed() {
+      try {
+        return window.localStorage.getItem(this.storageKey()) === 'closed';
+      } catch (error) {
+        return false;
+      }
+    }
+
+    storeDismissed() {
+      try {
+        window.localStorage.setItem(this.storageKey(), 'closed');
+      } catch (error) {
+        return;
+      }
+    }
+  }
+
+  if (!customElements.get('announcement-bar')) {
+    customElements.define('announcement-bar', AnnouncementBar);
+  }
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Announcement bar",
+  "tag": "section",
+  "class": "section-announcement-bar",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable",
+      "label": "Show announcement bar",
+      "default": true
+    },
+    {
+      "type": "inline_richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "Free shipping on orders over $75"
+    },
+    {
+      "type": "text",
+      "id": "link_text",
+      "label": "Link text",
+      "default": "Shop now"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Link URL"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "link_color",
+      "label": "Link color",
+      "default": "#ffffff"
+    }
+  ],
+  "enabled_on": {
+    "templates": ["index"]
+  },
+  "presets": [
+    {
+      "name": "Announcement bar"
+    }
+  ]
+}
+{% endschema %}

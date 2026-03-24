@@ -120,6 +120,10 @@
     "footer": {
       "copyright_text": "© {{ year }} {{ shop_name }}. All rights reserved."
     },
+    "announcement_bar": {
+      "close": "Close",
+      "region_label": "Announcement"
+    },
     "product-reviews": {
       "no_reviews": "Be the first to review this product",
       "reviewer_image": "Photo of {{ person }} from {{ city }}"
