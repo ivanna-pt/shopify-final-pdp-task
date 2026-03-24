@@ -24,3 +24,7 @@ node_modules/
 
 ##VScode
 .vscode/
+
+##AI agents
+.codex/
+.claude/
