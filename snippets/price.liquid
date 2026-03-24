@@ -1,0 +1,57 @@
+{% comment %}
+  Renders a list of product's price (regular, sale)
+
+  Accepts:
+  - product: {Object} Product Liquid object (optional)
+  - use_variant: {Boolean} Renders selected or first variant price instead of overall product pricing (optional)
+  - show_badges: {Boolean} Renders 'Sale' and 'Sold Out' tags if the product matches the condition (optional)
+  - show_compare_at_price: {Boolean} Renders the compare at price if the product matches the condition (optional)
+  - price_class: {String} Adds a price class to the price element (optional)
+
+  Usage:
+  {% render 'price', product: product %}
+{% endcomment %}
+
+{%- liquid
+  if use_variant
+    assign target = product.selected_or_first_available_variant
+  else
+    assign target = product
+  endif
+
+  assign compare_at_price = target.compare_at_price
+  assign price = target.price | default: 1999
+  assign available = target.available | default: false
+-%}
+
+{% unless target == null %}
+  <div
+    class="price-block{% if price_class %} {{ price_class }} {% endif %}"
+    data-price-container
+  >
+    {%- if compare_at_price > price and show_compare_at_price -%}
+      <div>
+        <span class="sr-only">{{ 'products.product.price.regular_price' | t }}</span>
+        <span class="price-regular line-through {% unless available %}opacity-60{% endunless %}">
+          {{- compare_at_price | money_without_trailing_zeros -}}
+        </span>
+      </div>
+    {%- endif -%}
+    <div>
+      <span class="sr-only">{{ 'products.product.price.sale_price' | t }}</span>
+      <span
+        class="price-sale {% unless available %}opacity-60{% endunless %}"
+        data-target="{{ target.id }}"
+      >
+        {{- price | money_with_currency -}}
+      </span>
+    </div>
+    {% if show_badges %}
+      {%- if available == false -%}
+        <span class="price-badge bg-gray">{{ 'products.product.sold_out' | t }}</span>
+      {%- elsif compare_at_price > price -%}
+        <span class="price-badge bg-red-600">{{ 'products.product.on_sale' | t }}</span>
+      {%- endif -%}
+    {% endif %}
+  </div>
+{% endunless %}

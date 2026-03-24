@@ -1,0 +1,28 @@
+<product-form>
+  {% form 'product', product, id: form_id %}
+    {% comment %} Error Summary Section {% endcomment %}
+    <div
+      class="error-message-wrapper hidden"
+      role="alert"
+      aria-live="assertive"
+    >
+      <span class="error-message text-red-400"></span>
+    </div>
+    <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+    <button
+      type="submit"
+      class="btn w-full btn-secondary {% unless product.selected_or_first_available_variant.available %}btn--disabled{% endunless %}"
+      {% unless product.selected_or_first_available_variant.available %}
+        disabled
+      {% endunless %}
+    >
+      <span data-atc-text>
+        {% if product.selected_or_first_available_variant.available %}
+          {{ 'products.product.add_to_cart' | t }}
+        {% else %}
+          {{ 'products.product.sold_out' | t }}
+        {% endif %}
+      </span>
+    </button>
+  {% endform %}
+</product-form>

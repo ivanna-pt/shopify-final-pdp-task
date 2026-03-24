@@ -11,3 +11,10 @@
 #
 # Ignore templates and sections with a regular expression:
 #   /(templates|sections)/.*\.json/
+
+node_modules/
+package-lock.json
+package.json
+
+.vscode/
+.github/

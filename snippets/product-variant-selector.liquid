@@ -1,0 +1,115 @@
+{% comment %}
+  Renders a variant selector for a product.
+  Usage:
+  {% render 'product-variant-selector', product: product %}
+{% endcomment %}
+{% unless product.has_only_default_variant %}
+  <variant-selector
+    class="my-6"
+    data-url="{{ product.url }}"
+    data-section-id="{{ section.id }}"
+  >
+    {% assign family = product.metafields.custom.color_family.value %}
+
+    {% if family %}
+      <fieldset class="my-6">
+        <legend class="sr-only">
+          {{ 'products.product.select_color' | t -}}
+          :
+        </legend>
+        <div class="flex align-center gap-2">
+          {% for item in family.products.value %}
+            {% liquid
+              assign is_current = false
+              if item.id == product.id
+                assign is_current = true
+              endif
+            %}
+            <div class="w-22 h-22 p-0 bg-gray-200 overflow-hidden rounded-md border {% if is_current %}border-black{% else %}border-transparent{% endif %} hover:border-black {% unless item.available %}opacity-50{% endunless %}">
+              <a
+                class="color-family-link"
+                href="{{ item.url }}?variant={{ item.selected_or_first_available_variant.id }}"
+                aria-current="{% if is_current %}page{% endif %}"
+                {% unless item.available %}
+                  aria-disabled="true"
+                {% endunless %}
+              >
+                {% if item.featured_image %}
+                  {{
+                    item.featured_image
+                    | image_url: width: 136, height: 136
+                    | image_tag:
+                      width: 88,
+                      height: 88,
+                      alt: item.title,
+                      class: 'w-full h-full aspect-square object-cover',
+                      sizes: '88px',
+                      loading: 'lazy'
+                  }}
+                {% else %}
+                  {{ 'image' | placeholder_svg_tag: 'rounded-md w-22 h-22' }}
+                  <span class="sr-only">{{ item.title }}</span>
+                {% endif %}
+                {% unless item.available %}
+                  <span class="sr-only">{{ 'products.product.sold_out' | t }}</span>
+                {% endunless %}
+              </a>
+            </div>
+          {% endfor %}
+        </div>
+      </fieldset>
+    {% endif %}
+
+    {% for option in product.options_with_values %}
+      {% assign option_name = option.name | downcase %}
+      <fieldset>
+        <legend class="text-sm mb-3">
+          {{ 'products.product.select_option' | t: option_name: option_name | default: option.name -}}
+          :
+        </legend>
+        <div class="text-center grid grid-cols-2 lg:grid-cols-3 gap-2 mb-6">
+          {% for value in option.values %}
+            {% liquid
+              assign option_key = 'option' | append: option.position
+              assign matching_variants = product.variants | where: option_key, value
+              assign variant = matching_variants.first
+              assign is_available = variant.available
+              assign is_selected = false
+              if option.selected_value == value
+                assign is_selected = true
+              endif
+            %}
+
+            <div class="option-value {% unless is_available %}option-value--unavailable{% endunless %}">
+              <input
+                type="radio"
+                id="option-{{ section.id }}-{{ option.position }}-{{ forloop.index }}"
+                name="option-{{ option.position }}"
+                value="{{ variant.id }}"
+                class="sr-only"
+                {% if is_selected %}
+                  checked
+                {% endif %}
+                {% unless is_available %}
+                  disabled
+                {% endunless %}
+              >
+              <label
+                for="option-{{ section.id }}-{{ option.position }}-{{ forloop.index }}"
+                class="option-label inline-block cursor-pointer tw-generic-button w-full {% if is_selected %}active{% endif %}"
+              >
+                {{ value }}
+                {% unless is_available %}
+                  <span class="sr-only">{{ 'products.product.sold_out' | t }}</span>
+                {% endunless %}
+              </label>
+            </div>
+          {% endfor %}
+        </div>
+      </fieldset>
+    {% endfor %}
+    <script type="application/json" id="ProductVariants-{{ section.id }}">
+      {{ product.variants | json }}
+    </script>
+  </variant-selector>
+{% endunless %}

@@ -1,0 +1,42 @@
+{% comment %}
+  Renders product badges from product tags.
+  Usage:
+  {% render 'product-badges', product: product %}
+{% endcomment %}
+
+{% liquid
+  assign badges_list = ''
+  for tag in product.tags
+    if tag contains 'badge:'
+      assign badge_tag = tag | remove: 'badge:' | strip
+      assign badges_list = badges_list | append: badge_tag | append: ','
+    endif
+  endfor
+  assign badges_list = badges_list | split: ',' | uniq
+%}
+
+{% if badges_list.size > 0 %}
+  <div
+    class="absolute top-4 left-4"
+    role="region"
+    aria-labelledby="product-badges-label"
+  >
+    <span id="product-badges-label" class="sr-only">
+      {{ 'products.product.product_badges' | t }}
+    </span>
+    <ul class="flex flex-col gap-2">
+      {% for badge in badges_list %}
+        {% if badge != blank %}
+          <li class="flex w-max flex-none items-center gap-2 bg-white bg-opacity-90 p-2 rounded-sm shadow-md">
+            {% if badge == 'highly rated' %}
+              <span aria-hidden="true">
+                {{ 'star-icon.svg' | inline_asset_content }}
+              </span>
+            {% endif %}
+            <span class="text-sm capitalize">{{ badge }}</span>
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}

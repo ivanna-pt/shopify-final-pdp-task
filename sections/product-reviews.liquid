@@ -1,0 +1,132 @@
+{%- liquid
+  assign section_id = 'product-reviews-' | append: section.id
+  assign heading_id = section_id | append: '-title'
+  assign reviews = product.metafields.custom.reviews.value
+  assign reviews_to_show = section.settings.reviews_to_show
+  assign section_id = 'product-reviews-' | append: section.id
+-%}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+    }
+
+    @media screen and (min-width: 750px) {
+      .section-{{ section.id }}-padding {
+        padding-top: {{ section.settings.padding_top }}px;
+        padding-bottom: {{ section.settings.padding_bottom }}px;
+      }
+    }
+{%- endstyle -%}
+
+<section id="{{ section_id }}" class="section-{{ section.id }}-padding" aria-labelledby="{{ heading_id }}">
+  <div class="page-width">
+    {%- if section.settings.title != blank -%}
+      <h2 id="{{ heading_id }}" class="h2 mb-12 text-center">{{ section.settings.title }}</h2>
+    {%- endif -%}
+    {% if reviews != blank %}
+      <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {%- for review in reviews limit: reviews_to_show -%}
+          {% assign review_author = review.reviewer.value %}
+          {% assign image_alt = 'sections.product-reviews.reviewer_image'
+            | t: person: review_author.name, city: review_author.city
+          %}
+          <li class="review-card">
+            {% render 'star-rating', rating: review.rating, show_count: false %}
+            <blockquote>
+              <p>{{ review.text }}</p>
+            </blockquote>
+            <div class="flex gap-3 items-center">
+              {% if review_author.image %}
+                {{
+                  review_author.image
+                  | image_url: width: 108
+                  | image_tag:
+                    width: 54,
+                    height: 54,
+                    sizes: '54px',
+                    widths: '54, 108',
+                    alt: image_alt,
+                    loading: 'lazy',
+                    class: 'rounded-full flex-shrink-0 w-[54px] h-[54px] object-cover bg-gray-200'
+                }}
+              {% else %}
+                {{ 'image' | placeholder_svg_tag: 'rounded-full bg-gray-200 w-[54px] h-[54px]' }}
+              {% endif %}
+              <div>
+                <p>
+                  <cite class="not-italic font-normal">{{ review_author.name }}</cite>
+                </p>
+                {% if review_author.city != blank %}
+                  <p class="text-gray-600 mt-1">
+                    {{ review_author.city }}
+                  </p>
+                {% endif %}
+              </div>
+            </div>
+          </li>
+        {%- endfor -%}
+      </ul>
+    {% else %}
+      <p class="text-gray-600 text-center" role="status">{{ 'sections.product-reviews.no_reviews' | t }}</p>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Product Reviews",
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Reviews"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "reviews_to_show",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "default": 3,
+      "label": "Reviews to show"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review_card",
+      "name": "Review Card",
+      "settings": []
+    }
+  ]
+}
+{% endschema %}

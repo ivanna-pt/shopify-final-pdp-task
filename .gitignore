@@ -18,3 +18,13 @@ release
 
 ## Github
 .github/
+
+##Tailwind
+node_modules/
+
+##VScode
+.vscode/
+
+##AI agents
+.codex/
+.claude/

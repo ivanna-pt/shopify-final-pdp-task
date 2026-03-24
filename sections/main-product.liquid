@@ -1,0 +1,376 @@
+{%- liquid
+  assign target = product.selected_or_first_available_variant
+-%}
+
+<product-info
+  class="section-{{ section.id }}-padding color-{{ section.settings.color_scheme }} bg-scheme"
+  id="MainProduct-{{ section.id }}"
+  data-selected-variant-id="{{ target.id }}"
+  data-product-handle="{{ product.handle }}"
+>
+  {%- style -%}
+    .section-{{ section.id }}-padding {
+        padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+        padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+      }
+
+      @media screen and (min-width: 750px) {
+        .section-{{ section.id }}-padding {
+          padding-top: {{ section.settings.padding_top }}px;
+          padding-bottom: {{ section.settings.padding_bottom }}px;
+        }
+      }
+  {%- endstyle -%}
+  <div class="page-width">
+    <div class="flex flex-col md:flex-row gap-8 bg-scheme">
+      <div class="md:sticky md:top-6 self-start md:flex-1">
+        {% render 'product-gallery', product: product, enable_image_badges: section.settings.enable_image_badges %}
+      </div>
+      <div class="md:flex-1">
+        {%- assign product_form_id = 'product-form-' | append: section.id -%}
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {%- when '@app' -%}
+              {% render block %}
+            {% when 'title' %}
+              <h2 class="text-scheme text-2xl! md:text-3xl font-normal!">
+                {{ product.title | split: '[' | first | escape }}
+              </h2>
+            {% when 'price' %}
+              <div class="my-6">
+                {% render 'price',
+                  product: product,
+                  show_badges: true,
+                  show_compare_at_price: true,
+                  price_class: 'main-product'
+                %}
+              </div>
+            {% when 'description' %}
+              {% if product.description != blank %}
+                <div
+                  class="mt-6 text-accent-scheme body-md"
+                  aria-label="{{ 'products.product.description' | t }}"
+                >
+                  {{ product.description }}
+                </div>
+              {% endif %}
+            {% when 'variant_picker' %}
+              {% render 'product-variant-selector',
+                product: product,
+                section: section,
+                product_form_id: product_form_id
+              %}
+            {% when 'quantity_selector' %}
+              {% liquid
+                assign variant = product.selected_or_first_available_variant
+                assign rule_max = variant.quantity_rule.max
+                assign inventory_max = null
+                if variant.inventory_management == 'shopify' and variant.inventory_policy != 'continue'
+                  assign inventory_max = variant.inventory_quantity
+                endif
+
+                assign effective_max = null
+                if rule_max
+                  assign effective_max = rule_max
+                elsif inventory_max
+                  assign effective_max = inventory_max
+                endif
+              %}
+              <div id="Quantity-Form-{{ section.id }}" class="my-8 flex flex-col">
+                <label class="body-md text-scheme mb-3" for="Quantity-{{ section.id }}">
+                  {{ 'products.product.quantity.label' | t }}:
+                </label>
+                <quantity-input>
+                  <button name="minus" type="button" class="cursor-pointer">
+                    <span class="sr-only">
+                      {{ 'products.product.quantity.decrease' | t: product: product }}
+                    </span>
+                    <span class="text-scheme">
+                      {{- 'icon-minus.svg' | inline_asset_content -}}
+                    </span>
+                  </button>
+                  <input
+                    type="number"
+                    name="quantity"
+                    id="Quantity-{{ section.id }}"
+                    data-min="{{ product.selected_or_first_available_variant.quantity_rule.min }}"
+                    min="{{ product.selected_or_first_available_variant.quantity_rule.min }}"
+                    {% if effective_max %}
+                      max="{{ effective_max }}"
+                      data-max="{{ effective_max }}"
+                    {% endif %}
+                    step="{{ product.selected_or_first_available_variant.quantity_rule.increment }}"
+                    value="{{ product.selected_or_first_available_variant.quantity_rule.min }}"
+                    form="{{ product_form_id }}"
+                    class="no-spinner text-scheme border-color-scheme border text-center w-16 mx-2 px-2 rounded-lg"
+                  >
+                  <button name="plus" type="button" class="cursor-pointer">
+                    <span class="sr-only">
+                      {{ 'products.product.quantity.increase' | t: product: product }}
+                    </span>
+                    <span class="text-scheme">
+                      {{- 'icon-plus.svg' | inline_asset_content -}}
+                    </span>
+                  </button>
+                </quantity-input>
+              </div>
+            {% when 'buy_buttons' %}
+              {% render 'buy-buttons', product: product, form_id: product_form_id %}
+            {% when 'collapsible_row' %}
+              {% render 'accordion-component',
+                id: block.id,
+                list_items: product.metafields.custom.product_details.value,
+                allow_multiple: false,
+                default_open: 1
+              %}
+            {% when 'icon_with_text' %}
+              {% render 'icon_with_text', items: product.metafields.custom.shipping_benefits.value %}
+            {% when 'rating' %}
+              {% liquid
+                assign reviews = product.metafields.custom.reviews.value
+                assign rating_sum = 0
+                assign review_count = 0
+                if reviews != blank
+                  for review in reviews
+                    assign rating_sum = rating_sum | plus: review.rating
+                    assign review_count = review_count | plus: 1
+                  endfor
+                endif
+                assign total_rating = rating_sum | divided_by: review_count | round: 1
+                assign scheme = section.settings.color_scheme
+                assign color = scheme.settings.text
+              %}
+              <div class="mt-2">
+                {% render 'star-rating', rating: total_rating, , show_number: true, star_color: color %}
+              </div>
+            {% when 'text' %}
+              <div class="mt-3 text-accent-scheme {{ block.settings.text_style }}">
+                {{ block.settings.custom_text }}
+              </div>
+            {% when 'inventory' %}
+              <div data-inventory-quantity>
+                {%- unless target.available == false -%}
+                  {% if target.inventory_management == 'shopify' and target.inventory_policy != 'continue' %}
+                    <span class="font-semibold text-scheme">
+                      {{ 'products.product.inventory_in_stock_show_count' | t: quantity: target.inventory_quantity }}
+                    </span>
+                  {%- else -%}
+                    <span class="font-semibold text-scheme">
+                      {{ 'products.product.inventory_in_stock' | t }}
+                    </span>
+                  {%- endif -%}
+                {%- else -%}
+                  <span class="text-red-600">{{ 'products.product.inventory_out_of_stock' | t }}</span>
+                {%- endunless -%}
+              </div>
+          {% endcase %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</product-info>
+
+{% schema %}
+{
+  "name": "Main Product",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "title",
+      "name": "Product Title",
+      "limit": 1
+    },
+    {
+      "type": "price",
+      "name": "Price",
+      "limit": 1
+    },
+    {
+      "type": "description",
+      "name": "Product Description",
+      "limit": 1
+    },
+    {
+      "type": "quantity_selector",
+      "name": "Quantity Selector",
+      "limit": 1
+    },
+    {
+      "type": "variant_picker",
+      "name": "Variant Picker",
+      "limit": 1
+    },
+    {
+      "type": "buy_buttons",
+      "name": "Buy Buttons",
+      "limit": 1
+    },
+    {
+      "type": "rating",
+      "name": "Rating",
+      "limit": 1
+    },
+    {
+      "type": "inventory",
+      "name": "Inventory",
+      "limit": 1
+    },
+    {
+      "type": "text",
+      "name": "Custom Text",
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "custom_text",
+          "label": "Text",
+          "default": "Performance-ready innovation, engineered for the city. The Nike Ava Rover elevates your everyday with a stacked ReactX midsole and an ultralight outsole designed with the streets in mind."
+        },
+        {
+          "type": "select",
+          "id": "text_style",
+          "label": "Text Style",
+          "options": [
+            {
+              "value": "product-text-muted",
+              "label": "Body Medium Muted"
+            },
+            {
+              "value": "body-md",
+              "label": "Body Medium"
+            },
+            {
+              "value": "product-subtitle",
+              "label": "Subtitle"
+            }
+          ],
+          "default": "product-text-muted"
+        }
+      ]
+    },
+    {
+      "type": "icon_with_text",
+      "name": "Icon with text",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Pairing 1",
+          "info": "Choose an icon or add an image for each pairing"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_1",
+          "label": "Image"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "heading_1",
+          "default": "Heading",
+          "label": "Heading",
+          "info": "Leave blank to hide this pairing"
+        },
+        {
+          "type": "header",
+          "content": "Pairing 2"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_2",
+          "label": "Image"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "heading_2",
+          "default": "Heading",
+          "label": "Heading",
+          "info": "Leave blank to hide this pairing"
+        },
+        {
+          "type": "header",
+          "content": "Pairing 3",
+          "info": "Choose an icon or add an image for each pairing"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_3",
+          "label": "Image"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "heading_3",
+          "default": "Heading",
+          "label": "Heading",
+          "info": "Leave blank to hide this pairing"
+        }
+      ]
+    },
+    {
+      "type": "collapsible_row",
+      "name": "Collapsible row",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Accordion Title",
+          "default": "Product Details"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Accordion Content",
+          "default": "<p>Here you can add detailed information about the product.</p>"
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_image_badges",
+      "default": true,
+      "label": "Enable image badges"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 40
+    }
+  ],
+  "presets": [
+    {
+      "name": "Main product"
+    }
+  ]
+}
+{% endschema %}

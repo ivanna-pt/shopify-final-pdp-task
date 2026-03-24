@@ -9,12 +9,104 @@
  */
 {
   "sections": {
-    "main": {
-      "type": "product",
-      "settings": {}
+    "main-product": {
+      "type": "main-product",
+      "blocks": {
+        "title": {
+          "type": "title",
+          "settings": {}
+        },
+        "price": {
+          "type": "price",
+          "settings": {}
+        },
+        "description": {
+          "type": "description",
+          "settings": {}
+        },
+        "inventory": {
+          "type": "inventory",
+          "settings": {}
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {}
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {}
+        },
+        "collapsible_row_1": {
+          "type": "collapsible_row",
+          "settings": {}
+        },
+        "rating": {
+          "type": "rating",
+          "settings": {}
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "custom_text": "Performance-ready innovation, engineered for the city. The Nike Ava Rover elevates your everyday with a stacked ReactX midsole and an ultralight outsole designed with the streets in mind.",
+            "text_style": "text-gray-600 body-md"
+          }
+        },
+        "icon_with_text": {
+          "type": "icon_with_text",
+          "settings": {}
+        },
+        "quantity": {
+          "type": "quantity_selector",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "title",
+        "rating",
+        "text",
+        "price",
+        "inventory",
+        "quantity",
+        "variant_picker",
+        "buy_buttons",
+        "icon_with_text",
+        "description",
+        "collapsible_row_1"
+      ],
+      "settings": {
+        "color_scheme": "scheme-1"
+      }
+    },
+    "banner": {
+      "type": "banner",
+      "settings": {
+        "image": "shopify://shop_images/Hero_Image.webp",
+        "height": 500,
+        "overlay_opacity": 0.3,
+        "title": "Step Into Next-Level Comfort",
+        "text": "Experience the perfect mix of style, support, and all-day cushioning with Nike Air Max Plus."
+      }
+    },
+    "reviews": {
+      "type": "product-reviews",
+      "settings": {
+        "title": "Reviews"
+      }
+    },
+    "related_products": {
+      "type": "related-products",
+      "settings": {
+        "title": "You may also like",
+        "limit": 4,
+        "padding_top": 40,
+        "padding_bottom": 40
+      }
     }
   },
   "order": [
-    "main"
+    "main-product",
+    "reviews",
+    "related_products",
+    "banner"
   ]
 }
