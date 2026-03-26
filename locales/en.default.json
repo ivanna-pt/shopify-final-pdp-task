@@ -122,6 +122,8 @@
     },
     "announcement_bar": {
       "close": "Close",
+      "previous": "Previous announcement",
+      "next": "Next announcement",
       "region_label": "Announcement"
     },
     "product-reviews": {

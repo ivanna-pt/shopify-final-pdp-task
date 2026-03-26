@@ -19,30 +19,84 @@
       color: var(--announcement-text);
     "
   >
-    <div class="flex flex-wrap items-center gap-3 py-3 px-4 max-w-[var(--page-width)] mx-auto">
-      <div class="flex flex-wrap items-center gap-3 min-w-0 break-words">
-        {%- if section.settings.text != blank -%}
-          <p class="m-0 text-body-md leading-body-md">{{ section.settings.text }}</p>
-        {%- endif -%}
-
-        {%- if section.settings.link_text != blank and section.settings.link_url != blank -%}
-          <a
-            class="underline underline-offset-4"
-            href="{{ section.settings.link_url }}"
-            style="color: var(--announcement-link);"
+    <div class="flex flex-wrap justify-center items-center gap-3 py-3 px-4 max-w-[var(--page-width)] mx-auto">
+      <div class="relative min-w-0 flex-1">
+        {% unless section.blocks.size < 2 %}
+          <div class="absolute inset-0 z-10 flex items-center justify-between pointer-events-none">
+            <button
+              class="pointer-events-auto inline-flex min-w-11 min-h-11 items-center justify-center rounded-full bg-transparent text-current leading-none transition-opacity hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+              type="button"
+              data-announcement-prev
+              aria-label="{{ 'sections.announcement_bar.previous' | t }}"
+            >
+              <span aria-hidden="true">&lt;</span>
+            </button>
+            <button
+              class="pointer-events-auto inline-flex min-w-11 min-h-11 items-center justify-center rounded-full bg-transparent text-current leading-none transition-opacity hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+              type="button"
+              data-announcement-next
+              aria-label="{{ 'sections.announcement_bar.next' | t }}"
+            >
+              <span aria-hidden="true">&gt;</span>
+            </button>
+          </div>
+        {% endunless %}
+        <div class="announcemment-bar__swiper px-11 w-full">
+          <div
+            class="w-full swiper swiper-container"
+            data-announcement-swiper
+            aria-roledescription="carousel"
+            {% unless section.settings.slider_autoplay == false %}
+              data-autoplay-delay="{{ section.settings.autoplay_delay | times: 1000 }}"
+            {% endunless %}
           >
-            {{ section.settings.link_text | escape }}
-          </a>
-        {%- endif -%}
+            <div class="swiper-wrapper" aria-live="polite" aria-atomic="true">
+              {% for block in section.blocks %}
+                {% case block.type %}
+                  {% when 'announcement' %}
+                    {%- assign slide_label = block.settings.text | strip_html | strip -%}
+                    {%- if slide_label == blank -%}
+                      {%- assign slide_label = block.settings.link_text | strip -%}
+                    {%- endif -%}
+                    <div
+                      class="swiper-slide"
+                      role="group"
+                      aria-roledescription="slide"
+                      {% unless forloop.first %}
+                        aria-hidden="true"
+                      {% endunless %}
+                      {% if slide_label != blank %}
+                        aria-label="{{ slide_label | escape }}"
+                      {% endif %}
+                    >
+                      <div class="flex flex-wrap justify-center items-center gap-3 min-w-0 break-words">
+                        {%- if block.settings.text != blank -%}
+                          <p class="m-0 text-body-md leading-body-md">{{ block.settings.text }}</p>
+                        {%- endif -%}
+                        {%- if block.settings.link_text != blank and block.settings.link_url != blank -%}
+                          <a
+                            class="underline underline-offset-4"
+                            href="{{ block.settings.link_url }}"
+                            style="color: var(--announcement-link);"
+                          >
+                            {{ block.settings.link_text | escape }}
+                          </a>
+                        {%- endif -%}
+                      </div>
+                    </div>
+                {% endcase %}
+              {% endfor %}
+            </div>
+          </div>
+        </div>
       </div>
-
       <button
-        class="ml-auto min-w-[44px] min-h-[44px] px-3 py-2 rounded-sm border border-current bg-transparent text-current leading-none transition-opacity hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+        class="ml-auto min-w-11 min-h-11 px-3 py-2 rounded-sm bg-transparent text-current leading-none transition-opacity hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
         type="button"
         data-announcement-close
         aria-label="{{ 'sections.announcement_bar.close' | t }}"
       >
-        {{ 'sections.announcement_bar.close' | t }}
+        X
       </button>
     </div>
   </announcement-bar>
@@ -52,6 +106,8 @@
   class AnnouncementBar extends HTMLElement {
     connectedCallback() {
       this.closeButton = this.querySelector('[data-announcement-close]');
+      this.swiperContainer = this.querySelector('[data-announcement-swiper]');
+      this.swiperInstance = null;
       this.closeHandler = this.handleClose.bind(this);
 
       if (!this.isDesignMode() && this.isDismissed()) {
@@ -60,10 +116,12 @@
       }
 
       this.closeButton?.addEventListener('click', this.closeHandler);
+      this.initSwiper();
     }
 
     disconnectedCallback() {
       this.closeButton?.removeEventListener('click', this.closeHandler);
+      this.destroySwiper();
     }
 
     handleClose() {
@@ -76,13 +134,86 @@
       this.setAttribute('aria-hidden', 'true');
     }
 
+    initSwiper() {
+      if (!this.swiperContainer) return;
+
+      const prevBtn = this.querySelector('[data-announcement-prev]');
+      const nextBtn = this.querySelector('[data-announcement-next]');
+
+      const autoplayDelay = this.swiperContainer.dataset.autoplayDelay;
+
+      const slides = Array.from(this.querySelectorAll('.swiper-slide'));
+      if (slides.length < 2) return;
+
+      if (typeof Swiper === 'undefined') {
+        console.warn('Swiper library not loaded');
+        return;
+      }
+
+      if (this.swiperInstance) {
+        this.swiperInstance.destroy(true, true);
+        this.swiperInstance = null;
+      }
+
+      const config = {
+        slidesPerView: 1,
+        spaceBetween: 16,
+        loop: false,
+        autoHeight: true,
+        watchOverflow: true,
+        allowTouchMove: true,
+        observer: true,
+        observeParents: true,
+      };
+
+      if (prevBtn && nextBtn) {
+        config.navigation = {
+          prevEl: prevBtn,
+          nextEl: nextBtn,
+        };
+      }
+
+      if (autoplayDelay) {
+        config.autoplay = {
+          delay: autoplayDelay,
+        };
+      }
+
+      this.swiperInstance = new Swiper(this.swiperContainer, config);
+
+      this.updateSlidesA11y();
+      this.swiperInstance.on('slideChange', () => this.updateSlidesA11y());
+    }
+
+    destroySwiper() {
+      if (!this.swiperInstance) return;
+      this.swiperInstance.destroy(true, true);
+      this.swiperInstance = null;
+    }
+
+    updateSlidesA11y() {
+      if (!this.swiperInstance) return;
+      const { slides, activeIndex } = this.swiperInstance;
+
+      slides.forEach((slide, index) => {
+        if (index === activeIndex) {
+          slide.removeAttribute('aria-hidden');
+          return;
+        }
+
+        slide.setAttribute('aria-hidden', 'true');
+      });
+    }
+
     storageKey() {
       return this.dataset.storageKey || 'announcement-bar-dismissed';
     }
 
     isDesignMode() {
-      return document.documentElement.classList.contains('shopify-design-mode')
-        || Boolean(window.Shopify && window.Shopify.designMode);
+      return (
+        document.documentElement.classList.contains('shopify-design-mode') ||
+        Boolean(window.Shopify && window.Shopify.designMode)
+      );
     }
 
     isDismissed() {
@@ -112,6 +243,31 @@
   "name": "Announcement bar",
   "tag": "section",
   "class": "section-announcement-bar",
+  "blocks": [
+    {
+      "type": "announcement",
+      "name": "Announcement",
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "Free shipping on orders over $75"
+        },
+        {
+          "type": "text",
+          "id": "link_text",
+          "label": "Link text",
+          "default": "Shop now"
+        },
+        {
+          "type": "url",
+          "id": "link_url",
+          "label": "Link URL"
+        }
+      ]
+    }
+  ],
   "settings": [
     {
       "type": "checkbox",
@@ -120,21 +276,24 @@
       "default": true
     },
     {
-      "type": "inline_richtext",
-      "id": "text",
-      "label": "Text",
-      "default": "Free shipping on orders over $75"
+      "type": "header",
+      "content": "Slider Settings"
     },
     {
-      "type": "text",
-      "id": "link_text",
-      "label": "Link text",
-      "default": "Shop now"
+      "type": "checkbox",
+      "id": "slider_autoplay",
+      "label": "Enable slider autoplay",
+      "default": true
     },
     {
-      "type": "url",
-      "id": "link_url",
-      "label": "Link URL"
+      "type": "range",
+      "id": "autoplay_delay",
+      "label": "Autoplay delay",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "default": 5
     },
     {
       "type": "color",
@@ -156,8 +315,9 @@
     }
   ],
   "enabled_on": {
-    "templates": ["index"]
+    "groups": ["header"]
   },
+
   "presets": [
     {
       "name": "Announcement bar"
