@@ -1,11 +1,4 @@
-{%- liquid
-  assign is_homepage = false
-  if request.page_type == 'index'
-    assign is_homepage = true
-  endif
--%}
-
-{%- if section.settings.enable and is_homepage -%}
+{%- if section.settings.enable -%}
   {% style %}
     #shopify-section-{{ section.id }} announcement-bar {
       --announcement-bg: {{ section.settings.bg_color }};
@@ -323,6 +316,7 @@
     }
   ],
   "enabled_on": {
+    "templates": ["index"],
     "groups": ["header"]
   },
 
