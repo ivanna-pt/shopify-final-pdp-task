@@ -24,6 +24,8 @@
     role="region"
     aria-label="{{ 'sections.announcement_bar.region_label' | t }}"
     data-storage-key="announcement-bar-{{ section.id }}"
+    hidden
+    aria-hidden="true"
   >
     <div class="flex flex-wrap justify-center items-center gap-3 py-3 px-4 max-w-[var(--page-width)] mx-auto">
       <div class="relative min-w-0 flex-1">
@@ -104,7 +106,7 @@
   </announcement-bar>
 {%- endif -%}
 
-{% javascript %}
+<script>
   class AnnouncementBar extends HTMLElement {
     connectedCallback() {
       this.closeButton = this.querySelector('[data-announcement-close]');
@@ -112,9 +114,8 @@
       this.swiperInstance = null;
       this.closeHandler = this.handleClose.bind(this);
 
-      if (!this.isDesignMode() && this.isDismissed()) {
-        this.hide();
-        return;
+      if (this.isDesignMode() || !this.isDismissed()) {
+        this.show();
       }
 
       this.closeButton?.addEventListener('click', this.closeHandler);
@@ -134,6 +135,11 @@
     hide() {
       this.setAttribute('hidden', '');
       this.setAttribute('aria-hidden', 'true');
+    }
+
+    show() {
+      this.removeAttribute('hidden');
+      this.removeAttribute('aria-hidden');
     }
 
     initSwiper() {
@@ -238,7 +244,7 @@
   if (!customElements.get('announcement-bar')) {
     customElements.define('announcement-bar', AnnouncementBar);
   }
-{% endjavascript %}
+</script>
 
 {% schema %}
 {
