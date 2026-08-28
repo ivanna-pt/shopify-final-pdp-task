@@ -141,7 +141,7 @@
                 assign color = scheme.settings.text
               %}
               <div class="mt-2">
-                {% render 'star-rating', rating: total_rating, , show_number: true, star_color: color %}
+                {% render 'star-rating', rating: total_rating, show_number: true, star_color: color %}
               </div>
             {% when 'text' %}
               <div class="mt-3 text-accent-scheme {{ block.settings.text_style }}">
@@ -374,3 +374,15 @@
   ]
 }
 {% endschema %}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{% render 'star-rating', rating: total_rating, , show_number: true, star_color:
+    color %}"
+  to: "{% render 'star-rating', rating: total_rating, show_number: true, star_color:
+    color %}"
+  position: 6440..6526
+{% endcomment %}
