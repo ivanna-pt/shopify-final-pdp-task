@@ -1,0 +1,190 @@
+{%- if section.settings.enable -%}
+  {% style %}
+    #shopify-section-{{ section.id }} announcement-bar {
+      --announcement-bg: {{ section.settings.bg_color }};
+      --announcement-text: {{ section.settings.text_color }};
+      --announcement-link: {{ section.settings.link_color }};
+      background-color: var(--announcement-bg);
+      color: var(--announcement-text);
+    }
+
+    #shopify-section-{{ section.id }} announcement-bar a {
+      color: var(--announcement-link);
+    }
+  {% endstyle %}
+  <announcement-bar
+    class="block"
+    role="region"
+    aria-label="{{ 'sections.announcement_bar.region_label' | t }}"
+    data-storage-key="announcement-bar-{{ section.id }}"
+    hidden
+    aria-hidden="true"
+  >
+    <div class="flex flex-wrap justify-center items-center gap-3 py-3 px-4 max-w-[var(--page-width)] mx-auto">
+      <div class="relative min-w-0 flex-1">
+        {% unless section.blocks.size < 2 %}
+          <div class="absolute inset-0 z-10 flex items-center justify-between pointer-events-none">
+            <button
+              class="pointer-events-auto inline-flex min-w-11 min-h-11 items-center justify-center rounded-full bg-transparent text-current leading-none transition-opacity hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+              type="button"
+              data-announcement-prev
+              aria-label="{{ 'sections.announcement_bar.previous' | t }}"
+            >
+              <span aria-hidden="true">&lt;</span>
+            </button>
+            <button
+              class="pointer-events-auto inline-flex min-w-11 min-h-11 items-center justify-center rounded-full bg-transparent text-current leading-none transition-opacity hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+              type="button"
+              data-announcement-next
+              aria-label="{{ 'sections.announcement_bar.next' | t }}"
+            >
+              <span aria-hidden="true">&gt;</span>
+            </button>
+          </div>
+        {% endunless %}
+        <div class="announcemment-bar__swiper px-11 w-full">
+          <div
+            class="w-full swiper swiper-container"
+            data-announcement-swiper
+            aria-roledescription="carousel"
+            {% unless section.settings.slider_autoplay == false %}
+              data-autoplay-delay="{{ section.settings.autoplay_delay | times: 1000 }}"
+            {% endunless %}
+          >
+            <div class="swiper-wrapper" aria-live="polite" aria-atomic="true">
+              {% for block in section.blocks %}
+                {% case block.type %}
+                  {% when 'announcement' %}
+                    {%- assign slide_label = block.settings.text | strip_html | strip -%}
+                    {%- if slide_label == blank -%}
+                      {%- assign slide_label = block.settings.link_text | strip -%}
+                    {%- endif -%}
+                    <div
+                      class="swiper-slide"
+                      role="group"
+                      aria-roledescription="slide"
+                      {% unless forloop.first %}
+                        aria-hidden="true"
+                      {% endunless %}
+                      {% if slide_label != blank %}
+                        aria-label="{{ slide_label | escape }}"
+                      {% endif %}
+                    >
+                      <div class="flex flex-wrap justify-center items-center gap-3 min-w-0 break-words">
+                        {%- if block.settings.text != blank -%}
+                          <p class="m-0 text-body-md leading-body-md">{{ block.settings.text }}</p>
+                        {%- endif -%}
+                        {%- if block.settings.link_text != blank and block.settings.link_url != blank -%}
+                          <a class="underline underline-offset-4" href="{{ block.settings.link_url }}">
+                            {{ block.settings.link_text | escape }}
+                          </a>
+                        {%- endif -%}
+                      </div>
+                    </div>
+                {% endcase %}
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+      <button
+        class="ml-auto min-w-11 min-h-11 px-3 py-2 rounded-sm bg-transparent text-current leading-none transition-opacity hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+        type="button"
+        data-announcement-close
+        aria-label="{{ 'sections.announcement_bar.close' | t }}"
+      >
+        X
+      </button>
+    </div>
+  </announcement-bar>
+  <script src="{{ 'announcement-bar.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Announcement bar",
+  "tag": "section",
+  "class": "section-announcement-bar",
+  "blocks": [
+    {
+      "type": "announcement",
+      "name": "Announcement",
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "Free shipping on orders over $75"
+        },
+        {
+          "type": "text",
+          "id": "link_text",
+          "label": "Link text",
+          "default": "Shop now"
+        },
+        {
+          "type": "url",
+          "id": "link_url",
+          "label": "Link URL"
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable",
+      "label": "Show announcement bar",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Slider Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "slider_autoplay",
+      "label": "Enable slider autoplay",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "autoplay_delay",
+      "label": "Autoplay delay",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "default": 5
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "link_color",
+      "label": "Link color",
+      "default": "#ffffff"
+    }
+  ],
+  "enabled_on": {
+    "templates": ["index"],
+    "groups": ["header"]
+  },
+
+  "presets": [
+    {
+      "name": "Announcement bar"
+    }
+  ]
+}
+{% endschema %}
